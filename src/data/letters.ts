@@ -29,6 +29,35 @@ const englishNames: Record<string, string[]> = {
   Z: ["z", "zed", "zee"]
 };
 
+const englishSpeechNames: Record<string, string> = {
+  A: "ay",
+  B: "bee",
+  C: "see",
+  D: "dee",
+  E: "ee",
+  F: "ef",
+  G: "gee",
+  H: "aitch",
+  I: "eye",
+  J: "jay",
+  K: "kay",
+  L: "el",
+  M: "em",
+  N: "en",
+  O: "oh",
+  P: "pee",
+  Q: "cue",
+  R: "are",
+  S: "ess",
+  T: "tee",
+  U: "you",
+  V: "vee",
+  W: "double you",
+  X: "ex",
+  Y: "why",
+  Z: "zed"
+};
+
 const polishAliases: Record<string, string[]> = {
   A: ["a"],
   Ą: ["ą", "a z ogonkiem"],
@@ -64,21 +93,61 @@ const polishAliases: Record<string, string[]> = {
   Ż: ["ż", "żet"]
 };
 
+const polishSpeechNames: Record<string, string> = {
+  A: "a",
+  Ą: "ą",
+  B: "be",
+  C: "ce",
+  Ć: "cie",
+  D: "de",
+  E: "e",
+  Ę: "ę",
+  F: "ef",
+  G: "gie",
+  H: "ha",
+  I: "i",
+  J: "jot",
+  K: "ka",
+  L: "el",
+  Ł: "eł",
+  M: "em",
+  N: "en",
+  Ń: "eń",
+  O: "o",
+  Ó: "ó",
+  P: "pe",
+  R: "er",
+  S: "es",
+  Ś: "eś",
+  T: "te",
+  U: "u",
+  W: "wu",
+  Y: "igrek",
+  Z: "zet",
+  Ź: "ziet",
+  Ż: "żet"
+};
+
 const englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const polishAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ".split("");
 
-function makeLetters(language: LanguageCode, alphabet: string[], aliases: Record<string, string[]>): LetterItem[] {
+function makeLetters(
+  language: LanguageCode,
+  alphabet: string[],
+  aliases: Record<string, string[]>,
+  speechNames: Record<string, string>
+): LetterItem[] {
   return alphabet.map((letter) => ({
     display: letter,
-    speechText: letter,
+    speechText: speechNames[letter] ?? letter.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US"),
     aliases: [letter.toLowerCase(), ...(aliases[letter] ?? [])],
     language
   }));
 }
 
 export const lettersByLanguage: Record<LanguageCode, LetterItem[]> = {
-  en: makeLetters("en", englishAlphabet, englishNames),
-  pl: makeLetters("pl", polishAlphabet, polishAliases)
+  en: makeLetters("en", englishAlphabet, englishNames, englishSpeechNames),
+  pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames)
 };
 
 export const languageNames: Record<LanguageCode, string> = {

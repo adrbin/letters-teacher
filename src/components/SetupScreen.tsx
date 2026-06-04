@@ -1,11 +1,12 @@
 import { languageNames } from "../data/letters";
+import { getCopy } from "../i18n";
 import type { GameMode, LanguageCode, SessionSettings } from "../types";
 
-const gameOptions: Array<{ mode: GameMode; title: string; accent: string }> = [
-  { mode: "hear-pick", title: "Hear letter, pick card", accent: "bg-orange-500" },
-  { mode: "hear-write", title: "Hear letter, write it", accent: "bg-sky-500" },
-  { mode: "see-pick-sound", title: "See letter, pick sound", accent: "bg-emerald-500" },
-  { mode: "see-say", title: "See letter, say it", accent: "bg-fuchsia-500" }
+const gameOptions: Array<{ mode: GameMode; accent: string }> = [
+  { mode: "hear-pick", accent: "bg-orange-500" },
+  { mode: "hear-write", accent: "bg-sky-500" },
+  { mode: "see-pick-sound", accent: "bg-emerald-500" },
+  { mode: "see-say", accent: "bg-fuchsia-500" }
 ];
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
+  const copy = getCopy(settings.language);
   const setValue = <Key extends keyof SessionSettings>(key: Key, value: SessionSettings[Key]) => {
     onSettingsChange({ ...settings, [key]: value });
   };
@@ -24,11 +26,11 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
       <section className="w-full max-w-5xl rounded-[2rem] bg-white/90 p-5 shadow-soft ring-1 ring-slate-200 sm:p-8">
         <div className="grid gap-7 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-wide text-orange-600">Letters Teacher</p>
-            <h1 className="mt-2 text-4xl font-black leading-tight text-slate-950 sm:text-6xl">Play with letters</h1>
+            <p className="text-sm font-black uppercase tracking-wide text-orange-600">{copy.appName}</p>
+            <h1 className="mt-2 text-4xl font-black leading-tight text-slate-950 sm:text-6xl">{copy.headline}</h1>
             <div className="mt-6 grid gap-4">
               <label className="grid gap-2 text-lg font-black text-slate-800">
-                Language
+                {copy.language}
                 <select
                   className="min-h-14 rounded-2xl border-2 border-slate-200 bg-white px-4 text-xl"
                   value={settings.language}
@@ -39,12 +41,12 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
                 </select>
               </label>
               <label className="grid gap-2 text-lg font-black text-slate-800">
-                Questions
+                {copy.questions}
                 <div className="flex items-center gap-3">
                   <button
                     className="control-button w-16 bg-slate-900 text-2xl text-white"
                     type="button"
-                    aria-label="Decrease question count"
+                    aria-label={copy.decreaseQuestionCount}
                     onClick={() => setValue("questionCount", Math.max(3, settings.questionCount - 1))}
                   >
                     -
@@ -62,7 +64,7 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
                   <button
                     className="control-button w-16 bg-slate-900 text-2xl text-white"
                     type="button"
-                    aria-label="Increase question count"
+                    aria-label={copy.increaseQuestionCount}
                     onClick={() => setValue("questionCount", Math.min(30, settings.questionCount + 1))}
                   >
                     +
@@ -73,10 +75,11 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
           </div>
 
           <div>
-            <h2 className="text-2xl font-black text-slate-950">Choose a game</h2>
+            <h2 className="text-2xl font-black text-slate-950">{copy.chooseGame}</h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {gameOptions.map((game) => {
                 const active = settings.gameMode === game.mode;
+                const title = copy.gameTitles[game.mode];
                 return (
                   <button
                     key={game.mode}
@@ -88,7 +91,7 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
                     onClick={() => setValue("gameMode", game.mode)}
                   >
                     <span className={`mb-4 block h-3 w-16 rounded-full ${game.accent}`} />
-                    <span className="block text-xl font-black text-slate-950">{game.title}</span>
+                    <span className="block text-xl font-black text-slate-950">{title}</span>
                   </button>
                 );
               })}
@@ -98,7 +101,7 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
               type="button"
               onClick={onStart}
             >
-              Start
+              {copy.start}
             </button>
           </div>
         </div>

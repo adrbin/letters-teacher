@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { SetupScreen } from "./components/SetupScreen";
+import { speechLocales } from "./data/letters";
 import { createSession, summarizeSession, type SessionState } from "./game/session";
 import type { SessionSettings } from "./types";
 
@@ -16,6 +17,11 @@ export default function App() {
   const [session, setSession] = useState<SessionState | null>(null);
 
   const summary = useMemo(() => (session?.completed ? summarizeSession(session) : null), [session]);
+  const activeLanguage = session?.settings.language ?? settings.language;
+
+  useEffect(() => {
+    document.documentElement.lang = speechLocales[activeLanguage];
+  }, [activeLanguage]);
 
   if (summary && session) {
     return (

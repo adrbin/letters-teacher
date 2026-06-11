@@ -123,7 +123,15 @@ describe("stamps", () => {
 
     expect(loadStamps()).toEqual([
       expect.objectContaining({ kind: "character", characterSet: "letters", language: "en", character: "A" }),
-      expect.objectContaining({ kind: "character", characterSet: "digits", language: "en", character: "1" })
+      expect.objectContaining({
+        kind: "character",
+        characterSet: "digits",
+        language: "en",
+        character: "1",
+        word: "one flower",
+        imageId: "count-flower",
+        alt: "one flower"
+      })
     ]);
   });
 

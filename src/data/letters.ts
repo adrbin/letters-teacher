@@ -248,6 +248,32 @@ const polishDigitSpeechNames: Record<string, string> = {
   "9": "dziewięć"
 };
 
+const englishDigitExamples: Record<string, { word: string; imageId: string; alt: string }> = {
+  "0": { word: "empty basket", imageId: "count-empty", alt: "empty basket" },
+  "1": { word: "one flower", imageId: "count-flower", alt: "one flower" },
+  "2": { word: "two butterflies", imageId: "count-butterfly", alt: "two butterflies" },
+  "3": { word: "three leaves", imageId: "count-leaf", alt: "three leaves" },
+  "4": { word: "four stars", imageId: "count-star", alt: "four stars" },
+  "5": { word: "five flowers", imageId: "count-flower", alt: "five flowers" },
+  "6": { word: "six butterflies", imageId: "count-butterfly", alt: "six butterflies" },
+  "7": { word: "seven leaves", imageId: "count-leaf", alt: "seven leaves" },
+  "8": { word: "eight stars", imageId: "count-star", alt: "eight stars" },
+  "9": { word: "nine flowers", imageId: "count-flower", alt: "nine flowers" }
+};
+
+const polishDigitExamples: Record<string, { word: string; imageId: string; alt: string }> = {
+  "0": { word: "pusty koszyk", imageId: "count-empty", alt: "pusty koszyk" },
+  "1": { word: "jeden kwiatek", imageId: "count-flower", alt: "jeden kwiatek" },
+  "2": { word: "dwa motyle", imageId: "count-butterfly", alt: "dwa motyle" },
+  "3": { word: "trzy listki", imageId: "count-leaf", alt: "trzy listki" },
+  "4": { word: "cztery gwiazdki", imageId: "count-star", alt: "cztery gwiazdki" },
+  "5": { word: "pięć kwiatków", imageId: "count-flower", alt: "piec kwiatkow" },
+  "6": { word: "sześć motyli", imageId: "count-butterfly", alt: "szesc motyli" },
+  "7": { word: "siedem listków", imageId: "count-leaf", alt: "siedem listkow" },
+  "8": { word: "osiem gwiazdek", imageId: "count-star", alt: "osiem gwiazdek" },
+  "9": { word: "dziewięć kwiatków", imageId: "count-flower", alt: "dziewiec kwiatkow" }
+};
+
 function makeLetters(
   language: LanguageCode,
   alphabet: string[],
@@ -268,14 +294,16 @@ function makeLetters(
 function makeDigits(
   language: LanguageCode,
   aliases: Record<string, string[]>,
-  speechNames: Record<string, string>
+  speechNames: Record<string, string>,
+  examples: Record<string, { word: string; imageId: string; alt: string }>
 ): LetterItem[] {
   return digits.map((digit) => ({
     display: digit,
     speechText: speechNames[digit] ?? digit,
     aliases: [digit, ...(aliases[digit] ?? [])],
     language,
-    characterSet: "digits"
+    characterSet: "digits",
+    example: examples[digit]
   }));
 }
 
@@ -285,13 +313,15 @@ export const lettersByLanguage: Record<LanguageCode, LetterItem[]> = {
 };
 
 export const digitsByLanguage: Record<LanguageCode, LetterItem[]> = {
-  en: makeDigits("en", englishDigitNames, englishDigitSpeechNames),
-  pl: makeDigits("pl", polishDigitNames, polishDigitSpeechNames)
+  en: makeDigits("en", englishDigitNames, englishDigitSpeechNames, englishDigitExamples),
+  pl: makeDigits("pl", polishDigitNames, polishDigitSpeechNames, polishDigitExamples)
 };
 
 export const letterImageIds = new Set([
   ...Object.values(englishExamples).map((example) => example.imageId),
-  ...Object.values(polishExamples).map((example) => example.imageId)
+  ...Object.values(polishExamples).map((example) => example.imageId),
+  ...Object.values(englishDigitExamples).map((example) => example.imageId),
+  ...Object.values(polishDigitExamples).map((example) => example.imageId)
 ]);
 
 export const languageNames: Record<LanguageCode, string> = {

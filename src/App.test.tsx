@@ -265,6 +265,7 @@ describe("App", () => {
     await user.click(screen.getByRole("tab", { name: /cyfry/i }));
 
     expect(screen.getByLabelText(/cyfra 4 stempel/i)).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /cztery gwiazdki/i })).toBeInTheDocument();
   });
 
   it("awards a new stamp on the results screen", async () => {

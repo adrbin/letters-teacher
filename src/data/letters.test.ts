@@ -49,6 +49,16 @@ describe("letters", () => {
     expect(getCharacters("pl", "digits").find((digit) => digit.display === "4")?.speechText).toBe("cztery");
   });
 
+  it("includes accessible example image metadata for every supported digit", () => {
+    for (const language of ["en", "pl"] as const) {
+      for (const digit of getCharacters(language, "digits")) {
+        expect(digit.example?.word).toBeTruthy();
+        expect(digit.example?.alt).toBeTruthy();
+        expect(letterImageIds.has(digit.example!.imageId)).toBe(true);
+      }
+    }
+  });
+
   it("matches spoken digit transcripts", () => {
     const englishSeven = getCharacters("en", "digits").find((digit) => digit.display === "7")!;
     const polishZero = getCharacters("pl", "digits").find((digit) => digit.display === "0")!;

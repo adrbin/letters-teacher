@@ -1,4 +1,5 @@
 import { getCopy } from "../i18n";
+import { getCharacters } from "../data/letters";
 import type { EarnedStamp, LanguageCode, LetterItem } from "../types";
 import { LetterImage } from "./LetterImage";
 
@@ -26,20 +27,22 @@ function StampBadge({
     );
   }
 
+  const currentItem = getCharacters(language, stamp.characterSet).find((item) => item.display === stamp.character);
+  const example =
+    stamp.word && stamp.imageId && stamp.alt
+      ? {
+          word: stamp.word,
+          imageId: stamp.imageId,
+          alt: stamp.alt
+        }
+      : currentItem?.example;
   const letter: LetterItem = {
     display: stamp.character,
     speechText: stamp.character,
     aliases: [stamp.character.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")],
     language,
     characterSet: stamp.characterSet,
-    example:
-      stamp.word && stamp.imageId && stamp.alt
-        ? {
-            word: stamp.word,
-            imageId: stamp.imageId,
-            alt: stamp.alt
-          }
-        : undefined
+    example
   };
 
   return (

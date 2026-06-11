@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { getLetters } from "./data/letters";
 import { generateQuestions } from "./game/questionGenerator";
 import { saveStamp } from "./game/stamps";
 
@@ -185,13 +186,20 @@ describe("App", () => {
   it("shows previously earned stamps on setup", () => {
     saveStamp(
       { language: "pl", gameMode: "hear-pick" },
-      { totalScore: 95, maxScore: 100, accuracy: 95, strongLetters: [], practiceLetters: [], results: [] },
+      {
+        totalScore: 95,
+        maxScore: 100,
+        accuracy: 95,
+        strongLetters: [],
+        practiceLetters: [],
+        results: [{ letter: "A", attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+      },
       "2026-06-10T10:00:00.000Z"
     );
 
     render(<App />);
 
-    expect(screen.getByLabelText(/złoty stempel/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/a jak auto stempel/i)).toBeInTheDocument();
   });
 
   it("awards a new stamp on the results screen", async () => {
@@ -209,7 +217,42 @@ describe("App", () => {
     }
 
     expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
-    expect(screen.getAllByLabelText(/złoty stempel/i)).toHaveLength(2);
+    expect(screen.getAllByLabelText(new RegExp(`${questions[0].target.display} jak ${questions[0].target.example!.word} stempel`, "i"))).toHaveLength(2);
+  });
+
+  it("shows a completed alphabet stamp when the last missing letter is earned", async () => {
+    const user = userEvent.setup();
+    const questions = generateQuestions("pl", 3, "session-1000-0.00289");
+    const missingLetter = questions[0].target.display;
+
+    for (const letter of getLetters("pl").map((item) => item.display).filter((letter) => letter !== missingLetter)) {
+      saveStamp(
+        { language: "pl", gameMode: "hear-pick" },
+        {
+          totalScore: 95,
+          maxScore: 100,
+          accuracy: 95,
+          strongLetters: [],
+          practiceLetters: [],
+          results: [{ letter, attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+        },
+        "2026-06-10T10:00:00.000Z"
+      );
+    }
+
+    render(<App />);
+
+    for (let count = 0; count < 7; count += 1) {
+      await user.click(screen.getByRole("button", { name: /zmniejsz liczbę pytań/i }));
+    }
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    for (const question of questions) {
+      await user.click(screen.getByRole("button", { name: `Wybierz ${question.target.display}` }));
+    }
+
+    expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/ukończony alfabet stempel x1/i)).toHaveLength(2);
   });
 
   it("clamps English quizzes to the available letter count", async () => {

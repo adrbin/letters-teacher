@@ -50,14 +50,25 @@ export type SessionSummary = {
   results: LetterResult[];
 };
 
-export type StampTier = "bronze" | "silver" | "gold";
-
-export type EarnedStamp = {
+export type LetterStamp = {
+  kind: "letter";
   id: string;
   language: LanguageCode;
-  gameMode: GameMode;
-  tier: StampTier;
+  letter: string;
+  word: string;
+  imageId: string;
+  alt: string;
   earnedAt: string;
   score: number;
   maxScore: number;
 };
+
+export type AlphabetCompleteStamp = {
+  kind: "alphabet-complete";
+  id: string;
+  language: LanguageCode;
+  completedCount: number;
+  earnedAt: string;
+};
+
+export type EarnedStamp = LetterStamp | AlphabetCompleteStamp;

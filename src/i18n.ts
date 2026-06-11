@@ -1,4 +1,4 @@
-import type { GameMode, LanguageCode, StampTier } from "./types";
+import type { GameMode, LanguageCode } from "./types";
 
 type Copy = {
   appName: string;
@@ -40,7 +40,9 @@ type Copy = {
   chooseLetter: (letter: string) => string;
   playSound: (number: number) => string;
   letterExample: (letter: string, word: string) => string;
-  stampTier: (tier: StampTier) => string;
+  stampLetterLabel: (letter: string, word: string) => string;
+  alphabetCompleteLabel: (count: number) => string;
+  alphabetCompleteTitle: string;
   gameTitles: Record<GameMode, string>;
   feedback: Record<string, string>;
 };
@@ -86,7 +88,9 @@ const copies: Record<LanguageCode, Copy> = {
     chooseLetter: (letter) => `Choose ${letter}`,
     playSound: (number) => `Play sound ${number}`,
     letterExample: (letter, word) => `${letter} as in ${word}`,
-    stampTier: (tier) => ({ bronze: "Bronze", silver: "Silver", gold: "Gold" })[tier],
+    stampLetterLabel: (letter, word) => `${letter} as in ${word}`,
+    alphabetCompleteLabel: (count) => `Completed alphabet stamp x${count}`,
+    alphabetCompleteTitle: "Alphabet complete",
     gameTitles: {
       "hear-pick": "Hear letter, pick card",
       "hear-write": "Hear letter, write it",
@@ -140,7 +144,9 @@ const copies: Record<LanguageCode, Copy> = {
     chooseLetter: (letter) => `Wybierz ${letter}`,
     playSound: (number) => `Odtwórz dźwięk ${number}`,
     letterExample: (letter, word) => `${letter} jak ${word}`,
-    stampTier: (tier) => ({ bronze: "Brązowy", silver: "Srebrny", gold: "Złoty" })[tier],
+    stampLetterLabel: (letter, word) => `${letter} jak ${word}`,
+    alphabetCompleteLabel: (count) => `Ukończony alfabet stempel x${count}`,
+    alphabetCompleteTitle: "Ukończony alfabet",
     gameTitles: {
       "hear-pick": "Usłysz literę, wybierz kartę",
       "hear-write": "Usłysz literę, napisz ją",

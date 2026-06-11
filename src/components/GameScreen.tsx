@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getLetters, matchesLetterTranscript } from "../data/letters";
 import { answerQuestion, remainingPoints, type SessionState } from "../game/session";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
+import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
 import { getCopy, translateFeedback } from "../i18n";
-import type { LetterItem } from "../types";
+import type { AttemptResult, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
+import { LetterImage } from "./LetterImage";
 
 type Props = {
   session: SessionState;
@@ -20,15 +22,27 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
   const { speak, supported: speechSupported, error: speechError } = useSpeechSynthesis();
+  const playFeedbackSound = useFeedbackSound();
+  const feedbackSequence = useRef(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [heardTranscript, setHeardTranscript] = useState("");
+  const [answerFeedback, setAnswerFeedback] = useState<{
+    result: AttemptResult;
+    target: LetterItem;
+    sourceKey: string;
+    feedbackKey: number;
+  } | null>(null);
 
   const submitAnswer = useCallback(
-    (answer: string) => {
+    (answer: string, sourceKey = answer || "try-again") => {
+      const answeredTarget = session.questions[session.currentIndex].target;
       const next = answerQuestion(session, answer);
+      feedbackSequence.current += 1;
+      setAnswerFeedback({ result: next.result, target: answeredTarget, sourceKey, feedbackKey: feedbackSequence.current });
+      playFeedbackSound(next.result.correct ? "correct" : "incorrect");
       onSessionChange(next.state);
     },
-    [onSessionChange, session]
+    [onSessionChange, playFeedbackSound, session]
   );
 
   const recognition = useSpeechRecognition(
@@ -36,7 +50,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
     useCallback(
       (transcript: string) => {
         setHeardTranscript(transcript);
-        submitAnswer(matchesLetterTranscript(question.target, transcript) ? question.target.display : "");
+        submitAnswer(matchesLetterTranscript(question.target, transcript) ? question.target.display : "", "speech");
       },
       [question.target, submitAnswer]
     )
@@ -58,10 +72,18 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
   const progressLabel = `${session.currentIndex + 1} / ${session.questions.length}`;
   const availablePoints = remainingPoints(session.wrongAttempts.length);
   const status = translateFeedback(session.settings.language, session.lastFeedback) || speechError || copy.ready;
+  const feedbackTone = answerFeedback?.result.correct ? "answer-correct" : answerFeedback ? "answer-incorrect" : "";
 
   return (
     <main className="page-shell min-h-screen p-4 sm:p-6">
-      <section className="mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-5xl flex-col rounded-[2rem] bg-white/92 p-4 shadow-soft ring-1 ring-slate-200 sm:min-h-[calc(100vh-3rem)] sm:p-6">
+      <section className="relative mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] bg-white/92 p-4 shadow-soft ring-1 ring-slate-200 sm:min-h-[calc(100vh-3rem)] sm:p-6">
+        {answerFeedback?.result.correct && (
+          <div
+            key={`burst-${answerFeedback.feedbackKey}`}
+            className="celebration-burst pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          />
+        )}
         <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <button className="control-button bg-slate-100 px-4 text-slate-900" type="button" onClick={onExit}>
@@ -70,7 +92,10 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
             <p className="rounded-full bg-blue-100 px-4 py-2 text-lg font-black text-blue-900">{progressLabel}</p>
           </div>
           <div className="flex items-center gap-3">
-            <p className="rounded-full bg-emerald-100 px-4 py-2 text-lg font-black text-emerald-900">
+            <p
+              key={answerFeedback?.result.correct ? answerFeedback.feedbackKey : "score"}
+              className={`rounded-full bg-emerald-100 px-4 py-2 text-lg font-black text-emerald-900 ${answerFeedback?.result.correct ? "score-pop" : ""}`}
+            >
               {copy.score} {session.score}
             </p>
             <p className="rounded-full bg-amber-100 px-4 py-2 text-lg font-black text-amber-900">
@@ -88,7 +113,8 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               wrongAttempts={session.wrongAttempts}
               speechSupported={speechSupported}
               onSpeak={speak}
-              onAnswer={submitAnswer}
+              onAnswer={(answer) => submitAnswer(answer, answer)}
+              answerFeedback={answerFeedback}
               copy={copy}
             />
           )}
@@ -100,8 +126,9 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               onStrokesChange={setStrokes}
               speechSupported={speechSupported}
               onSpeak={speak}
-              onAnswer={submitAnswer}
+              onAnswer={(answer) => submitAnswer(answer, "check")}
               letters={getLetters(session.settings.language)}
+              answerFeedback={answerFeedback}
               copy={copy}
             />
           )}
@@ -112,7 +139,8 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               target={question.target}
               speechSupported={speechSupported}
               onSpeak={speak}
-              onAnswer={submitAnswer}
+              onAnswer={(answer) => submitAnswer(answer, answer)}
+              answerFeedback={answerFeedback}
               copy={copy}
             />
           )}
@@ -122,12 +150,24 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
           )}
         </div>
 
+        {answerFeedback?.result.correct && answerFeedback.target.example && (
+          <div
+            key={`example-${answerFeedback.feedbackKey}`}
+            className="answer-correct mx-auto mb-4 flex w-full max-w-xl items-center justify-center gap-4 rounded-3xl bg-emerald-100 p-3 text-center text-emerald-950"
+            role="status"
+          >
+            <LetterImage letter={answerFeedback.target} compact />
+            <p className="text-xl font-black">{copy.letterExample(answerFeedback.target.display, answerFeedback.target.example.word)}</p>
+          </div>
+        )}
+
         <div
+          key={answerFeedback ? `status-${answerFeedback.feedbackKey}` : "status"}
           className="min-h-16 rounded-3xl bg-slate-950 px-5 py-4 text-center text-xl font-black text-white"
           role="status"
           aria-live="polite"
         >
-          {status}
+          <span className={feedbackTone}>{status}</span>
         </div>
       </section>
     </main>
@@ -160,12 +200,14 @@ function HearPickGame({
   speechSupported,
   onSpeak,
   onAnswer,
+  answerFeedback,
   copy
 }: SpeechProps & {
   questionTarget: LetterItem;
   options: LetterItem[];
   wrongAttempts: string[];
   onAnswer: (answer: string) => void;
+  answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
 }) {
   return (
@@ -175,12 +217,13 @@ function HearPickGame({
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option) => {
           const missed = wrongAttempts.includes(option.display);
+          const pulsing = answerFeedback?.sourceKey === option.display;
           return (
             <button
               key={option.display}
               className={`control-button min-h-28 border-4 text-5xl ${
                 missed ? "border-rose-500 bg-rose-100 text-rose-950" : "border-slate-200 bg-white text-slate-950 shadow-sm"
-              }`}
+              } ${pulsing ? (answerFeedback?.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
               type="button"
               aria-label={copy.chooseLetter(option.display)}
               onClick={() => onAnswer(option.display)}
@@ -203,6 +246,7 @@ function HearWriteGame({
   onSpeak,
   onAnswer,
   letters,
+  answerFeedback,
   copy
 }: SpeechProps & {
   target: LetterItem;
@@ -210,6 +254,7 @@ function HearWriteGame({
   onStrokesChange: (strokes: Stroke[]) => void;
   onAnswer: (answer: string) => void;
   letters: LetterItem[];
+  answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
 }) {
   const recognized = useMemo(
@@ -232,7 +277,9 @@ function HearWriteGame({
           {copy.clear}
         </button>
         <button
-          className="control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200"
+          className={`control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200 ${
+            answerFeedback?.sourceKey === "check" ? (answerFeedback.result.correct ? "answer-correct" : "answer-incorrect") : ""
+          }`}
           type="button"
           data-recognized-letter={recognized.letter ?? ""}
           data-recognition-confidence={recognized.confidence.toFixed(3)}
@@ -252,6 +299,7 @@ function SeePickSoundGame({
   speechSupported,
   onSpeak,
   onAnswer,
+  answerFeedback,
   copy
 }: {
   options: LetterItem[];
@@ -259,6 +307,7 @@ function SeePickSoundGame({
   speechSupported: boolean;
   onSpeak: (letter: LetterItem) => boolean;
   onAnswer: (answer: string) => void;
+  answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
 }) {
   const [previewedLetter, setPreviewedLetter] = useState<LetterItem | null>(null);
@@ -269,7 +318,10 @@ function SeePickSoundGame({
 
   return (
     <div className="grid gap-7 text-center">
-      <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+      <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
+        <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+        <LetterImage letter={target} compact />
+      </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.pickMatchingSound}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option, index) => (
@@ -279,7 +331,7 @@ function SeePickSoundGame({
               previewedLetter?.display === option.display
                 ? "border-emerald-500 bg-emerald-100 text-emerald-950"
                 : "border-slate-200 bg-white text-slate-950"
-            }`}
+            } ${answerFeedback?.sourceKey === option.display ? (answerFeedback.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
             type="button"
             aria-label={copy.playSound(index + 1)}
             disabled={!speechSupported}
@@ -319,7 +371,10 @@ function SeeSayGame({
 }) {
   return (
     <div className="grid gap-7 text-center">
-      <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+      <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
+        <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+        <LetterImage letter={target} compact />
+      </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.sayThisLetter}</h1>
       {recognition.supported ? (
         <>

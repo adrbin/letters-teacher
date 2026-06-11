@@ -1,6 +1,7 @@
 import { getLetters, languageNames } from "../data/letters";
 import { getCopy } from "../i18n";
-import type { GameMode, LanguageCode, SessionSettings } from "../types";
+import type { EarnedStamp, GameMode, LanguageCode, SessionSettings } from "../types";
+import { StampCollection } from "./StampBadge";
 
 const MIN_QUESTION_COUNT = 3;
 const MAX_QUESTION_COUNT = 30;
@@ -14,6 +15,7 @@ const gameOptions: Array<{ mode: GameMode; accent: string }> = [
 
 type Props = {
   settings: SessionSettings;
+  stamps: EarnedStamp[];
   onSettingsChange: (settings: SessionSettings) => void;
   onStart: () => void;
 };
@@ -26,7 +28,7 @@ function clampQuestionCount(language: LanguageCode, questionCount: number): numb
   return Math.min(getMaxQuestionCount(language), Math.max(MIN_QUESTION_COUNT, questionCount || 10));
 }
 
-export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
+export function SetupScreen({ settings, stamps, onSettingsChange, onStart }: Props) {
   const copy = getCopy(settings.language);
   const maxQuestionCount = getMaxQuestionCount(settings.language);
   const setValue = <Key extends keyof SessionSettings>(key: Key, value: SessionSettings[Key]) => {
@@ -124,6 +126,9 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
             >
               {copy.start}
             </button>
+            <div className="mt-4">
+              <StampCollection stamps={stamps} language={settings.language} />
+            </div>
           </div>
         </div>
       </section>

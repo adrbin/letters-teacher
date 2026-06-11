@@ -7,6 +7,11 @@ export type LetterItem = {
   speechText: string;
   aliases: string[];
   language: LanguageCode;
+  example?: {
+    word: string;
+    imageId: string;
+    alt: string;
+  };
 };
 
 export type SessionSettings = {
@@ -43,4 +48,16 @@ export type SessionSummary = {
   strongLetters: string[];
   practiceLetters: string[];
   results: LetterResult[];
+};
+
+export type StampTier = "bronze" | "silver" | "gold";
+
+export type EarnedStamp = {
+  id: string;
+  language: LanguageCode;
+  gameMode: GameMode;
+  tier: StampTier;
+  earnedAt: string;
+  score: number;
+  maxScore: number;
 };

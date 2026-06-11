@@ -1,15 +1,18 @@
 import { languageNames } from "../data/letters";
 import { getCopy } from "../i18n";
-import type { SessionSettings, SessionSummary } from "../types";
+import type { EarnedStamp, SessionSettings, SessionSummary } from "../types";
+import { StampBadge, StampCollection } from "./StampBadge";
 
 type Props = {
   settings: SessionSettings;
   summary: SessionSummary;
+  stamps: EarnedStamp[];
+  newStamp: EarnedStamp | null;
   onPlayAgain: () => void;
   onChooseGame: () => void;
 };
 
-export function ResultsScreen({ settings, summary, onPlayAgain, onChooseGame }: Props) {
+export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain, onChooseGame }: Props) {
   const copy = getCopy(settings.language);
 
   return (
@@ -31,9 +34,20 @@ export function ResultsScreen({ settings, summary, onPlayAgain, onChooseGame }: 
           <p className="text-xl font-black">{summary.accuracy}%</p>
         </div>
 
+        {newStamp && (
+          <section className="mx-auto mt-7 grid max-w-sm justify-items-center gap-3 rounded-3xl bg-amber-50 p-5 text-amber-950 ring-2 ring-amber-200">
+            <h2 className="text-2xl font-black">{copy.newStamp}</h2>
+            <StampBadge stamp={newStamp} language={settings.language} isNew />
+          </section>
+        )}
+
         <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
           <LetterList title={copy.strongLetters} letters={summary.strongLetters} tone="emerald" />
           <LetterList title={copy.practiceAgain} letters={summary.practiceLetters} tone="amber" />
+        </div>
+
+        <div className="mt-7 text-left">
+          <StampCollection stamps={stamps} language={settings.language} />
         </div>
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">

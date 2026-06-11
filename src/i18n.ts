@@ -1,4 +1,4 @@
-import type { GameMode, LanguageCode } from "./types";
+import type { GameMode, LanguageCode, StampTier } from "./types";
 
 type Copy = {
   appName: string;
@@ -31,10 +31,16 @@ type Copy = {
   strongLetters: string;
   practiceAgain: string;
   playAgain: string;
+  stamp: string;
+  stampCollection: string;
+  newStamp: string;
+  noStampsYet: string;
   decreaseQuestionCount: string;
   increaseQuestionCount: string;
   chooseLetter: (letter: string) => string;
   playSound: (number: number) => string;
+  letterExample: (letter: string, word: string) => string;
+  stampTier: (tier: StampTier) => string;
   gameTitles: Record<GameMode, string>;
   feedback: Record<string, string>;
 };
@@ -71,10 +77,16 @@ const copies: Record<LanguageCode, Copy> = {
     strongLetters: "Strong letters",
     practiceAgain: "Practice again",
     playAgain: "Play again",
+    stamp: "stamp",
+    stampCollection: "Stamp collection",
+    newStamp: "New stamp!",
+    noStampsYet: "Win a game to collect stamps.",
     decreaseQuestionCount: "Decrease question count",
     increaseQuestionCount: "Increase question count",
     chooseLetter: (letter) => `Choose ${letter}`,
     playSound: (number) => `Play sound ${number}`,
+    letterExample: (letter, word) => `${letter} as in ${word}`,
+    stampTier: (tier) => ({ bronze: "Bronze", silver: "Silver", gold: "Gold" })[tier],
     gameTitles: {
       "hear-pick": "Hear letter, pick card",
       "hear-write": "Hear letter, write it",
@@ -119,10 +131,16 @@ const copies: Record<LanguageCode, Copy> = {
     strongLetters: "Mocne litery",
     practiceAgain: "Poćwicz ponownie",
     playAgain: "Zagraj ponownie",
+    stamp: "stempel",
+    stampCollection: "Kolekcja stempli",
+    newStamp: "Nowy stempel!",
+    noStampsYet: "Wygraj grę, aby zdobyć stemple.",
     decreaseQuestionCount: "Zmniejsz liczbę pytań",
     increaseQuestionCount: "Zwiększ liczbę pytań",
     chooseLetter: (letter) => `Wybierz ${letter}`,
     playSound: (number) => `Odtwórz dźwięk ${number}`,
+    letterExample: (letter, word) => `${letter} jak ${word}`,
+    stampTier: (tier) => ({ bronze: "Brązowy", silver: "Srebrny", gold: "Złoty" })[tier],
     gameTitles: {
       "hear-pick": "Usłysz literę, wybierz kartę",
       "hear-write": "Usłysz literę, napisz ją",

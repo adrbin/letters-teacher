@@ -1,5 +1,31 @@
 import "@testing-library/jest-dom/vitest";
 
+function createMemoryStorage(): Storage {
+  let store: Record<string, string> = {};
+
+  return {
+    get length() {
+      return Object.keys(store).length;
+    },
+    clear: () => {
+      store = {};
+    },
+    getItem: (key: string) => store[key] ?? null,
+    key: (index: number) => Object.keys(store)[index] ?? null,
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    }
+  };
+}
+
+Object.defineProperty(window, "localStorage", {
+  configurable: true,
+  value: createMemoryStorage()
+});
+
 Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
   configurable: true,
   value: () => ({

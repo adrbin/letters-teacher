@@ -2,6 +2,8 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { generateQuestions } from "./game/questionGenerator";
+import { saveStamp } from "./game/stamps";
 
 const cancelSpeechMock = vi.fn();
 const getVoicesMock = vi.fn(() => [
@@ -96,6 +98,7 @@ describe("App", () => {
     cancelSpeechMock.mockClear();
     getVoicesMock.mockClear();
     speakMock.mockClear();
+    window.localStorage.clear();
     WorkingSpeechRecognition.instances = [];
     vi.spyOn(Date, "now").mockReturnValue(1000);
     vi.spyOn(Math, "random").mockReturnValue(0.00289);
@@ -130,6 +133,19 @@ describe("App", () => {
     expect(progress).toBeInTheDocument();
   });
 
+  it("shows success feedback with a letter image after a correct card", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("pl", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+    await user.click(screen.getByRole("button", { name: `Wybierz ${target.display}` }));
+
+    expect(screen.getByText("2 / 10")).toBeInTheDocument();
+    expect(screen.getByText(`${target.display} jak ${target.example!.word}`)).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
+  });
+
   it("previews a sound before submitting it on the see letter screen", async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -144,6 +160,17 @@ describe("App", () => {
     expect(screen.getByRole("button", { name: /wybierz ten dźwięk/i })).toBeEnabled();
   });
 
+  it("shows letter images in see-letter games", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("pl", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /zobacz literę, wybierz dźwięk/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
+  });
+
   it("translates setup UI when the language changes", async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -153,6 +180,36 @@ describe("App", () => {
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
 
     expect(screen.getByRole("heading", { name: /play with letters/i })).toBeInTheDocument();
+  });
+
+  it("shows previously earned stamps on setup", () => {
+    saveStamp(
+      { language: "pl", gameMode: "hear-pick" },
+      { totalScore: 95, maxScore: 100, accuracy: 95, strongLetters: [], practiceLetters: [], results: [] },
+      "2026-06-10T10:00:00.000Z"
+    );
+
+    render(<App />);
+
+    expect(screen.getByLabelText(/złoty stempel/i)).toBeInTheDocument();
+  });
+
+  it("awards a new stamp on the results screen", async () => {
+    const user = userEvent.setup();
+    const questions = generateQuestions("pl", 3, "session-1000-0.00289");
+    render(<App />);
+
+    for (let count = 0; count < 7; count += 1) {
+      await user.click(screen.getByRole("button", { name: /zmniejsz liczbę pytań/i }));
+    }
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    for (const question of questions) {
+      await user.click(screen.getByRole("button", { name: `Wybierz ${question.target.display}` }));
+    }
+
+    expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/złoty stempel/i)).toHaveLength(2);
   });
 
   it("clamps English quizzes to the available letter count", async () => {

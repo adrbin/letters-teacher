@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getLetters, matchesLetterTranscript } from "./letters";
+import { getLetters, letterImageIds, matchesLetterTranscript } from "./letters";
 
 describe("letters", () => {
   it("matches aliases for spoken letters", () => {
@@ -29,5 +29,15 @@ describe("letters", () => {
     expect(englishA.speechText).toBe("ay");
     expect(polishB.display).toBe("B");
     expect(polishB.speechText).toBe("be");
+  });
+
+  it("includes accessible example image metadata for every supported letter", () => {
+    for (const language of ["en", "pl"] as const) {
+      for (const letter of getLetters(language)) {
+        expect(letter.example?.word).toBeTruthy();
+        expect(letter.example?.alt).toBeTruthy();
+        expect(letterImageIds.has(letter.example!.imageId)).toBe(true);
+      }
+    }
   });
 });

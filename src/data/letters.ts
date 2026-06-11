@@ -58,6 +58,35 @@ const englishSpeechNames: Record<string, string> = {
   Z: "zed"
 };
 
+const englishExamples: Record<string, { word: string; imageId: string; alt: string }> = {
+  A: { word: "apple", imageId: "fruit-red", alt: "red apple" },
+  B: { word: "ball", imageId: "ball", alt: "colorful ball" },
+  C: { word: "cat", imageId: "cat", alt: "smiling cat face" },
+  D: { word: "dog", imageId: "dog", alt: "happy dog face" },
+  E: { word: "egg", imageId: "egg", alt: "white egg" },
+  F: { word: "fish", imageId: "fish", alt: "orange fish" },
+  G: { word: "gift", imageId: "gift", alt: "wrapped gift" },
+  H: { word: "house", imageId: "house", alt: "small house" },
+  I: { word: "ice", imageId: "ice", alt: "ice pop" },
+  J: { word: "jam", imageId: "jar", alt: "jam jar" },
+  K: { word: "kite", imageId: "kite", alt: "bright kite" },
+  L: { word: "leaf", imageId: "leaf", alt: "green leaf" },
+  M: { word: "moon", imageId: "moon", alt: "crescent moon" },
+  N: { word: "nest", imageId: "nest", alt: "bird nest" },
+  O: { word: "orange", imageId: "orange", alt: "orange fruit" },
+  P: { word: "pencil", imageId: "pencil", alt: "yellow pencil" },
+  Q: { word: "queen", imageId: "crown", alt: "gold crown" },
+  R: { word: "rain", imageId: "rain", alt: "rain cloud" },
+  S: { word: "sun", imageId: "sun", alt: "bright sun" },
+  T: { word: "tree", imageId: "tree", alt: "green tree" },
+  U: { word: "umbrella", imageId: "umbrella", alt: "red umbrella" },
+  V: { word: "van", imageId: "vehicle", alt: "blue van" },
+  W: { word: "water", imageId: "water", alt: "water drop" },
+  X: { word: "x-ray", imageId: "xray", alt: "x-ray card" },
+  Y: { word: "yarn", imageId: "yarn", alt: "ball of yarn" },
+  Z: { word: "zip", imageId: "zip", alt: "zipper" }
+};
+
 const polishAliases: Record<string, string[]> = {
   A: ["a"],
   Ą: ["ą", "a z ogonkiem", "on", "om"],
@@ -128,6 +157,41 @@ const polishSpeechNames: Record<string, string> = {
   Ż: "żet"
 };
 
+const polishExamples: Record<string, { word: string; imageId: string; alt: string }> = {
+  A: { word: "auto", imageId: "vehicle", alt: "niebieskie auto" },
+  Ą: { word: "ząb", imageId: "tooth", alt: "bialy zab" },
+  B: { word: "balon", imageId: "balloon", alt: "kolorowy balon" },
+  C: { word: "cytryna", imageId: "lemon", alt: "zolta cytryna" },
+  Ć: { word: "ćma", imageId: "moth", alt: "kolorowa cma" },
+  D: { word: "dom", imageId: "house", alt: "maly dom" },
+  E: { word: "ekran", imageId: "screen", alt: "ekran tabletu" },
+  Ę: { word: "gęś", imageId: "goose", alt: "biala ges" },
+  F: { word: "foka", imageId: "seal", alt: "szara foka" },
+  G: { word: "gitara", imageId: "guitar", alt: "czerwona gitara" },
+  H: { word: "hamak", imageId: "hammock", alt: "kolorowy hamak" },
+  I: { word: "igla", imageId: "needle", alt: "igla z nitka" },
+  J: { word: "jabłko", imageId: "fruit-red", alt: "czerwone jablko" },
+  K: { word: "kot", imageId: "cat", alt: "usmiechniety kot" },
+  L: { word: "lalka", imageId: "doll", alt: "lalka" },
+  Ł: { word: "łódka", imageId: "boat", alt: "mala lodka" },
+  M: { word: "motyl", imageId: "butterfly", alt: "kolorowy motyl" },
+  N: { word: "nos", imageId: "nose", alt: "nos" },
+  Ń: { word: "koń", imageId: "horse", alt: "brazowy kon" },
+  O: { word: "oko", imageId: "eye", alt: "oko" },
+  Ó: { word: "góra", imageId: "mountain", alt: "zielona gora" },
+  P: { word: "pies", imageId: "dog", alt: "wesoly pies" },
+  R: { word: "rak", imageId: "crab", alt: "czerwony rak" },
+  S: { word: "słońce", imageId: "sun", alt: "jasne slonce" },
+  Ś: { word: "ślimak", imageId: "snail", alt: "slimak" },
+  T: { word: "tort", imageId: "cake", alt: "urodzinowy tort" },
+  U: { word: "ul", imageId: "hive", alt: "ul" },
+  W: { word: "woda", imageId: "water", alt: "kropla wody" },
+  Y: { word: "dym", imageId: "smoke", alt: "dym" },
+  Z: { word: "zamek", imageId: "castle", alt: "zamek" },
+  Ź: { word: "źrebak", imageId: "foal", alt: "zrebak" },
+  Ż: { word: "żaba", imageId: "frog", alt: "zielona zaba" }
+};
+
 const englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const polishAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ".split("");
 
@@ -135,20 +199,27 @@ function makeLetters(
   language: LanguageCode,
   alphabet: string[],
   aliases: Record<string, string[]>,
-  speechNames: Record<string, string>
+  speechNames: Record<string, string>,
+  examples: Record<string, { word: string; imageId: string; alt: string }>
 ): LetterItem[] {
   return alphabet.map((letter) => ({
     display: letter,
     speechText: speechNames[letter] ?? letter.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US"),
     aliases: [letter.toLowerCase(), ...(aliases[letter] ?? [])],
-    language
+    language,
+    example: examples[letter]
   }));
 }
 
 export const lettersByLanguage: Record<LanguageCode, LetterItem[]> = {
-  en: makeLetters("en", englishAlphabet, englishNames, englishSpeechNames),
-  pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames)
+  en: makeLetters("en", englishAlphabet, englishNames, englishSpeechNames, englishExamples),
+  pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames, polishExamples)
 };
+
+export const letterImageIds = new Set([
+  ...Object.values(englishExamples).map((example) => example.imageId),
+  ...Object.values(polishExamples).map((example) => example.imageId)
+]);
 
 export const languageNames: Record<LanguageCode, string> = {
   en: "English",

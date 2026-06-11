@@ -13,35 +13,39 @@ function StampBadge({
 }) {
   const copy = getCopy(language);
 
-  if (stamp.kind === "alphabet-complete") {
+  if (stamp.kind === "collection-complete") {
     return (
       <div
         className={`stamp-badge ${isNew ? "stamp-badge-new" : ""} grid min-h-32 min-w-32 place-items-center rounded-3xl bg-emerald-100 p-4 text-center font-black text-emerald-950 ring-4 ring-emerald-300`}
-        aria-label={copy.alphabetCompleteLabel(stamp.completedCount)}
+        aria-label={copy.collectionCompleteLabel[stamp.characterSet](stamp.completedCount)}
       >
-        <span className="text-4xl leading-none">ABC</span>
-        <span className="text-sm uppercase">{copy.alphabetCompleteTitle}</span>
+        <span className="text-4xl leading-none">{stamp.characterSet === "digits" ? "123" : "ABC"}</span>
+        <span className="text-sm uppercase">{copy.collectionCompleteTitle[stamp.characterSet]}</span>
         <span className="rounded-full bg-white/80 px-3 py-1 text-lg">x{stamp.completedCount}</span>
       </div>
     );
   }
 
   const letter: LetterItem = {
-    display: stamp.letter,
-    speechText: stamp.letter,
-    aliases: [stamp.letter.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")],
+    display: stamp.character,
+    speechText: stamp.character,
+    aliases: [stamp.character.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")],
     language,
-    example: {
-      word: stamp.word,
-      imageId: stamp.imageId,
-      alt: stamp.alt
-    }
+    characterSet: stamp.characterSet,
+    example:
+      stamp.word && stamp.imageId && stamp.alt
+        ? {
+            word: stamp.word,
+            imageId: stamp.imageId,
+            alt: stamp.alt
+          }
+        : undefined
   };
 
   return (
     <div
       className={`stamp-badge ${isNew ? "stamp-badge-new" : ""} rounded-3xl bg-white p-3 text-center font-black text-slate-950 shadow-sm ring-4 ring-amber-200`}
-      aria-label={`${copy.stampLetterLabel(stamp.letter, stamp.word)} ${copy.stamp}`}
+      aria-label={`${copy.stampCharacterLabel[stamp.characterSet](stamp.character, stamp.word)} ${copy.stamp}`}
     >
       <LetterImage letter={letter} compact />
     </div>
@@ -52,7 +56,7 @@ export function StampCollection({ stamps, language }: { stamps: EarnedStamp[]; l
   const copy = getCopy(language);
   const sortedStamps = [...stamps].sort((first, second) => {
     if (first.kind === second.kind) return first.id.localeCompare(second.id);
-    return first.kind === "alphabet-complete" ? -1 : 1;
+    return first.kind === "collection-complete" ? -1 : 1;
   });
 
   return (

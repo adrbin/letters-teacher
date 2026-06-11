@@ -23,7 +23,7 @@ function createRuntimeSeed(): string {
 export function createSession(settings: SessionSettings, seed?: string): SessionState {
   return {
     settings,
-    questions: generateQuestions(settings.language, settings.questionCount, seed ?? createRuntimeSeed()),
+    questions: generateQuestions(settings.language, settings.characterSet, settings.questionCount, seed ?? createRuntimeSeed()),
     currentIndex: 0,
     score: 0,
     results: [],

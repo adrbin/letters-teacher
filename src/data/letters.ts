@@ -1,4 +1,4 @@
-import type { LanguageCode, LetterItem } from "../types";
+import type { CharacterSet, LanguageCode, LetterItem } from "../types";
 
 const englishNames: Record<string, string[]> = {
   A: ["a", "ay", "hey"],
@@ -194,6 +194,59 @@ const polishExamples: Record<string, { word: string; imageId: string; alt: strin
 
 const englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const polishAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ".split("");
+const digits = "0123456789".split("");
+
+const englishDigitNames: Record<string, string[]> = {
+  "0": ["0", "zero", "oh"],
+  "1": ["1", "one", "won"],
+  "2": ["2", "two", "too", "to"],
+  "3": ["3", "three"],
+  "4": ["4", "four", "for"],
+  "5": ["5", "five"],
+  "6": ["6", "six"],
+  "7": ["7", "seven"],
+  "8": ["8", "eight", "ate"],
+  "9": ["9", "nine"]
+};
+
+const englishDigitSpeechNames: Record<string, string> = {
+  "0": "zero",
+  "1": "one",
+  "2": "two",
+  "3": "three",
+  "4": "four",
+  "5": "five",
+  "6": "six",
+  "7": "seven",
+  "8": "eight",
+  "9": "nine"
+};
+
+const polishDigitNames: Record<string, string[]> = {
+  "0": ["0", "zero"],
+  "1": ["1", "jeden", "jedynka"],
+  "2": ["2", "dwa", "dwójka", "dwojka"],
+  "3": ["3", "trzy", "trójka", "trojka"],
+  "4": ["4", "cztery", "czwórka", "czworka"],
+  "5": ["5", "pięć", "piec", "piątka", "piatka"],
+  "6": ["6", "sześć", "szesc", "szóstka", "szostka"],
+  "7": ["7", "siedem", "siódemka", "siodemka"],
+  "8": ["8", "osiem", "ósemka", "osemka"],
+  "9": ["9", "dziewięć", "dziewiec", "dziewiątka", "dziewiatka"]
+};
+
+const polishDigitSpeechNames: Record<string, string> = {
+  "0": "zero",
+  "1": "jeden",
+  "2": "dwa",
+  "3": "trzy",
+  "4": "cztery",
+  "5": "pięć",
+  "6": "sześć",
+  "7": "siedem",
+  "8": "osiem",
+  "9": "dziewięć"
+};
 
 function makeLetters(
   language: LanguageCode,
@@ -207,13 +260,33 @@ function makeLetters(
     speechText: speechNames[letter] ?? letter.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US"),
     aliases: [letter.toLowerCase(), ...(aliases[letter] ?? [])],
     language,
+    characterSet: "letters",
     example: examples[letter]
+  }));
+}
+
+function makeDigits(
+  language: LanguageCode,
+  aliases: Record<string, string[]>,
+  speechNames: Record<string, string>
+): LetterItem[] {
+  return digits.map((digit) => ({
+    display: digit,
+    speechText: speechNames[digit] ?? digit,
+    aliases: [digit, ...(aliases[digit] ?? [])],
+    language,
+    characterSet: "digits"
   }));
 }
 
 export const lettersByLanguage: Record<LanguageCode, LetterItem[]> = {
   en: makeLetters("en", englishAlphabet, englishNames, englishSpeechNames, englishExamples),
   pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames, polishExamples)
+};
+
+export const digitsByLanguage: Record<LanguageCode, LetterItem[]> = {
+  en: makeDigits("en", englishDigitNames, englishDigitSpeechNames),
+  pl: makeDigits("pl", polishDigitNames, polishDigitSpeechNames)
 };
 
 export const letterImageIds = new Set([
@@ -235,6 +308,10 @@ export function getLetters(language: LanguageCode): LetterItem[] {
   return lettersByLanguage[language];
 }
 
+export function getCharacters(language: LanguageCode, characterSet: CharacterSet): LetterItem[] {
+  return characterSet === "digits" ? digitsByLanguage[language] : lettersByLanguage[language];
+}
+
 function normalizeTranscript(value: string, language: LanguageCode): string {
   return value
     .trim()
@@ -252,3 +329,5 @@ export function matchesLetterTranscript(letter: LetterItem, transcript: string):
     return cleaned === normalizedAlias || words.includes(normalizedAlias) || cleaned.includes(` ${normalizedAlias} `);
   });
 }
+
+export const matchesCharacterTranscript = matchesLetterTranscript;

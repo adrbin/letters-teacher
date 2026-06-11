@@ -42,7 +42,7 @@ export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain
         )}
 
         <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
-          <LetterList title={copy.strongLetters} letters={summary.strongLetters} tone="emerald" />
+          <LetterList title={copy.strongCharacters[settings.characterSet]} letters={summary.strongLetters} tone="emerald" />
           <LetterList title={copy.practiceAgain} letters={summary.practiceLetters} tone="amber" />
         </div>
 

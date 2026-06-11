@@ -109,4 +109,18 @@ describe("handwriting recognizer", () => {
     expect(recognizeExpectedLetter(zDot, "Ż", ["Z", "Ż"]).matches).toBe(true);
     expect(recognizeExpectedLetter(lSlash.slice(0, 1), "Ł", ["L", "Ł"]).matches).toBe(false);
   });
+
+  it("validates common digit drawings against the target", () => {
+    const fixtures: Array<[string, Stroke[]]> = [
+      ["0", [[{ x: 50, y: 8 }, { x: 82, y: 20 }, { x: 88, y: 58 }, { x: 74, y: 92 }, { x: 28, y: 90 }, { x: 14, y: 56 }, { x: 22, y: 18 }, { x: 50, y: 8 }]]],
+      ["1", [[{ x: 44, y: 26 }, { x: 58, y: 10 }, { x: 58, y: 92 }], [{ x: 36, y: 92 }, { x: 78, y: 92 }]]],
+      ["2", [[{ x: 22, y: 32 }, { x: 38, y: 10 }, { x: 76, y: 16 }, { x: 84, y: 40 }, { x: 18, y: 92 }, { x: 88, y: 92 }]]],
+      ["5", [[{ x: 82, y: 10 }, { x: 28, y: 10 }, { x: 24, y: 48 }, { x: 70, y: 48 }, { x: 86, y: 68 }, { x: 70, y: 92 }, { x: 28, y: 88 }]]],
+      ["8", [[{ x: 50, y: 8 }, { x: 78, y: 24 }, { x: 50, y: 50 }, { x: 22, y: 24 }, { x: 50, y: 8 }], [{ x: 50, y: 50 }, { x: 82, y: 72 }, { x: 50, y: 94 }, { x: 18, y: 72 }, { x: 50, y: 50 }]]]
+    ];
+
+    for (const [digit, strokes] of fixtures) {
+      expect(recognizeExpectedLetter(strokes, digit, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]).matches).toBe(true);
+    }
+  });
 });

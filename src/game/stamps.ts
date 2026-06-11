@@ -1,5 +1,5 @@
-import { getLetters } from "../data/letters";
-import type { EarnedStamp, LanguageCode, LetterStamp, SessionSummary } from "../types";
+import { getCharacters } from "../data/letters";
+import type { CharacterSet, CharacterStamp, CollectionCompleteStamp, EarnedStamp, LanguageCode, SessionSummary } from "../types";
 
 const STORAGE_KEY = "letters-teacher:stamps";
 const MIN_STAMP_ACCURACY = 60;
@@ -18,35 +18,41 @@ function isLanguage(value: unknown): value is LanguageCode {
   return value === "en" || value === "pl";
 }
 
-function isLetterStamp(value: unknown): value is LetterStamp {
-  const stamp = value as Partial<LetterStamp>;
+function isCharacterSet(value: unknown): value is CharacterSet {
+  return value === "letters" || value === "digits";
+}
+
+function isCharacterStamp(value: unknown): value is CharacterStamp {
+  const stamp = value as Partial<CharacterStamp>;
   return (
-    stamp?.kind === "letter" &&
+    stamp?.kind === "character" &&
     typeof stamp.id === "string" &&
     isLanguage(stamp.language) &&
-    typeof stamp.letter === "string" &&
-    typeof stamp.word === "string" &&
-    typeof stamp.imageId === "string" &&
-    typeof stamp.alt === "string" &&
+    isCharacterSet(stamp.characterSet) &&
+    typeof stamp.character === "string" &&
+    (typeof stamp.word === "undefined" || typeof stamp.word === "string") &&
+    (typeof stamp.imageId === "undefined" || typeof stamp.imageId === "string") &&
+    (typeof stamp.alt === "undefined" || typeof stamp.alt === "string") &&
     typeof stamp.earnedAt === "string" &&
     typeof stamp.score === "number" &&
     typeof stamp.maxScore === "number"
   );
 }
 
-function isAlphabetCompleteStamp(value: unknown): value is EarnedStamp {
-  const stamp = value as Partial<EarnedStamp>;
+function isCollectionCompleteStamp(value: unknown): value is CollectionCompleteStamp {
+  const stamp = value as Partial<CollectionCompleteStamp>;
   return (
-    stamp?.kind === "alphabet-complete" &&
+    stamp?.kind === "collection-complete" &&
     typeof stamp.id === "string" &&
     isLanguage(stamp.language) &&
+    isCharacterSet(stamp.characterSet) &&
     typeof stamp.earnedAt === "string" &&
     typeof stamp.completedCount === "number"
   );
 }
 
 function isStamp(value: unknown): value is EarnedStamp {
-  return isLetterStamp(value) || isAlphabetCompleteStamp(value);
+  return isCharacterStamp(value) || isCollectionCompleteStamp(value);
 }
 
 function pickRandom<T>(items: T[]): T | null {
@@ -54,18 +60,25 @@ function pickRandom<T>(items: T[]): T | null {
   return items[Math.floor(Math.random() * items.length)] ?? items[0];
 }
 
-function createLetterStamp(language: LanguageCode, letter: string, summary: SessionSummary, earnedAt: string): LetterStamp | null {
-  const item = getLetters(language).find((candidate) => candidate.display === letter);
-  if (!item?.example) return null;
+function createCharacterStamp(
+  language: LanguageCode,
+  characterSet: CharacterSet,
+  character: string,
+  summary: SessionSummary,
+  earnedAt: string
+): CharacterStamp | null {
+  const item = getCharacters(language, characterSet).find((candidate) => candidate.display === character);
+  if (!item) return null;
 
   return {
-    kind: "letter",
-    id: `${language}:letter:${item.display}`,
+    kind: "character",
+    id: `${language}:${characterSet}:character:${item.display}`,
     language,
-    letter: item.display,
-    word: item.example.word,
-    imageId: item.example.imageId,
-    alt: item.example.alt,
+    characterSet,
+    character: item.display,
+    word: item.example?.word,
+    imageId: item.example?.imageId,
+    alt: item.example?.alt,
     earnedAt,
     score: summary.totalScore,
     maxScore: summary.maxScore
@@ -92,45 +105,55 @@ function saveStamps(stamps: EarnedStamp[]): void {
 }
 
 export function saveStamp(
-  settings: { language: LanguageCode; gameMode?: unknown },
+  settings: { language: LanguageCode; characterSet: CharacterSet; gameMode?: unknown },
   summary: SessionSummary,
   earnedAt = new Date().toISOString()
 ): { stamp: EarnedStamp | null; stamps: EarnedStamp[]; isNew: boolean } {
   const stamps = loadStamps();
   if (summary.accuracy < MIN_STAMP_ACCURACY) return { stamp: null, stamps, isNew: false };
 
-  const alphabet = getLetters(settings.language).map((letter) => letter.display);
-  const collectedLetters = new Set(
+  const collection = getCharacters(settings.language, settings.characterSet).map((letter) => letter.display);
+  const collectedCharacters = new Set(
     stamps
-      .filter((stamp): stamp is LetterStamp => stamp.kind === "letter" && stamp.language === settings.language)
-      .map((stamp) => stamp.letter)
+      .filter(
+        (stamp): stamp is CharacterStamp =>
+          stamp.kind === "character" && stamp.language === settings.language && stamp.characterSet === settings.characterSet
+      )
+      .map((stamp) => stamp.character)
   );
-  const uncollectedLetters = alphabet.filter((letter) => !collectedLetters.has(letter));
-  const practicedLetters = summary.results.map((result) => result.letter).filter((letter) => alphabet.includes(letter));
-  const practicedCandidates = practicedLetters.filter((letter) => !collectedLetters.has(letter));
-  const selectedLetter = pickRandom(practicedCandidates.length > 0 ? practicedCandidates : uncollectedLetters);
-  if (!selectedLetter) return { stamp: null, stamps, isNew: false };
+  const uncollectedCharacters = collection.filter((character) => !collectedCharacters.has(character));
+  const practicedCharacters = summary.results.map((result) => result.letter).filter((character) => collection.includes(character));
+  const practicedCandidates = practicedCharacters.filter((character) => !collectedCharacters.has(character));
+  const selectedCharacter = pickRandom(practicedCandidates.length > 0 ? practicedCandidates : uncollectedCharacters);
+  if (!selectedCharacter) return { stamp: null, stamps, isNew: false };
 
-  const letterStamp = createLetterStamp(settings.language, selectedLetter, summary, earnedAt);
-  if (!letterStamp) return { stamp: null, stamps, isNew: false };
+  const characterStamp = createCharacterStamp(settings.language, settings.characterSet, selectedCharacter, summary, earnedAt);
+  if (!characterStamp) return { stamp: null, stamps, isNew: false };
 
-  const nextCollectedLetters = new Set([...collectedLetters, letterStamp.letter]);
-  const completesAlphabet = nextCollectedLetters.size >= alphabet.length;
-  const stampsWithoutLanguageLetters = stamps.filter((stamp) => !(stamp.kind === "letter" && stamp.language === settings.language));
+  const nextCollectedCharacters = new Set([...collectedCharacters, characterStamp.character]);
+  const completesCollection = nextCollectedCharacters.size >= collection.length;
+  const stampsWithoutCurrentCharacters = stamps.filter(
+    (stamp) => !(stamp.kind === "character" && stamp.language === settings.language && stamp.characterSet === settings.characterSet)
+  );
 
-  if (completesAlphabet) {
+  if (completesCollection) {
     const existingCompletion = stamps.find(
-      (stamp) => stamp.kind === "alphabet-complete" && stamp.language === settings.language
+      (stamp) =>
+        stamp.kind === "collection-complete" && stamp.language === settings.language && stamp.characterSet === settings.characterSet
     );
     const completionStamp: EarnedStamp = {
-      kind: "alphabet-complete",
-      id: `${settings.language}:alphabet-complete`,
+      kind: "collection-complete",
+      id: `${settings.language}:${settings.characterSet}:complete`,
       language: settings.language,
-      completedCount: existingCompletion?.kind === "alphabet-complete" ? existingCompletion.completedCount + 1 : 1,
+      characterSet: settings.characterSet,
+      completedCount: existingCompletion?.kind === "collection-complete" ? existingCompletion.completedCount + 1 : 1,
       earnedAt
     };
     const nextStamps = [
-      ...stampsWithoutLanguageLetters.filter((stamp) => !(stamp.kind === "alphabet-complete" && stamp.language === settings.language)),
+      ...stampsWithoutCurrentCharacters.filter(
+        (stamp) =>
+          !(stamp.kind === "collection-complete" && stamp.language === settings.language && stamp.characterSet === settings.characterSet)
+      ),
       completionStamp
     ];
 
@@ -143,12 +166,12 @@ export function saveStamp(
     return { stamp: completionStamp, stamps: nextStamps, isNew: true };
   }
 
-  const nextStamps = [...stamps, letterStamp];
+  const nextStamps = [...stamps, characterStamp];
   try {
     saveStamps(nextStamps);
   } catch {
-    return { stamp: letterStamp, stamps, isNew: true };
+    return { stamp: characterStamp, stamps, isNew: true };
   }
 
-  return { stamp: letterStamp, stamps: nextStamps, isNew: true };
+  return { stamp: characterStamp, stamps: nextStamps, isNew: true };
 }

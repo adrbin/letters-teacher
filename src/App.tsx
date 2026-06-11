@@ -9,6 +9,7 @@ import type { EarnedStamp, SessionSettings } from "./types";
 
 const defaultSettings: SessionSettings = {
   language: "pl",
+  characterSet: "letters",
   gameMode: "hear-pick",
   questionCount: 10
 };
@@ -42,7 +43,7 @@ export default function App() {
       <ResultsScreen
         settings={session.settings}
         summary={summary}
-        stamps={stamps.filter((stamp) => stamp.language === session.settings.language)}
+        stamps={stamps.filter((stamp) => stamp.language === session.settings.language && stamp.characterSet === session.settings.characterSet)}
         newStamp={newStamp}
         onPlayAgain={() => setSession(createSession(session.settings))}
         onChooseGame={() => setSession(null)}
@@ -57,7 +58,7 @@ export default function App() {
   return (
     <SetupScreen
       settings={settings}
-      stamps={stamps.filter((stamp) => stamp.language === settings.language)}
+      stamps={stamps.filter((stamp) => stamp.language === settings.language && stamp.characterSet === settings.characterSet)}
       onSettingsChange={setSettings}
       onStart={() => setSession(createSession(settings))}
     />

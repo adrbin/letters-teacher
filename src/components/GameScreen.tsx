@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { getLetters, matchesLetterTranscript } from "../data/letters";
+import { getCharacters, matchesCharacterTranscript } from "../data/letters";
 import { answerQuestion, remainingPoints, type SessionState } from "../game/session";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
@@ -21,6 +21,7 @@ type Copy = ReturnType<typeof getCopy>;
 export function GameScreen({ session, onSessionChange, onExit }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
+  const characterSet = session.settings.characterSet;
   const { speak, supported: speechSupported, error: speechError } = useSpeechSynthesis();
   const playFeedbackSound = useFeedbackSound();
   const feedbackSequence = useRef(0);
@@ -50,7 +51,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
     useCallback(
       (transcript: string) => {
         setHeardTranscript(transcript);
-        submitAnswer(matchesLetterTranscript(question.target, transcript) ? question.target.display : "", "speech");
+        submitAnswer(matchesCharacterTranscript(question.target, transcript) ? question.target.display : "", "speech");
       },
       [question.target, submitAnswer]
     )
@@ -115,6 +116,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               onSpeak={speak}
               onAnswer={(answer) => submitAnswer(answer, answer)}
               answerFeedback={answerFeedback}
+              characterSet={characterSet}
               copy={copy}
             />
           )}
@@ -127,8 +129,9 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               speechSupported={speechSupported}
               onSpeak={speak}
               onAnswer={(answer) => submitAnswer(answer, "check")}
-              letters={getLetters(session.settings.language)}
+              letters={getCharacters(session.settings.language, characterSet)}
               answerFeedback={answerFeedback}
+              characterSet={characterSet}
               copy={copy}
             />
           )}
@@ -146,18 +149,27 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
           )}
 
           {session.settings.gameMode === "see-say" && (
-            <SeeSayGame target={question.target} transcript={heardTranscript} recognition={recognition} onExit={onExit} copy={copy} />
+            <SeeSayGame
+              target={question.target}
+              transcript={heardTranscript}
+              recognition={recognition}
+              onExit={onExit}
+              characterSet={characterSet}
+              copy={copy}
+            />
           )}
         </div>
 
-        {answerFeedback?.result.correct && answerFeedback.target.example && (
+        {answerFeedback?.result.correct && (
           <div
             key={`example-${answerFeedback.feedbackKey}`}
             className="answer-correct mx-auto mb-4 flex w-full max-w-xl items-center justify-center gap-4 rounded-3xl bg-emerald-100 p-3 text-center text-emerald-950"
             role="status"
           >
             <LetterImage letter={answerFeedback.target} compact />
-            <p className="text-xl font-black">{copy.letterExample(answerFeedback.target.display, answerFeedback.target.example.word)}</p>
+            <p className="text-xl font-black">
+              {copy.characterExample[characterSet](answerFeedback.target.display, answerFeedback.target.example?.word)}
+            </p>
           </div>
         )}
 
@@ -201,6 +213,7 @@ function HearPickGame({
   onSpeak,
   onAnswer,
   answerFeedback,
+  characterSet,
   copy
 }: SpeechProps & {
   questionTarget: LetterItem;
@@ -208,12 +221,13 @@ function HearPickGame({
   wrongAttempts: string[];
   onAnswer: (answer: string) => void;
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
+  characterSet: "letters" | "digits";
   copy: Copy;
 }) {
   return (
     <div className="grid gap-7 text-center">
-      <SpeakerButton letter={questionTarget} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playLetterSound} />
-      <h1 className="text-3xl font-black text-slate-950">{copy.pickLetterYouHear}</h1>
+      <SpeakerButton letter={questionTarget} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound[characterSet]} />
+      <h1 className="text-3xl font-black text-slate-950">{copy.pickCharacterYouHear[characterSet]}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option) => {
           const missed = wrongAttempts.includes(option.display);
@@ -225,7 +239,7 @@ function HearPickGame({
                 missed ? "border-rose-500 bg-rose-100 text-rose-950" : "border-slate-200 bg-white text-slate-950 shadow-sm"
               } ${pulsing ? (answerFeedback?.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
               type="button"
-              aria-label={copy.chooseLetter(option.display)}
+              aria-label={copy.chooseCharacter[characterSet](option.display)}
               onClick={() => onAnswer(option.display)}
             >
               {missed ? "✕ " : ""}
@@ -247,6 +261,7 @@ function HearWriteGame({
   onAnswer,
   letters,
   answerFeedback,
+  characterSet,
   copy
 }: SpeechProps & {
   target: LetterItem;
@@ -255,6 +270,7 @@ function HearWriteGame({
   onAnswer: (answer: string) => void;
   letters: LetterItem[];
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
+  characterSet: "letters" | "digits";
   copy: Copy;
 }) {
   const recognized = useMemo(
@@ -269,8 +285,8 @@ function HearWriteGame({
 
   return (
     <div className="grid gap-5 text-center">
-      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playLetterSound} />
-      <h1 className="text-3xl font-black text-slate-950">{copy.drawLetter}</h1>
+      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound[characterSet]} />
+      <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter[characterSet]}</h1>
       <DrawingCanvas strokes={strokes} onChange={onStrokesChange} />
       <div className="mx-auto flex w-full max-w-2xl gap-3">
         <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => onStrokesChange([])}>
@@ -361,12 +377,14 @@ function SeeSayGame({
   transcript,
   recognition,
   onExit,
+  characterSet,
   copy
 }: {
   target: LetterItem;
   transcript: string;
   recognition: ReturnType<typeof useSpeechRecognition>;
   onExit: () => void;
+  characterSet: "letters" | "digits";
   copy: Copy;
 }) {
   return (
@@ -375,7 +393,7 @@ function SeeSayGame({
         <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
         <LetterImage letter={target} compact />
       </div>
-      <h1 className="text-3xl font-black text-slate-950">{copy.sayThisLetter}</h1>
+      <h1 className="text-3xl font-black text-slate-950">{copy.sayThisCharacter[characterSet]}</h1>
       {recognition.supported ? (
         <>
           <button

@@ -1,5 +1,5 @@
-import { getLetters } from "../data/letters";
-import type { LanguageCode, Question } from "../types";
+import { getCharacters } from "../data/letters";
+import type { CharacterSet, LanguageCode, Question } from "../types";
 
 function hashSeed(seed: string): number {
   let hash = 2166136261;
@@ -30,9 +30,9 @@ function shuffle<T>(items: T[], random: () => number): T[] {
   return copy;
 }
 
-export function generateQuestions(language: LanguageCode, questionCount: number, seed = "letters-teacher"): Question[] {
-  const random = createRandom(`${seed}-${language}-${questionCount}`);
-  const letters = getLetters(language);
+export function generateQuestions(language: LanguageCode, characterSet: CharacterSet, questionCount: number, seed = "letters-teacher"): Question[] {
+  const random = createRandom(`${seed}-${language}-${characterSet}-${questionCount}`);
+  const letters = getCharacters(language, characterSet);
   const targets: Question[] = [];
   const shuffledLetters = shuffle(letters, random);
   const targetCount = Math.min(Math.max(0, questionCount), letters.length);
@@ -46,7 +46,7 @@ export function generateQuestions(language: LanguageCode, questionCount: number,
     const options = shuffle([target, ...distractors], random);
 
     targets.push({
-      id: `${language}-${index}-${target.display}`,
+      id: `${language}-${characterSet}-${index}-${target.display}`,
       target,
       options
     });

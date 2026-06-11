@@ -1,13 +1,14 @@
 # Letters Teacher
 
-A React PWA for helping children learn letters through playful flashcard games. The app supports Polish and English, uses browser speech APIs, includes a local handwriting practice flow, and is designed to work well on phones, tablets, and desktops.
+A React PWA for helping children learn letters and digits through playful character games. The app supports Polish and English, uses browser speech APIs, includes a local handwriting practice flow, and is designed to work well on phones, tablets, and desktops.
 
 ## Features
 
-- Hear a letter sound and pick the matching card.
-- Hear a letter sound and write it on a drawing canvas.
-- See a letter and pick the matching sound.
-- See a letter and pronounce it with speech recognition where supported.
+- Practice letters or digits in separate tabs.
+- Hear a character sound and pick the matching card.
+- Hear a character sound and write it on a drawing canvas.
+- See a character and pick the matching sound.
+- See a character and pronounce it with speech recognition where supported.
 - Configurable language and question count.
 - Scoring that rewards correct answers and reduces points after wrong attempts.
 - Results screen with progress feedback and earned stamps.
@@ -88,4 +89,4 @@ Speech synthesis and speech recognition are browser APIs. Speech synthesis is br
 
 ## Product Notes
 
-The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish and English are the initial supported languages.
+The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish and English are the initial supported languages, with practice for letters and digits.

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Build a client-side React + Tailwind CSS PWA for children age 4+ to practice letters through four flashcard-style games. The app supports Polish and English, uses browser APIs for speech synthesis and speech recognition, works offline for installed app assets, and keeps the UI responsive across iPhone, iPad, and desktop.
+Build a client-side React + Tailwind CSS PWA for children age 4+ to practice letters and digits through four flashcard-style character games. The app supports Polish and English, uses browser APIs for speech synthesis and speech recognition, works offline for installed app assets, and keeps the UI responsive across iPhone, iPad, and desktop.
 
 The pronunciation game will use browser speech recognition even if the browser requires network access. All other app behavior and assets should remain available offline.
 
@@ -15,6 +15,7 @@ The pronunciation game will use browser speech recognition even if the browser r
 - **Languages**:
   - English alphabet: A-Z.
   - Polish alphabet: include Polish letters appropriate for early learning, including diacritics such as `Ą`, `Ć`, `Ę`, `Ł`, `Ń`, `Ó`, `Ś`, `Ź`, `Ż`.
+  - Digits: 0-9 in separate letter/digit practice tabs.
   - Speech synthesis uses `SpeechSynthesisUtterance` with language-specific voice/language hints.
 
 ## Core Screens And Text Mockups

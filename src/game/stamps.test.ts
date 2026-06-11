@@ -38,20 +38,21 @@ describe("stamps", () => {
   });
 
   it("does not award alphabet stamps below the score threshold", () => {
-    expect(saveStamp({ language: "en", gameMode: "hear-pick" }, summary(59, ["A"])).stamp).toBeNull();
+    expect(saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(59, ["A"])).stamp).toBeNull();
     expect(loadStamps()).toEqual([]);
   });
 
   it("awards a letter stamp at the score threshold", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
 
-    const saved = saveStamp({ language: "en", gameMode: "hear-pick" }, summary(60, ["A", "B"]), "2026-06-10T10:00:00.000Z");
+    const saved = saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(60, ["A", "B"]), "2026-06-10T10:00:00.000Z");
 
     expect(saved.isNew).toBe(true);
     expect(saved.stamp).toMatchObject({
-      kind: "letter",
+      kind: "character",
+      characterSet: "letters",
       language: "en",
-      letter: "A",
+      character: "A",
       word: "apple",
       imageId: "fruit-red",
       alt: "red apple",
@@ -63,21 +64,21 @@ describe("stamps", () => {
 
   it("prioritizes practiced letters that are not already collected", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
-    saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
+    saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
 
-    const saved = saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A", "B"]), "2026-06-10T10:01:00.000Z");
+    const saved = saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A", "B"]), "2026-06-10T10:01:00.000Z");
 
-    expect(saved.stamp).toMatchObject({ kind: "letter", language: "en", letter: "B", word: "ball" });
-    expect(loadStamps().filter((stamp) => stamp.kind === "letter").map((stamp) => stamp.letter)).toEqual(["A", "B"]);
+    expect(saved.stamp).toMatchObject({ kind: "character", characterSet: "letters", language: "en", character: "B", word: "ball" });
+    expect(loadStamps().filter((stamp) => stamp.kind === "character").map((stamp) => stamp.character)).toEqual(["A", "B"]);
   });
 
   it("falls back to an uncollected alphabet letter when practiced letters are already collected", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
-    saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
+    saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
 
-    const saved = saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:01:00.000Z");
+    const saved = saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:01:00.000Z");
 
-    expect(saved.stamp).toMatchObject({ kind: "letter", language: "en", letter: "B", word: "ball" });
+    expect(saved.stamp).toMatchObject({ kind: "character", characterSet: "letters", language: "en", character: "B", word: "ball" });
   });
 
   it("converts a full alphabet into a completed alphabet stamp and starts a new cycle", () => {
@@ -85,33 +86,58 @@ describe("stamps", () => {
     const englishLetters = getLetters("en").map((letter) => letter.display);
 
     for (const [index, letter] of englishLetters.slice(0, -1).entries()) {
-      saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, [letter]), `2026-06-10T10:00:${String(index).padStart(2, "0")}.000Z`);
+      saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, [letter]), `2026-06-10T10:00:${String(index).padStart(2, "0")}.000Z`);
     }
 
-    const saved = saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, [englishLetters.at(-1)!]), "2026-06-10T10:01:00.000Z");
+    const saved = saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, [englishLetters.at(-1)!]), "2026-06-10T10:01:00.000Z");
 
-    expect(saved.stamp).toMatchObject({ kind: "alphabet-complete", language: "en", completedCount: 1 });
-    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "alphabet-complete", language: "en", completedCount: 1 })]);
+    expect(saved.stamp).toMatchObject({ kind: "collection-complete", characterSet: "letters", language: "en", completedCount: 1 });
+    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "collection-complete", characterSet: "letters", language: "en", completedCount: 1 })]);
 
-    const nextCycle = saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:02:00.000Z");
+    const nextCycle = saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:02:00.000Z");
 
-    expect(nextCycle.stamp).toMatchObject({ kind: "letter", language: "en", letter: "A" });
+    expect(nextCycle.stamp).toMatchObject({ kind: "character", characterSet: "letters", language: "en", character: "A" });
     expect(loadStamps()).toEqual([
-      expect.objectContaining({ kind: "alphabet-complete", language: "en", completedCount: 1 }),
-      expect.objectContaining({ kind: "letter", language: "en", letter: "A" })
+      expect.objectContaining({ kind: "collection-complete", characterSet: "letters", language: "en", completedCount: 1 }),
+      expect.objectContaining({ kind: "character", characterSet: "letters", language: "en", character: "A" })
     ]);
   });
 
   it("keeps English and Polish stamp progress separate", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
 
-    saveStamp({ language: "en", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
-    saveStamp({ language: "pl", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:01:00.000Z");
+    saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
+    saveStamp({ language: "pl", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:01:00.000Z");
 
     expect(loadStamps()).toEqual([
-      expect.objectContaining({ kind: "letter", language: "en", letter: "A", word: "apple" }),
-      expect.objectContaining({ kind: "letter", language: "pl", letter: "A", word: "auto" })
+      expect.objectContaining({ kind: "character", characterSet: "letters", language: "en", character: "A", word: "apple" }),
+      expect.objectContaining({ kind: "character", characterSet: "letters", language: "pl", character: "A", word: "auto" })
     ]);
+  });
+
+  it("keeps letter and digit stamp progress separate", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    saveStamp({ language: "en", characterSet: "letters", gameMode: "hear-pick" }, summary(95, ["A"]), "2026-06-10T10:00:00.000Z");
+    saveStamp({ language: "en", characterSet: "digits", gameMode: "hear-pick" }, summary(95, ["1"]), "2026-06-10T10:01:00.000Z");
+
+    expect(loadStamps()).toEqual([
+      expect.objectContaining({ kind: "character", characterSet: "letters", language: "en", character: "A" }),
+      expect.objectContaining({ kind: "character", characterSet: "digits", language: "en", character: "1" })
+    ]);
+  });
+
+  it("converts a full digit collection into a completed digits stamp", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    for (const digit of ["0", "1", "2", "3", "4", "5", "6", "7", "8"]) {
+      saveStamp({ language: "pl", characterSet: "digits", gameMode: "hear-pick" }, summary(95, [digit]), `2026-06-10T10:00:0${digit}.000Z`);
+    }
+
+    const saved = saveStamp({ language: "pl", characterSet: "digits", gameMode: "hear-pick" }, summary(95, ["9"]), "2026-06-10T10:01:00.000Z");
+
+    expect(saved.stamp).toMatchObject({ kind: "collection-complete", characterSet: "digits", language: "pl", completedCount: 1 });
+    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "collection-complete", characterSet: "digits", language: "pl", completedCount: 1 })]);
   });
 
   it("fails gracefully when storage cannot be read", () => {
@@ -121,10 +147,11 @@ describe("stamps", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
 
     expect(loadStamps()).toEqual([]);
-    expect(saveStamp({ language: "pl", gameMode: "see-say" }, summary(80, ["A"])).stamp).toMatchObject({
-      kind: "letter",
+    expect(saveStamp({ language: "pl", characterSet: "letters", gameMode: "see-say" }, summary(80, ["A"])).stamp).toMatchObject({
+      kind: "character",
+      characterSet: "letters",
       language: "pl",
-      letter: "A"
+      character: "A"
     });
   });
 });

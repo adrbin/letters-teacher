@@ -1,24 +1,25 @@
-import type { GameMode, LanguageCode } from "./types";
+import type { CharacterSet, GameMode, LanguageCode } from "./types";
 
 type Copy = {
   appName: string;
-  headline: string;
+  headline: Record<CharacterSet, string>;
   language: string;
   questions: string;
+  characterSetTabs: Record<CharacterSet, string>;
   chooseGame: string;
   start: string;
   back: string;
   score: string;
   ready: string;
   pointPrefix: string;
-  playLetterSound: string;
-  pickLetterYouHear: string;
-  drawLetter: string;
+  playCharacterSound: Record<CharacterSet, string>;
+  pickCharacterYouHear: Record<CharacterSet, string>;
+  drawCharacter: Record<CharacterSet, string>;
   clear: string;
   check: string;
   pickMatchingSound: string;
   chooseThisSound: string;
-  sayThisLetter: string;
+  sayThisCharacter: Record<CharacterSet, string>;
   stopRecording: string;
   startRecording: string;
   chooseAnotherGame: string;
@@ -28,7 +29,7 @@ type Copy = {
   heard: string;
   greatWork: string;
   accuracy: string;
-  strongLetters: string;
+  strongCharacters: Record<CharacterSet, string>;
   practiceAgain: string;
   playAgain: string;
   stamp: string;
@@ -37,36 +38,55 @@ type Copy = {
   noStampsYet: string;
   decreaseQuestionCount: string;
   increaseQuestionCount: string;
-  chooseLetter: (letter: string) => string;
+  chooseCharacter: Record<CharacterSet, (character: string) => string>;
   playSound: (number: number) => string;
-  letterExample: (letter: string, word: string) => string;
-  stampLetterLabel: (letter: string, word: string) => string;
-  alphabetCompleteLabel: (count: number) => string;
-  alphabetCompleteTitle: string;
-  gameTitles: Record<GameMode, string>;
+  characterExample: Record<CharacterSet, (character: string, word?: string) => string>;
+  stampCharacterLabel: Record<CharacterSet, (character: string, word?: string) => string>;
+  collectionCompleteLabel: Record<CharacterSet, (count: number) => string>;
+  collectionCompleteTitle: Record<CharacterSet, string>;
+  gameTitles: Record<CharacterSet, Record<GameMode, string>>;
   feedback: Record<string, string>;
 };
 
 const copies: Record<LanguageCode, Copy> = {
   en: {
     appName: "Letters Teacher",
-    headline: "Play with letters",
+    headline: {
+      letters: "Play with letters",
+      digits: "Play with digits"
+    },
     language: "Language",
     questions: "Questions",
+    characterSetTabs: {
+      letters: "Letters",
+      digits: "Digits"
+    },
     chooseGame: "Choose a game",
     start: "Start",
     back: "Back",
     score: "Score",
     ready: "Ready!",
     pointPrefix: "+",
-    playLetterSound: "Play letter sound",
-    pickLetterYouHear: "Pick the letter you hear",
-    drawLetter: "Draw the letter",
+    playCharacterSound: {
+      letters: "Play letter sound",
+      digits: "Play digit sound"
+    },
+    pickCharacterYouHear: {
+      letters: "Pick the letter you hear",
+      digits: "Pick the digit you hear"
+    },
+    drawCharacter: {
+      letters: "Draw the letter",
+      digits: "Draw the digit"
+    },
     clear: "Clear",
     check: "Check",
     pickMatchingSound: "Pick the matching sound",
     chooseThisSound: "Choose this sound",
-    sayThisLetter: "Say this letter",
+    sayThisCharacter: {
+      letters: "Say this letter",
+      digits: "Say this digit"
+    },
     stopRecording: "Stop recording",
     startRecording: "Start recording",
     chooseAnotherGame: "Choose another game",
@@ -76,7 +96,10 @@ const copies: Record<LanguageCode, Copy> = {
     heard: "Heard",
     greatWork: "Great work!",
     accuracy: "Accuracy",
-    strongLetters: "Strong letters",
+    strongCharacters: {
+      letters: "Strong letters",
+      digits: "Strong digits"
+    },
     practiceAgain: "Practice again",
     playAgain: "Play again",
     stamp: "stamp",
@@ -85,17 +108,40 @@ const copies: Record<LanguageCode, Copy> = {
     noStampsYet: "Win a game to collect stamps.",
     decreaseQuestionCount: "Decrease question count",
     increaseQuestionCount: "Increase question count",
-    chooseLetter: (letter) => `Choose ${letter}`,
+    chooseCharacter: {
+      letters: (letter) => `Choose ${letter}`,
+      digits: (digit) => `Choose digit ${digit}`
+    },
     playSound: (number) => `Play sound ${number}`,
-    letterExample: (letter, word) => `${letter} as in ${word}`,
-    stampLetterLabel: (letter, word) => `${letter} as in ${word}`,
-    alphabetCompleteLabel: (count) => `Completed alphabet stamp x${count}`,
-    alphabetCompleteTitle: "Alphabet complete",
+    characterExample: {
+      letters: (letter, word) => `${letter} as in ${word}`,
+      digits: (digit) => `Digit ${digit}`
+    },
+    stampCharacterLabel: {
+      letters: (letter, word) => `${letter} as in ${word}`,
+      digits: (digit) => `Digit ${digit}`
+    },
+    collectionCompleteLabel: {
+      letters: (count) => `Completed alphabet stamp x${count}`,
+      digits: (count) => `Completed digits stamp x${count}`
+    },
+    collectionCompleteTitle: {
+      letters: "Alphabet complete",
+      digits: "Digits complete"
+    },
     gameTitles: {
-      "hear-pick": "Hear letter, pick card",
-      "hear-write": "Hear letter, write it",
-      "see-pick-sound": "See letter, pick sound",
-      "see-say": "See letter, say it"
+      letters: {
+        "hear-pick": "Hear letter, pick card",
+        "hear-write": "Hear letter, write it",
+        "see-pick-sound": "See letter, pick sound",
+        "see-say": "See letter, say it"
+      },
+      digits: {
+        "hear-pick": "Hear digit, pick card",
+        "hear-write": "Hear digit, write it",
+        "see-pick-sound": "See digit, pick sound",
+        "see-say": "See digit, say it"
+      }
     },
     feedback: {
       "This game is finished.": "This game is finished.",
@@ -106,23 +152,42 @@ const copies: Record<LanguageCode, Copy> = {
   },
   pl: {
     appName: "Nauczyciel liter",
-    headline: "Baw się literami",
+    headline: {
+      letters: "Baw się literami",
+      digits: "Baw się cyframi"
+    },
     language: "Język",
     questions: "Pytania",
+    characterSetTabs: {
+      letters: "Litery",
+      digits: "Cyfry"
+    },
     chooseGame: "Wybierz grę",
     start: "Start",
     back: "Wróć",
     score: "Punkty",
     ready: "Gotowe!",
     pointPrefix: "+",
-    playLetterSound: "Odtwórz dźwięk litery",
-    pickLetterYouHear: "Wybierz literę, którą słyszysz",
-    drawLetter: "Narysuj literę",
+    playCharacterSound: {
+      letters: "Odtwórz dźwięk litery",
+      digits: "Odtwórz dźwięk cyfry"
+    },
+    pickCharacterYouHear: {
+      letters: "Wybierz literę, którą słyszysz",
+      digits: "Wybierz cyfrę, którą słyszysz"
+    },
+    drawCharacter: {
+      letters: "Narysuj literę",
+      digits: "Narysuj cyfrę"
+    },
     clear: "Wyczyść",
     check: "Sprawdź",
     pickMatchingSound: "Wybierz pasujący dźwięk",
     chooseThisSound: "Wybierz ten dźwięk",
-    sayThisLetter: "Powiedz tę literę",
+    sayThisCharacter: {
+      letters: "Powiedz tę literę",
+      digits: "Powiedz tę cyfrę"
+    },
     stopRecording: "Zatrzymaj nagrywanie",
     startRecording: "Zacznij nagrywanie",
     chooseAnotherGame: "Wybierz inną grę",
@@ -132,7 +197,10 @@ const copies: Record<LanguageCode, Copy> = {
     heard: "Usłyszano",
     greatWork: "Świetna robota!",
     accuracy: "Dokładność",
-    strongLetters: "Mocne litery",
+    strongCharacters: {
+      letters: "Mocne litery",
+      digits: "Mocne cyfry"
+    },
     practiceAgain: "Poćwicz ponownie",
     playAgain: "Zagraj ponownie",
     stamp: "stempel",
@@ -141,17 +209,40 @@ const copies: Record<LanguageCode, Copy> = {
     noStampsYet: "Wygraj grę, aby zdobyć stemple.",
     decreaseQuestionCount: "Zmniejsz liczbę pytań",
     increaseQuestionCount: "Zwiększ liczbę pytań",
-    chooseLetter: (letter) => `Wybierz ${letter}`,
+    chooseCharacter: {
+      letters: (letter) => `Wybierz ${letter}`,
+      digits: (digit) => `Wybierz cyfrę ${digit}`
+    },
     playSound: (number) => `Odtwórz dźwięk ${number}`,
-    letterExample: (letter, word) => `${letter} jak ${word}`,
-    stampLetterLabel: (letter, word) => `${letter} jak ${word}`,
-    alphabetCompleteLabel: (count) => `Ukończony alfabet stempel x${count}`,
-    alphabetCompleteTitle: "Ukończony alfabet",
+    characterExample: {
+      letters: (letter, word) => `${letter} jak ${word}`,
+      digits: (digit) => `Cyfra ${digit}`
+    },
+    stampCharacterLabel: {
+      letters: (letter, word) => `${letter} jak ${word}`,
+      digits: (digit) => `Cyfra ${digit}`
+    },
+    collectionCompleteLabel: {
+      letters: (count) => `Ukończony alfabet stempel x${count}`,
+      digits: (count) => `Ukończone cyfry stempel x${count}`
+    },
+    collectionCompleteTitle: {
+      letters: "Ukończony alfabet",
+      digits: "Ukończone cyfry"
+    },
     gameTitles: {
-      "hear-pick": "Usłysz literę, wybierz kartę",
-      "hear-write": "Usłysz literę, napisz ją",
-      "see-pick-sound": "Zobacz literę, wybierz dźwięk",
-      "see-say": "Zobacz literę, powiedz ją"
+      letters: {
+        "hear-pick": "Usłysz literę, wybierz kartę",
+        "hear-write": "Usłysz literę, napisz ją",
+        "see-pick-sound": "Zobacz literę, wybierz dźwięk",
+        "see-say": "Zobacz literę, powiedz ją"
+      },
+      digits: {
+        "hear-pick": "Usłysz cyfrę, wybierz kartę",
+        "hear-write": "Usłysz cyfrę, napisz ją",
+        "see-pick-sound": "Zobacz cyfrę, wybierz dźwięk",
+        "see-say": "Zobacz cyfrę, powiedz ją"
+      }
     },
     feedback: {
       "This game is finished.": "Ta gra jest zakończona.",

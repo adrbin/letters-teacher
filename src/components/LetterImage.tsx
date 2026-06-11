@@ -112,9 +112,26 @@ function ExampleShape({ imageId }: { imageId: string }) {
 }
 
 export function LetterImage({ letter, compact = false }: Props) {
-  if (!letter.example) return null;
-
   const sizeClasses = compact ? "h-28 w-28" : "h-40 w-40 sm:h-48 sm:w-48";
+
+  if (letter.characterSet === "digits") {
+    return (
+      <figure className="grid justify-items-center gap-2">
+        <div
+          className={`${sizeClasses} grid place-items-center rounded-[1.75rem] bg-cyan-100 text-center text-7xl font-black leading-none text-cyan-950 shadow-lg ring-4 ring-cyan-300`}
+          role="img"
+          aria-label={`digit ${letter.display}`}
+        >
+          {letter.display}
+        </div>
+        <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
+          {letter.display}
+        </figcaption>
+      </figure>
+    );
+  }
+
+  if (!letter.example) return null;
 
   return (
     <figure className="grid justify-items-center gap-2">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getLetters, letterImageIds, matchesLetterTranscript } from "./letters";
+import { getCharacters, getLetters, letterImageIds, matchesCharacterTranscript, matchesLetterTranscript } from "./letters";
 
 describe("letters", () => {
   it("matches aliases for spoken letters", () => {
@@ -39,5 +39,22 @@ describe("letters", () => {
         expect(letterImageIds.has(letter.example!.imageId)).toBe(true);
       }
     }
+  });
+
+  it("exposes digits with localized speech names and aliases", () => {
+    expect(getCharacters("en", "digits").map((digit) => digit.display)).toEqual(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+    expect(getCharacters("pl", "digits").map((digit) => digit.display)).toEqual(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+
+    expect(getCharacters("en", "digits").find((digit) => digit.display === "4")?.speechText).toBe("four");
+    expect(getCharacters("pl", "digits").find((digit) => digit.display === "4")?.speechText).toBe("cztery");
+  });
+
+  it("matches spoken digit transcripts", () => {
+    const englishSeven = getCharacters("en", "digits").find((digit) => digit.display === "7")!;
+    const polishZero = getCharacters("pl", "digits").find((digit) => digit.display === "0")!;
+
+    expect(matchesCharacterTranscript(englishSeven, "seven")).toBe(true);
+    expect(matchesCharacterTranscript(englishSeven, "number 7")).toBe(true);
+    expect(matchesCharacterTranscript(polishZero, "zero")).toBe(true);
   });
 });

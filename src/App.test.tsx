@@ -136,7 +136,7 @@ describe("App", () => {
 
   it("shows success feedback with a letter image after a correct card", async () => {
     const user = userEvent.setup();
-    const target = generateQuestions("pl", 10, "session-1000-0.00289")[0].target;
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /^start$/i }));
@@ -163,7 +163,7 @@ describe("App", () => {
 
   it("shows letter images in see-letter games", async () => {
     const user = userEvent.setup();
-    const target = generateQuestions("pl", 10, "session-1000-0.00289")[0].target;
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /zobacz literę, wybierz dźwięk/i }));
@@ -183,9 +183,50 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: /play with letters/i })).toBeInTheDocument();
   });
 
+  it("switches to digit games and clamps question count to ten", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const questionCount = screen.getByRole("spinbutton") as HTMLInputElement;
+    await user.clear(questionCount);
+    await user.type(questionCount, "30");
+
+    await user.click(screen.getByRole("tab", { name: /cyfry/i }));
+
+    expect(questionCount).toHaveValue(10);
+    expect(questionCount).toHaveAttribute("max", "10");
+    expect(screen.getByRole("heading", { name: /baw się cyframi/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    expect(screen.getByRole("heading", { name: /wybierz cyfrę/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /wybierz cyfrę/i })).toHaveLength(4);
+  });
+
+  it("starts each digit game with digit-specific labels", async () => {
+    const user = userEvent.setup();
+    const games = [
+      { gameName: /usłysz cyfrę, wybierz kartę/i, heading: /wybierz cyfrę/i },
+      { gameName: /usłysz cyfrę, napisz ją/i, heading: /narysuj cyfrę/i },
+      { gameName: /zobacz cyfrę, wybierz dźwięk/i, heading: /wybierz pasujący dźwięk/i },
+      { gameName: /zobacz cyfrę, powiedz ją/i, heading: /powiedz tę cyfrę/i }
+    ];
+
+    for (const { gameName, heading } of games) {
+      const { unmount } = render(<App />);
+      await user.click(screen.getByRole("tab", { name: /cyfry/i }));
+      await user.click(screen.getByRole("button", { name: gameName }));
+      await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+      expect(screen.getByText(/\d \/ 10/)).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+      unmount();
+    }
+  });
+
   it("shows previously earned stamps on setup", () => {
     saveStamp(
-      { language: "pl", gameMode: "hear-pick" },
+      { language: "pl", characterSet: "letters", gameMode: "hear-pick" },
       {
         totalScore: 95,
         maxScore: 100,
@@ -202,9 +243,33 @@ describe("App", () => {
     expect(screen.getByLabelText(/a jak auto stempel/i)).toBeInTheDocument();
   });
 
+  it("shows previously earned digit stamps on the digit tab", async () => {
+    const user = userEvent.setup();
+    saveStamp(
+      { language: "pl", characterSet: "digits", gameMode: "hear-pick" },
+      {
+        totalScore: 95,
+        maxScore: 100,
+        accuracy: 95,
+        strongLetters: [],
+        practiceLetters: [],
+        results: [{ letter: "4", attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+      },
+      "2026-06-10T10:00:00.000Z"
+    );
+
+    render(<App />);
+
+    expect(screen.queryByLabelText(/cyfra 4 stempel/i)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: /cyfry/i }));
+
+    expect(screen.getByLabelText(/cyfra 4 stempel/i)).toBeInTheDocument();
+  });
+
   it("awards a new stamp on the results screen", async () => {
     const user = userEvent.setup();
-    const questions = generateQuestions("pl", 3, "session-1000-0.00289");
+    const questions = generateQuestions("pl", "letters", 3, "session-1000-0.00289");
     render(<App />);
 
     for (let count = 0; count < 7; count += 1) {
@@ -222,12 +287,12 @@ describe("App", () => {
 
   it("shows a completed alphabet stamp when the last missing letter is earned", async () => {
     const user = userEvent.setup();
-    const questions = generateQuestions("pl", 3, "session-1000-0.00289");
+    const questions = generateQuestions("pl", "letters", 3, "session-1000-0.00289");
     const missingLetter = questions[0].target.display;
 
     for (const letter of getLetters("pl").map((item) => item.display).filter((letter) => letter !== missingLetter)) {
       saveStamp(
-        { language: "pl", gameMode: "hear-pick" },
+        { language: "pl", characterSet: "letters", gameMode: "hear-pick" },
         {
           totalScore: 95,
           maxScore: 100,
@@ -299,16 +364,11 @@ describe("App", () => {
     const canvas = screen.getByRole("img", { name: /drawing area/i });
     prepareCanvas(canvas);
     drawStroke(canvas, [
-      { x: 18, y: 8 },
-      { x: 18, y: 92 }
-    ]);
-    drawStroke(canvas, [
-      { x: 82, y: 8 },
-      { x: 82, y: 92 }
-    ]);
-    drawStroke(canvas, [
-      { x: 18, y: 50 },
-      { x: 82, y: 50 }
+      { x: 10, y: 8 },
+      { x: 28, y: 92 },
+      { x: 50, y: 50 },
+      { x: 72, y: 92 },
+      { x: 90, y: 8 }
     ]);
 
     await user.click(screen.getByRole("button", { name: /check/i }));
@@ -392,7 +452,7 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /zacznij nagrywanie/i }));
 
     await act(async () => {
-      WorkingSpeechRecognition.instances[0].onresult?.({ results: [[{ transcript: "air" }, { transcript: "r" }]] });
+      WorkingSpeechRecognition.instances[0].onresult?.({ results: [[{ transcript: "ty" }]] });
     });
 
     expect(screen.getByText("2 / 10")).toBeInTheDocument();

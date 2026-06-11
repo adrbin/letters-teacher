@@ -1,7 +1,7 @@
 {
   "name": "Letters Teacher",
   "short_name": "Letters",
-  "description": "A playful letter learning PWA for children.",
+  "description": "A playful character learning PWA for children.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fff7ed",

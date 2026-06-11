@@ -419,22 +419,54 @@ function ExampleShape({ imageId }: { imageId: string }) {
   return <PlantShape kind="flower" />;
 }
 
-const digitPositions = [
-  { x: 64, y: 62 },
-  { x: 46, y: 48 },
-  { x: 82, y: 48 },
-  { x: 46, y: 76 },
-  { x: 82, y: 76 },
-  { x: 28, y: 48 },
-  { x: 100, y: 48 },
-  { x: 28, y: 78 },
-  { x: 100, y: 78 }
-];
+const digitGridColumns = {
+  1: [64],
+  2: [44, 84],
+  3: [28, 64, 100]
+} as const;
+
+const digitGridRows: Record<number, readonly (1 | 2 | 3)[]> = {
+  1: [1],
+  2: [2],
+  3: [3],
+  4: [2, 2],
+  5: [2, 1, 2],
+  6: [3, 3],
+  7: [3, 1, 3],
+  8: [3, 2, 3],
+  9: [3, 3, 3]
+};
+
+const digitGridRowY = {
+  1: [64],
+  2: [44, 84],
+  3: [30, 64, 98]
+} as const;
+
+const countItemScale = 0.38;
+
+export function getCenteredCountItemTransform(x: number, y: number): string {
+  const offset = 64 * countItemScale;
+  return `translate(${x - offset} ${y - offset}) scale(${countItemScale})`;
+}
+
+export function getDigitGridPositions(count: number): { x: number; y: number }[] {
+  const rows = digitGridRows[count];
+  if (!rows) return [];
+
+  const rowY = digitGridRowY[rows.length as 1 | 2 | 3];
+  return rows.flatMap((columns, rowIndex) =>
+    digitGridColumns[columns].map((x) => ({
+      x,
+      y: rowY[rowIndex]
+    }))
+  );
+}
 
 function CountItem({ imageId, x, y }: { imageId: string; x: number; y: number }) {
   if (imageId === "count-butterfly") {
     return (
-      <g transform={`translate(${x - 16} ${y - 16}) scale(0.5)`}>
+      <g transform={getCenteredCountItemTransform(x, y)}>
         <BirdShape kind="butterfly" />
       </g>
     );
@@ -442,7 +474,7 @@ function CountItem({ imageId, x, y }: { imageId: string; x: number; y: number })
 
   if (imageId === "count-leaf") {
     return (
-      <g transform={`translate(${x - 16} ${y - 16}) scale(0.5)`}>
+      <g transform={getCenteredCountItemTransform(x, y)}>
         <PlantShape kind="leaf" />
       </g>
     );
@@ -453,7 +485,7 @@ function CountItem({ imageId, x, y }: { imageId: string; x: number; y: number })
   }
 
   return (
-    <g transform={`translate(${x - 16} ${y - 18}) scale(0.5)`}>
+    <g transform={getCenteredCountItemTransform(x, y)}>
       <PlantShape kind="flower" />
     </g>
   );
@@ -473,7 +505,7 @@ function DigitShape({ digit, imageId }: { digit: string; imageId: string }) {
 
   return (
     <>
-      {digitPositions.slice(0, count).map((position, index) => (
+      {getDigitGridPositions(count).map((position, index) => (
         <CountItem key={`${position.x}-${position.y}-${index}`} imageId={imageId} x={position.x} y={position.y} />
       ))}
     </>

@@ -1,6 +1,9 @@
-import { languageNames } from "../data/letters";
+import { getLetters, languageNames } from "../data/letters";
 import { getCopy } from "../i18n";
 import type { GameMode, LanguageCode, SessionSettings } from "../types";
+
+const MIN_QUESTION_COUNT = 3;
+const MAX_QUESTION_COUNT = 30;
 
 const gameOptions: Array<{ mode: GameMode; accent: string }> = [
   { mode: "hear-pick", accent: "bg-orange-500" },
@@ -15,9 +18,29 @@ type Props = {
   onStart: () => void;
 };
 
+function getMaxQuestionCount(language: LanguageCode): number {
+  return Math.min(MAX_QUESTION_COUNT, getLetters(language).length);
+}
+
+function clampQuestionCount(language: LanguageCode, questionCount: number): number {
+  return Math.min(getMaxQuestionCount(language), Math.max(MIN_QUESTION_COUNT, questionCount || 10));
+}
+
 export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
   const copy = getCopy(settings.language);
+  const maxQuestionCount = getMaxQuestionCount(settings.language);
   const setValue = <Key extends keyof SessionSettings>(key: Key, value: SessionSettings[Key]) => {
+    if (key === "language") {
+      const language = value as LanguageCode;
+      onSettingsChange({ ...settings, language, questionCount: clampQuestionCount(language, settings.questionCount) });
+      return;
+    }
+
+    if (key === "questionCount") {
+      onSettingsChange({ ...settings, questionCount: clampQuestionCount(settings.language, value as number) });
+      return;
+    }
+
     onSettingsChange({ ...settings, [key]: value });
   };
 
@@ -47,25 +70,23 @@ export function SetupScreen({ settings, onSettingsChange, onStart }: Props) {
                     className="control-button w-16 bg-slate-900 text-2xl text-white"
                     type="button"
                     aria-label={copy.decreaseQuestionCount}
-                    onClick={() => setValue("questionCount", Math.max(3, settings.questionCount - 1))}
+                    onClick={() => setValue("questionCount", settings.questionCount - 1)}
                   >
                     -
                   </button>
                   <input
                     className="min-h-14 w-24 rounded-2xl border-2 border-slate-200 text-center text-2xl font-black"
                     type="number"
-                    min={3}
-                    max={30}
+                    min={MIN_QUESTION_COUNT}
+                    max={maxQuestionCount}
                     value={settings.questionCount}
-                    onChange={(event) =>
-                      setValue("questionCount", Math.min(30, Math.max(3, Number(event.target.value) || 10)))
-                    }
+                    onChange={(event) => setValue("questionCount", Number(event.target.value))}
                   />
                   <button
                     className="control-button w-16 bg-slate-900 text-2xl text-white"
                     type="button"
                     aria-label={copy.increaseQuestionCount}
-                    onClick={() => setValue("questionCount", Math.min(30, settings.questionCount + 1))}
+                    onClick={() => setValue("questionCount", settings.questionCount + 1)}
                   >
                     +
                   </button>

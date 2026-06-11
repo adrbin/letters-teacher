@@ -60,13 +60,13 @@ const englishSpeechNames: Record<string, string> = {
 
 const polishAliases: Record<string, string[]> = {
   A: ["a"],
-  Ą: ["ą", "a z ogonkiem"],
-  B: ["b", "be"],
+  Ą: ["ą", "a z ogonkiem", "on", "om"],
+  B: ["b", "be", "by"],
   C: ["c", "ce"],
-  Ć: ["ć", "cie"],
-  D: ["d", "de"],
+  Ć: ["ć", "cie", "ci"],
+  D: ["d", "de", "dy"],
   E: ["e"],
-  Ę: ["ę", "e z ogonkiem"],
+  Ę: ["ę", "e z ogonkiem", "en", "em"],
   F: ["f", "ef"],
   G: ["g", "gie"],
   H: ["h", "ha"],
@@ -74,23 +74,23 @@ const polishAliases: Record<string, string[]> = {
   J: ["j", "jot"],
   K: ["k", "ka"],
   L: ["l", "el"],
-  Ł: ["ł", "eł"],
+  Ł: ["ł", "eł", "el"],
   M: ["m", "em"],
   N: ["n", "en"],
-  Ń: ["ń", "eń"],
+  Ń: ["ń", "eń", "eni", "ni"],
   O: ["o"],
-  Ó: ["ó", "u kreskowane", "o kreskowane"],
-  P: ["p", "pe"],
+  Ó: ["ó", "u", "u kreskowane", "o kreskowane"],
+  P: ["p", "pe", "py"],
   R: ["r", "er"],
   S: ["s", "es"],
-  Ś: ["ś", "eś"],
-  T: ["t", "te"],
+  Ś: ["ś", "eś", "si"],
+  T: ["t", "te", "ty"],
   U: ["u"],
   W: ["w", "wu"],
   Y: ["y", "igrek"],
   Z: ["z", "zet"],
-  Ź: ["ź", "ziet"],
-  Ż: ["ż", "żet"]
+  Ź: ["ź", "ziet", "zi"],
+  Ż: ["ż", "żet", "rz", "rzet"]
 };
 
 const polishSpeechNames: Record<string, string> = {
@@ -164,7 +164,20 @@ export function getLetters(language: LanguageCode): LetterItem[] {
   return lettersByLanguage[language];
 }
 
+function normalizeTranscript(value: string, language: LanguageCode): string {
+  return value
+    .trim()
+    .toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function matchesLetterTranscript(letter: LetterItem, transcript: string): boolean {
-  const cleaned = transcript.trim().toLocaleLowerCase(letter.language === "pl" ? "pl-PL" : "en-US");
-  return letter.aliases.some((alias) => cleaned === alias || cleaned.includes(alias));
+  const cleaned = normalizeTranscript(transcript, letter.language);
+  const words = cleaned.split(" ").filter(Boolean);
+  return letter.aliases.some((alias) => {
+    const normalizedAlias = normalizeTranscript(alias, letter.language);
+    return cleaned === normalizedAlias || words.includes(normalizedAlias) || cleaned.includes(` ${normalizedAlias} `);
+  });
 }

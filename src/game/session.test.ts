@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { answerQuestion, createSession, remainingPoints, summarizeSession } from "./session";
 
 describe("session", () => {
@@ -7,6 +7,34 @@ describe("session", () => {
     expect(remainingPoints(1)).toBe(7);
     expect(remainingPoints(2)).toBe(4);
     expect(remainingPoints(8)).toBe(1);
+  });
+
+  it("uses a fresh default seed for new sessions", () => {
+    const dateSpy = vi.spyOn(Date, "now").mockReturnValue(1000);
+    const randomSpy = vi.spyOn(Math, "random").mockReturnValueOnce(0.111).mockReturnValueOnce(0.999);
+
+    const first = createSession({ language: "en", gameMode: "hear-pick", questionCount: 10 }).questions.map(
+      (question) => question.id
+    );
+    const second = createSession({ language: "en", gameMode: "hear-pick", questionCount: 10 }).questions.map(
+      (question) => question.id
+    );
+
+    expect(first).not.toEqual(second);
+
+    randomSpy.mockRestore();
+    dateSpy.mockRestore();
+  });
+
+  it("keeps explicit session seeds deterministic", () => {
+    const first = createSession({ language: "en", gameMode: "hear-pick", questionCount: 10 }, "seed").questions.map(
+      (question) => question.id
+    );
+    const second = createSession({ language: "en", gameMode: "hear-pick", questionCount: 10 }, "seed").questions.map(
+      (question) => question.id
+    );
+
+    expect(first).toEqual(second);
   });
 
   it("does not advance after a wrong answer", () => {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getLetters, matchesLetterTranscript } from "../data/letters";
 import { answerQuestion, remainingPoints, type SessionState } from "../game/session";
-import { recognizeLetter, type Stroke } from "../handwriting/recognizer";
+import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
 import { getCopy, translateFeedback } from "../i18n";
@@ -45,10 +45,15 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
   useEffect(() => {
     setStrokes([]);
     setHeardTranscript("");
+    let speakTimeout: number | undefined;
     if (session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write") {
-      window.setTimeout(() => speak(question.target), 250);
+      speakTimeout = window.setTimeout(() => speak(question.target), 250);
     }
-  }, [question.id, question.target, session.settings.gameMode, speak]);
+    return () => {
+      if (speakTimeout) window.clearTimeout(speakTimeout);
+      recognition.abort();
+    };
+  }, [question.id, question.target, recognition.abort, session.settings.gameMode, speak]);
 
   const progressLabel = `${session.currentIndex + 1} / ${session.questions.length}`;
   const availablePoints = remainingPoints(session.wrongAttempts.length);
@@ -207,7 +212,15 @@ function HearWriteGame({
   letters: LetterItem[];
   copy: Copy;
 }) {
-  const recognized = useMemo(() => recognizeLetter(strokes, letters.map((letter) => letter.display)), [letters, strokes]);
+  const recognized = useMemo(
+    () =>
+      recognizeExpectedLetter(
+        strokes,
+        target.display,
+        letters.map((letter) => letter.display)
+      ),
+    [letters, strokes, target.display]
+  );
 
   return (
     <div className="grid gap-5 text-center">
@@ -221,7 +234,10 @@ function HearWriteGame({
         <button
           className="control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200"
           type="button"
-          onClick={() => onAnswer(recognized.letter === target.display ? target.display : "")}
+          data-recognized-letter={recognized.letter ?? ""}
+          data-recognition-confidence={recognized.confidence.toFixed(3)}
+          data-recognition-matches={recognized.matches ? "true" : "false"}
+          onClick={() => onAnswer(recognized.matches ? target.display : "")}
         >
           {copy.check}
         </button>

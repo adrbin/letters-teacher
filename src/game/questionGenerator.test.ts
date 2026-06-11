@@ -10,6 +10,26 @@ describe("generateQuestions", () => {
     expect(first).toEqual(second);
   });
 
+  it("uses different target orders for different seeds", () => {
+    const first = generateQuestions("pl", 10, "first-seed").map((question) => question.target.display);
+    const second = generateQuestions("pl", 10, "second-seed").map((question) => question.target.display);
+
+    expect(first).not.toEqual(second);
+  });
+
+  it("does not repeat target letters within a quiz", () => {
+    const targetDisplays = generateQuestions("pl", 30, "seed").map((question) => question.target.display);
+
+    expect(new Set(targetDisplays).size).toBe(targetDisplays.length);
+  });
+
+  it("caps generated questions at the language alphabet size", () => {
+    const targetDisplays = generateQuestions("en", 30, "seed").map((question) => question.target.display);
+
+    expect(targetDisplays).toHaveLength(26);
+    expect(new Set(targetDisplays).size).toBe(26);
+  });
+
   it("keeps each option set unique and includes the target", () => {
     const questions = generateQuestions("en", 10, "seed");
 

@@ -16,10 +16,14 @@ export type SessionState = {
   completed: boolean;
 };
 
+function createRuntimeSeed(): string {
+  return `session-${Date.now()}-${Math.random()}`;
+}
+
 export function createSession(settings: SessionSettings, seed?: string): SessionState {
   return {
     settings,
-    questions: generateQuestions(settings.language, settings.questionCount, seed),
+    questions: generateQuestions(settings.language, settings.questionCount, seed ?? createRuntimeSeed()),
     currentIndex: 0,
     score: 0,
     results: [],

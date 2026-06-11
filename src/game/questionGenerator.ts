@@ -34,14 +34,11 @@ export function generateQuestions(language: LanguageCode, questionCount: number,
   const random = createRandom(`${seed}-${language}-${questionCount}`);
   const letters = getLetters(language);
   const targets: Question[] = [];
-  let shuffledLetters = shuffle(letters, random);
+  const shuffledLetters = shuffle(letters, random);
+  const targetCount = Math.min(Math.max(0, questionCount), letters.length);
 
-  for (let index = 0; index < questionCount; index += 1) {
-    if (index > 0 && index % shuffledLetters.length === 0) {
-      shuffledLetters = shuffle(letters, random);
-    }
-
-    const target = shuffledLetters[index % shuffledLetters.length];
+  for (let index = 0; index < targetCount; index += 1) {
+    const target = shuffledLetters[index];
     const distractors = shuffle(
       letters.filter((letter) => letter.display !== target.display),
       random

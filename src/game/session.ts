@@ -11,6 +11,7 @@ export type SessionState = {
   currentIndex: number;
   score: number;
   results: LetterResult[];
+  pendingResult: AttemptResult | null;
   wrongAttempts: string[];
   lastFeedback: string;
   completed: boolean;
@@ -27,6 +28,7 @@ export function createSession(settings: SessionSettings, seed?: string): Session
     currentIndex: 0,
     score: 0,
     results: [],
+    pendingResult: null,
     wrongAttempts: [],
     lastFeedback: "",
     completed: false
@@ -38,7 +40,7 @@ export function remainingPoints(wrongAttemptCount: number): number {
 }
 
 export function answerQuestion(state: SessionState, answer: string): { state: SessionState; result: AttemptResult } {
-  if (state.completed) {
+  if (state.completed || state.pendingResult) {
     return {
       state,
       result: {
@@ -80,25 +82,41 @@ export function answerQuestion(state: SessionState, answer: string): { state: Se
     correct: true
   };
   const results = [...state.results, result];
-  const nextIndex = state.currentIndex + 1;
-  const completed = nextIndex >= state.questions.length;
+  const feedback = availablePoints === MAX_POINTS_PER_QUESTION ? "Wonderful!" : "You got it!";
+  const attemptResult: AttemptResult = {
+    correct: true,
+    awardedPoints: availablePoints,
+    remainingPoints: availablePoints,
+    feedback
+  };
 
   return {
     state: {
       ...state,
-      currentIndex: completed ? state.currentIndex : nextIndex,
       score: state.score + availablePoints,
       results,
-      wrongAttempts: [],
-      lastFeedback: availablePoints === MAX_POINTS_PER_QUESTION ? "Wonderful!" : "You got it!",
-      completed
+      pendingResult: attemptResult,
+      lastFeedback: feedback
     },
-    result: {
-      correct: true,
-      awardedPoints: availablePoints,
-      remainingPoints: completed ? 0 : MAX_POINTS_PER_QUESTION,
-      feedback: availablePoints === MAX_POINTS_PER_QUESTION ? "Wonderful!" : "You got it!"
-    }
+    result: attemptResult
+  };
+}
+
+export function advanceQuestion(state: SessionState): SessionState {
+  if (state.completed || !state.pendingResult) {
+    return state;
+  }
+
+  const nextIndex = state.currentIndex + 1;
+  const completed = nextIndex >= state.questions.length;
+
+  return {
+    ...state,
+    currentIndex: completed ? state.currentIndex : nextIndex,
+    pendingResult: null,
+    wrongAttempts: [],
+    lastFeedback: "",
+    completed
   };
 }
 

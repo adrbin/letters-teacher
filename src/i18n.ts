@@ -23,6 +23,8 @@ type Copy = {
   stopRecording: string;
   startRecording: string;
   chooseAnotherGame: string;
+  nextQuestion: string;
+  showResults: string;
   speechRecognitionUnavailable: string;
   speechRecognitionTryAgain: string;
   speechSynthesisUnavailable: string;
@@ -90,6 +92,8 @@ const copies: Record<LanguageCode, Copy> = {
     stopRecording: "Stop recording",
     startRecording: "Start recording",
     chooseAnotherGame: "Choose another game",
+    nextQuestion: "Next question",
+    showResults: "Show results",
     speechRecognitionUnavailable: "Speech recognition is not available in this browser.",
     speechRecognitionTryAgain: "I could not hear that. Try again.",
     speechSynthesisUnavailable: "Speech is not available in this browser.",
@@ -191,6 +195,8 @@ const copies: Record<LanguageCode, Copy> = {
     stopRecording: "Zatrzymaj nagrywanie",
     startRecording: "Zacznij nagrywanie",
     chooseAnotherGame: "Wybierz inną grę",
+    nextQuestion: "Następne pytanie",
+    showResults: "Pokaż wyniki",
     speechRecognitionUnavailable: "Rozpoznawanie mowy nie jest dostępne w tej przeglądarce.",
     speechRecognitionTryAgain: "Nie udało mi się usłyszeć. Spróbuj jeszcze raz.",
     speechSynthesisUnavailable: "Odtwarzanie mowy nie jest dostępne w tej przeglądarce.",

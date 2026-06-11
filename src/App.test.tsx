@@ -66,6 +66,10 @@ function drawStroke(canvas: HTMLElement, points: Array<{ x: number; y: number }>
   fireEvent(canvas, pointerEvent("pointerup", { pointerId: 1 }));
 }
 
+async function continueAfterCorrectAnswer(user: ReturnType<typeof userEvent.setup>, isFinalQuestion = false) {
+  await user.click(screen.getByRole("button", { name: isFinalQuestion ? /pokaż wyniki/i : /następne pytanie/i }));
+}
+
 Object.defineProperty(window, "speechSynthesis", {
   configurable: true,
   value: {
@@ -142,9 +146,15 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /^start$/i }));
     await user.click(screen.getByRole("button", { name: `Wybierz ${target.display}` }));
 
-    expect(screen.getByText("2 / 10")).toBeInTheDocument();
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.getByText("Wspaniale!")).toBeInTheDocument();
     expect(screen.getByText(`${target.display} jak ${target.example!.word}`)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /wybierz/i })).not.toBeInTheDocument();
+
+    await continueAfterCorrectAnswer(user);
+
+    expect(screen.getByText("2 / 10")).toBeInTheDocument();
   });
 
   it("previews a sound before submitting it on the see letter screen", async () => {
@@ -278,8 +288,9 @@ describe("App", () => {
     }
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
-    for (const question of questions) {
+    for (const [index, question] of questions.entries()) {
       await user.click(screen.getByRole("button", { name: `Wybierz ${question.target.display}` }));
+      await continueAfterCorrectAnswer(user, index === questions.length - 1);
     }
 
     expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
@@ -313,8 +324,9 @@ describe("App", () => {
     }
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
-    for (const question of questions) {
+    for (const [index, question] of questions.entries()) {
       await user.click(screen.getByRole("button", { name: `Wybierz ${question.target.display}` }));
+      await continueAfterCorrectAnswer(user, index === questions.length - 1);
     }
 
     expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
@@ -373,6 +385,12 @@ describe("App", () => {
     ]);
 
     await user.click(screen.getByRole("button", { name: /check/i }));
+
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: /drawing area/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /next question/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /next question/i }));
 
     expect(screen.getByText("2 / 10")).toBeInTheDocument();
   });
@@ -442,7 +460,7 @@ describe("App", () => {
     expect(screen.getByRole("button", { name: /zacznij nagrywanie/i })).toBeInTheDocument();
   });
 
-  it("cleans up speech recognition when a spoken answer advances the question", async () => {
+  it("cleans up speech recognition when a spoken answer shows success feedback", async () => {
     Object.defineProperty(window, "webkitSpeechRecognition", { configurable: true, value: WorkingSpeechRecognition });
 
     const user = userEvent.setup();
@@ -456,8 +474,14 @@ describe("App", () => {
       WorkingSpeechRecognition.instances[0].onresult?.({ results: [[{ transcript: "ty" }]] });
     });
 
-    expect(screen.getByText("2 / 10")).toBeInTheDocument();
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.getByText("Wspaniale!")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /zacznij nagrywanie/i })).not.toBeInTheDocument();
     expect(WorkingSpeechRecognition.instances[0].abort).toHaveBeenCalledTimes(1);
+
+    await continueAfterCorrectAnswer(user);
+
+    expect(screen.getByText("2 / 10")).toBeInTheDocument();
   });
 
   it("keeps speech recognition retryable after temporary no-speech errors", async () => {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getCharacters, matchesCharacterTranscript } from "../data/letters";
-import { answerQuestion, remainingPoints, type SessionState } from "../game/session";
+import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } from "../game/session";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
@@ -57,9 +57,18 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
     )
   );
 
+  const showingSuccess = Boolean(session.pendingResult?.correct && answerFeedback?.result.correct);
+  const isFinalQuestion = session.currentIndex >= session.questions.length - 1;
+
+  const handleContinue = useCallback(() => {
+    setAnswerFeedback(null);
+    onSessionChange(advanceQuestion(session));
+  }, [onSessionChange, session]);
+
   useEffect(() => {
     setStrokes([]);
     setHeardTranscript("");
+    setAnswerFeedback(null);
     let speakTimeout: number | undefined;
     if (session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write") {
       speakTimeout = window.setTimeout(() => speak(question.target), 250);
@@ -70,15 +79,21 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
     };
   }, [question.id, question.target, recognition.abort, session.settings.gameMode, speak]);
 
+  useEffect(() => {
+    if (session.pendingResult?.correct) {
+      recognition.abort();
+    }
+  }, [recognition.abort, session.pendingResult?.correct]);
+
   const progressLabel = `${session.currentIndex + 1} / ${session.questions.length}`;
   const availablePoints = remainingPoints(session.wrongAttempts.length);
   const status = translateFeedback(session.settings.language, session.lastFeedback) || speechError || copy.ready;
-  const feedbackTone = answerFeedback?.result.correct ? "answer-correct" : answerFeedback ? "answer-incorrect" : "";
+  const feedbackTone = answerFeedback ? "answer-incorrect" : "";
 
   return (
     <main className="page-shell min-h-screen p-4 sm:p-6">
       <section className="relative mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] bg-white/92 p-4 shadow-soft ring-1 ring-slate-200 sm:min-h-[calc(100vh-3rem)] sm:p-6">
-        {answerFeedback?.result.correct && (
+        {showingSuccess && answerFeedback && (
           <div
             key={`burst-${answerFeedback.feedbackKey}`}
             className="celebration-burst pointer-events-none absolute inset-0"
@@ -107,82 +122,130 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-6">
-          {session.settings.gameMode === "hear-pick" && (
-            <HearPickGame
-              questionTarget={question.target}
-              options={question.options}
-              wrongAttempts={session.wrongAttempts}
-              speechSupported={speechSupported}
-              onSpeak={speak}
-              onAnswer={(answer) => submitAnswer(answer, answer)}
-              answerFeedback={answerFeedback}
+          {showingSuccess && answerFeedback ? (
+            <SuccessFeedback
+              target={answerFeedback.target}
               characterSet={characterSet}
+              status={status}
+              continueLabel={isFinalQuestion ? copy.showResults : copy.nextQuestion}
+              onContinue={handleContinue}
               copy={copy}
+              feedbackKey={answerFeedback.feedbackKey}
             />
-          )}
+          ) : (
+            <>
+              {session.settings.gameMode === "hear-pick" && (
+                <HearPickGame
+                  questionTarget={question.target}
+                  options={question.options}
+                  wrongAttempts={session.wrongAttempts}
+                  speechSupported={speechSupported}
+                  onSpeak={speak}
+                  onAnswer={(answer) => submitAnswer(answer, answer)}
+                  answerFeedback={answerFeedback}
+                  characterSet={characterSet}
+                  copy={copy}
+                />
+              )}
 
-          {session.settings.gameMode === "hear-write" && (
-            <HearWriteGame
-              target={question.target}
-              strokes={strokes}
-              onStrokesChange={setStrokes}
-              speechSupported={speechSupported}
-              onSpeak={speak}
-              onAnswer={(answer) => submitAnswer(answer, "check")}
-              letters={getCharacters(session.settings.language, characterSet)}
-              answerFeedback={answerFeedback}
-              characterSet={characterSet}
-              copy={copy}
-            />
-          )}
+              {session.settings.gameMode === "hear-write" && (
+                <HearWriteGame
+                  target={question.target}
+                  strokes={strokes}
+                  onStrokesChange={setStrokes}
+                  speechSupported={speechSupported}
+                  onSpeak={speak}
+                  onAnswer={(answer) => submitAnswer(answer, "check")}
+                  letters={getCharacters(session.settings.language, characterSet)}
+                  answerFeedback={answerFeedback}
+                  characterSet={characterSet}
+                  copy={copy}
+                />
+              )}
 
-          {session.settings.gameMode === "see-pick-sound" && (
-            <SeePickSoundGame
-              options={question.options}
-              target={question.target}
-              speechSupported={speechSupported}
-              onSpeak={speak}
-              onAnswer={(answer) => submitAnswer(answer, answer)}
-              answerFeedback={answerFeedback}
-              copy={copy}
-            />
-          )}
+              {session.settings.gameMode === "see-pick-sound" && (
+                <SeePickSoundGame
+                  options={question.options}
+                  target={question.target}
+                  speechSupported={speechSupported}
+                  onSpeak={speak}
+                  onAnswer={(answer) => submitAnswer(answer, answer)}
+                  answerFeedback={answerFeedback}
+                  copy={copy}
+                />
+              )}
 
-          {session.settings.gameMode === "see-say" && (
-            <SeeSayGame
-              target={question.target}
-              transcript={heardTranscript}
-              recognition={recognition}
-              onExit={onExit}
-              characterSet={characterSet}
-              copy={copy}
-            />
+              {session.settings.gameMode === "see-say" && (
+                <SeeSayGame
+                  target={question.target}
+                  transcript={heardTranscript}
+                  recognition={recognition}
+                  onExit={onExit}
+                  characterSet={characterSet}
+                  copy={copy}
+                />
+              )}
+            </>
           )}
         </div>
 
-        {answerFeedback?.result.correct && (
+        {!showingSuccess && (
           <div
-            key={`example-${answerFeedback.feedbackKey}`}
-            className="answer-correct mx-auto mb-4 flex w-full max-w-xl items-center justify-center gap-4 rounded-3xl bg-emerald-100 p-3 text-center text-emerald-950"
+            key={answerFeedback ? `status-${answerFeedback.feedbackKey}` : "status"}
+            className="min-h-16 rounded-3xl bg-slate-950 px-5 py-4 text-center text-xl font-black text-white"
             role="status"
+            aria-live="polite"
           >
-            <LetterImage letter={answerFeedback.target} compact />
-            <p className="text-xl font-black">
-              {copy.characterExample[characterSet](answerFeedback.target.display, answerFeedback.target.example?.word)}
-            </p>
+            <span className={feedbackTone}>{status}</span>
           </div>
         )}
-
-        <div
-          key={answerFeedback ? `status-${answerFeedback.feedbackKey}` : "status"}
-          className="min-h-16 rounded-3xl bg-slate-950 px-5 py-4 text-center text-xl font-black text-white"
-          role="status"
-          aria-live="polite"
-        >
-          <span className={feedbackTone}>{status}</span>
-        </div>
       </section>
     </main>
+  );
+}
+
+function SuccessFeedback({
+  target,
+  characterSet,
+  status,
+  continueLabel,
+  onContinue,
+  copy,
+  feedbackKey
+}: {
+  target: LetterItem;
+  characterSet: "letters" | "digits";
+  status: string;
+  continueLabel: string;
+  onContinue: () => void;
+  copy: Copy;
+  feedbackKey: number;
+}) {
+  return (
+    <div
+      key={`success-${feedbackKey}`}
+      className="answer-correct mx-auto grid w-full max-w-2xl gap-5 rounded-3xl bg-emerald-100 p-5 text-center text-emerald-950 ring-4 ring-emerald-200"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="success-stars flex justify-center gap-3 text-3xl text-amber-400" aria-hidden="true">
+        <span>★</span>
+        <span>★</span>
+        <span>★</span>
+      </div>
+      <p className="text-3xl font-black">{status}</p>
+      <div className="mx-auto flex w-full max-w-xl flex-wrap items-center justify-center gap-4 rounded-3xl bg-white/75 p-4">
+        <LetterImage letter={target} compact />
+        <p className="text-2xl font-black">{copy.characterExample[characterSet](target.display, target.example?.word)}</p>
+      </div>
+      <button
+        className="control-button mx-auto w-full max-w-md bg-emerald-600 px-6 py-4 text-2xl text-white shadow-lg shadow-emerald-200"
+        type="button"
+        onClick={onContinue}
+      >
+        {continueLabel}
+      </button>
+    </div>
   );
 }
 

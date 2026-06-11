@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { answerQuestion, createSession, remainingPoints, summarizeSession } from "./session";
+import { advanceQuestion, answerQuestion, createSession, remainingPoints, summarizeSession } from "./session";
 
 describe("session", () => {
   it("reduces available points after wrong attempts", () => {
@@ -48,16 +48,32 @@ describe("session", () => {
     expect(next.state.wrongAttempts).toHaveLength(1);
   });
 
-  it("advances after a correct answer and finishes at the configured count", () => {
+  it("records a correct answer without advancing until confirmed", () => {
     let session = createSession({ language: "en", characterSet: "letters", gameMode: "hear-pick", questionCount: 2 }, "seed");
 
     session = answerQuestion(session, session.questions[0].target.display).state;
+    expect(session.currentIndex).toBe(0);
+    expect(session.completed).toBe(false);
+    expect(session.pendingResult?.correct).toBe(true);
+    expect(session.results).toHaveLength(1);
+
+    session = advanceQuestion(session);
+    expect(session.currentIndex).toBe(1);
+    expect(session.pendingResult).toBeNull();
+  });
+
+  it("finishes only after advancing from the final correct answer", () => {
+    let session = createSession({ language: "en", characterSet: "letters", gameMode: "hear-pick", questionCount: 2 }, "seed");
+
+    session = advanceQuestion(answerQuestion(session, session.questions[0].target.display).state);
+    session = answerQuestion(session, session.questions[1].target.display).state;
     expect(session.currentIndex).toBe(1);
     expect(session.completed).toBe(false);
-
-    session = answerQuestion(session, session.questions[1].target.display).state;
-    expect(session.completed).toBe(true);
+    expect(session.pendingResult?.correct).toBe(true);
     expect(session.results).toHaveLength(2);
+
+    session = advanceQuestion(session);
+    expect(session.completed).toBe(true);
   });
 
   it("summarizes strong and practice letters", () => {
@@ -65,6 +81,7 @@ describe("session", () => {
     const firstWrong = session.questions[0].options.find((option) => option.display !== session.questions[0].target.display)!;
     session = answerQuestion(session, firstWrong.display).state;
     session = answerQuestion(session, session.questions[0].target.display).state;
+    session = advanceQuestion(session);
     session = answerQuestion(session, session.questions[1].target.display).state;
 
     const summary = summarizeSession(session);

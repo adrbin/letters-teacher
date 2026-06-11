@@ -450,14 +450,20 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: /zobacz literę, powiedz ją/i }));
     await user.click(screen.getByRole("button", { name: /^start$/i }));
-    await user.click(screen.getByRole("button", { name: /zacznij nagrywanie/i }));
 
-    expect(screen.getByRole("button", { name: /zatrzymaj nagrywanie/i })).toBeInTheDocument();
+    const startRecordingButton = screen.getByRole("button", { name: /zacznij nagrywanie/i });
+    expect(startRecordingButton).toHaveTextContent("●");
 
-    await user.click(screen.getByRole("button", { name: /zatrzymaj nagrywanie/i }));
+    await user.click(startRecordingButton);
+
+    const stopRecordingButton = screen.getByRole("button", { name: /zatrzymaj nagrywanie/i });
+    expect(stopRecordingButton).toBeInTheDocument();
+    expect(stopRecordingButton).toHaveTextContent("■");
+
+    await user.click(stopRecordingButton);
 
     expect(WorkingSpeechRecognition.instances[0].stop).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /zacznij nagrywanie/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /zacznij nagrywanie/i })).toHaveTextContent("●");
   });
 
   it("cleans up speech recognition when a spoken answer shows success feedback", async () => {

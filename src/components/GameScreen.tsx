@@ -467,7 +467,7 @@ function SeeSayGame({
             aria-label={recognition.listening ? copy.stopRecording : copy.startRecording}
             onClick={recognition.listening ? recognition.stop : recognition.start}
           >
-            ●
+            <span aria-hidden="true">{recognition.listening ? "■" : "●"}</span>
           </button>
           <p className="min-h-8 text-xl font-black text-slate-700">{transcript ? `${copy.heard}: ${transcript}` : recognition.error}</p>
         </>

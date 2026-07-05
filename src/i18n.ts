@@ -5,9 +5,11 @@ type Copy = {
   headline: Record<CharacterSet, string>;
   language: string;
   questions: string;
+  questionCountSummary: (count: number) => string;
   letterCase: string;
   letterCaseOptions: Record<LetterCase, string>;
   characterSetTabs: Record<CharacterSet, string>;
+  choosePractice: string;
   chooseGame: string;
   settings: string;
   done: string;
@@ -59,6 +61,7 @@ type Copy = {
   collectionCompleteLabel: Record<CharacterSet, (count: number) => string>;
   collectionCompleteTitle: Record<CharacterSet, string>;
   gameTitles: Record<CharacterSet, Record<GameMode, string>>;
+  gameShortTitles: Record<CharacterSet, Record<GameMode, string>>;
   feedback: Record<string, string>;
 };
 
@@ -72,6 +75,7 @@ const copies: Record<LanguageCode, Copy> = {
     },
     language: "Language",
     questions: "Questions",
+    questionCountSummary: (count) => `${count} questions`,
     letterCase: "Letter case",
     letterCaseOptions: {
       uppercase: "Capital letters",
@@ -82,6 +86,7 @@ const copies: Record<LanguageCode, Copy> = {
       digits: "Digits",
       words: "Words"
     },
+    choosePractice: "What to practice?",
     chooseGame: "Choose a game",
     settings: "Settings",
     done: "Done",
@@ -192,6 +197,26 @@ const copies: Record<LanguageCode, Copy> = {
         "see-say": "See word, say it"
       }
     },
+    gameShortTitles: {
+      letters: {
+        "hear-pick": "Listen and pick",
+        "hear-write": "Listen and write",
+        "see-pick-sound": "Match sound",
+        "see-say": "See and say"
+      },
+      digits: {
+        "hear-pick": "Listen and pick",
+        "hear-write": "Listen and write",
+        "see-pick-sound": "Match sound",
+        "see-say": "See and say"
+      },
+      words: {
+        "hear-pick": "Listen and pick",
+        "hear-write": "Listen and spell",
+        "see-pick-sound": "Match sound",
+        "see-say": "See and say"
+      }
+    },
     feedback: {
       "This game is finished.": "This game is finished.",
       "Almost. Try once more.": "Almost. Try once more.",
@@ -208,6 +233,7 @@ const copies: Record<LanguageCode, Copy> = {
     },
     language: "Język",
     questions: "Pytania",
+    questionCountSummary: (count) => `${count} pytań`,
     letterCase: "Wielkość liter",
     letterCaseOptions: {
       uppercase: "Wielkie litery",
@@ -218,6 +244,7 @@ const copies: Record<LanguageCode, Copy> = {
       digits: "Cyfry",
       words: "Słowa"
     },
+    choosePractice: "Co ćwiczymy?",
     chooseGame: "Wybierz grę",
     settings: "Ustawienia",
     done: "Gotowe",
@@ -326,6 +353,26 @@ const copies: Record<LanguageCode, Copy> = {
         "hear-write": "Usłysz słowo, ułóż je",
         "see-pick-sound": "Zobacz słowo, wybierz dźwięk",
         "see-say": "Zobacz słowo, powiedz je"
+      }
+    },
+    gameShortTitles: {
+      letters: {
+        "hear-pick": "Słuchaj i wybierz",
+        "hear-write": "Słuchaj i napisz",
+        "see-pick-sound": "Dopasuj dźwięk",
+        "see-say": "Zobacz i powiedz"
+      },
+      digits: {
+        "hear-pick": "Słuchaj i wybierz",
+        "hear-write": "Słuchaj i napisz",
+        "see-pick-sound": "Dopasuj dźwięk",
+        "see-say": "Zobacz i powiedz"
+      },
+      words: {
+        "hear-pick": "Słuchaj i wybierz",
+        "hear-write": "Słuchaj i ułóż",
+        "see-pick-sound": "Dopasuj dźwięk",
+        "see-say": "Zobacz i powiedz"
       }
     },
     feedback: {

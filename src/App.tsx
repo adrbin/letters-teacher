@@ -5,10 +5,10 @@ import { ResultsScreen } from "./components/ResultsScreen";
 import { SettingsScreen } from "./components/SettingsScreen";
 import { speechLocales } from "./data/letters";
 import { createSession, summarizeSession, type SessionState } from "./game/session";
-import { loadAppSettings, saveAppSettings } from "./game/settings";
+import { loadAppSettings, saveAppSettings, updateSessionSetting } from "./game/settings";
 import { loadStamps, saveStamp } from "./game/stamps";
 import { useSpeechSynthesis } from "./hooks/useSpeechSynthesis";
-import type { AppSettings, EarnedStamp, SessionSettings } from "./types";
+import type { AppSettings, CharacterSet, EarnedStamp, GameMode, SessionSettings } from "./types";
 
 type AppView = "home" | "settings";
 
@@ -45,6 +45,10 @@ export default function App() {
 
   const setSettings = (settings: SessionSettings) => {
     setAppSettings((current) => ({ ...current, session: settings }));
+  };
+
+  const setSessionSetting = <Key extends keyof SessionSettings>(key: Key, value: SessionSettings[Key]) => {
+    setAppSettings((current) => ({ ...current, session: updateSessionSetting(current.session, key, value) }));
   };
 
   const setReadUiActionsAloud = (readUiActionsAloud: boolean) => {
@@ -103,6 +107,8 @@ export default function App() {
       settings={settings}
       stamps={stamps.filter((stamp) => stamp.language === settings.language && stamp.characterSet === settings.characterSet)}
       onStart={startSession}
+      onCharacterSetChange={(characterSet: CharacterSet) => setSessionSetting("characterSet", characterSet)}
+      onGameModeChange={(gameMode: GameMode) => setSessionSetting("gameMode", gameMode)}
       onOpenSettings={() => setView("settings")}
       onUiAction={speakUiAction}
     />

@@ -2,6 +2,8 @@
 
 A React PWA for helping children learn letters, digits, and simple words through playful practice games. The app supports Polish and English, uses browser speech APIs, includes local handwriting and tile spelling practice flows, and is designed to work well on phones, tablets, and desktops.
 
+Try it at: https://letters-teacher.netlify.app
+
 ## Features
 
 - Practice letters, digits, or simple words in separate tabs.

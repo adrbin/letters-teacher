@@ -187,8 +187,8 @@ describe("App", () => {
     expect(digitsIcon).toHaveAttribute("aria-hidden", "true");
     expect(lettersIcon?.querySelector("rect") ?? null).not.toBeInTheDocument();
     expect(digitsIcon?.querySelector("rect") ?? null).not.toBeInTheDocument();
-    expect(lettersGlyph).toHaveAttribute("font-size", "15.5");
-    expect(digitsGlyph).toHaveAttribute("font-size", "16.5");
+    expect(lettersGlyph).toHaveAttribute("font-size", "18.5");
+    expect(digitsGlyph).toHaveAttribute("font-size", "19.5");
   });
 
   it("reads UI action labels aloud when the setting is enabled", async () => {

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -171,6 +171,24 @@ describe("App", () => {
 
     expect(settingsButton).toHaveTextContent("Ustawienia");
     expect(settingsButton.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("uses unframed letter and digit glyph icons without changing practice button names", () => {
+    render(<App />);
+
+    const lettersButton = screen.getByRole("button", { name: /^litery$/i });
+    const digitsButton = screen.getByRole("button", { name: /^cyfry$/i });
+    const lettersIcon = lettersButton.querySelector("svg");
+    const digitsIcon = digitsButton.querySelector("svg");
+    const lettersGlyph = within(lettersButton).getByText("ABC", { selector: "text" });
+    const digitsGlyph = within(digitsButton).getByText("123", { selector: "text" });
+
+    expect(lettersIcon).toHaveAttribute("aria-hidden", "true");
+    expect(digitsIcon).toHaveAttribute("aria-hidden", "true");
+    expect(lettersIcon?.querySelector("rect") ?? null).not.toBeInTheDocument();
+    expect(digitsIcon?.querySelector("rect") ?? null).not.toBeInTheDocument();
+    expect(lettersGlyph).toHaveAttribute("font-size", "15.5");
+    expect(digitsGlyph).toHaveAttribute("font-size", "16.5");
   });
 
   it("reads UI action labels aloud when the setting is enabled", async () => {

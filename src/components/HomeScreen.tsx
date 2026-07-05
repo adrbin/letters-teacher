@@ -1,24 +1,23 @@
 import {
   BookOpen,
-  Hash,
   ListChecks,
   Mic,
   MousePointerClick,
   PencilLine,
   Play,
   Settings,
-  Shapes,
   Volume2,
   type LucideIcon
 } from "lucide-react";
 import { getCopy } from "../i18n";
 import type { CharacterSet, EarnedStamp, GameMode, SessionSettings } from "../types";
+import { DigitsIcon, LettersIcon } from "./CharacterSetIcons";
 import { IconLabel } from "./IconLabel";
 import { StampCollection } from "./StampBadge";
 
 const characterOptions: Array<{ characterSet: CharacterSet; icon: LucideIcon }> = [
-  { characterSet: "letters", icon: Shapes },
-  { characterSet: "digits", icon: Hash },
+  { characterSet: "letters", icon: LettersIcon },
+  { characterSet: "digits", icon: DigitsIcon },
   { characterSet: "words", icon: BookOpen }
 ];
 

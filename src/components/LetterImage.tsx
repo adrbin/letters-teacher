@@ -3,12 +3,13 @@ import type { LetterItem } from "../types";
 type Props = {
   letter: LetterItem;
   compact?: boolean;
+  showCaption?: boolean;
 };
 
-const warmIds = new Set(["fruit-red", "orange", "lemon", "sun", "cake", "gift", "count-star", "count-flower"]);
-const coolIds = new Set(["water", "rain", "ice", "screen", "xray", "count-empty"]);
-const greenIds = new Set(["leaf", "tree", "frog", "mountain", "hive", "count-leaf"]);
-const vehicleIds = new Set(["vehicle", "boat"]);
+const warmIds = new Set(["fruit-red", "orange", "lemon", "sun", "cake", "gift", "count-star", "count-flower", "family-mom", "family-dad", "hat", "cup", "pig", "hen", "fox", "cow", "ant", "bee", "wasp", "egg", "ear", "hand", "shoe", "sock", "duck", "bird", "book", "star", "juice", "cheese", "rice", "salt", "bear", "mouse", "blanket"]);
+const coolIds = new Set(["water", "rain", "ice", "screen", "xray", "count-empty", "bed", "foot", "leg"]);
+const greenIds = new Set(["leaf", "tree", "frog", "mountain", "hive", "count-leaf", "forest"]);
+const vehicleIds = new Set(["vehicle", "boat", "bus"]);
 
 function getPalette(imageId: string) {
   if (warmIds.has(imageId)) return { main: "#fb923c", accent: "#facc15", bg: "#ffedd5" };
@@ -128,7 +129,281 @@ function PlantShape({ kind }: { kind: "leaf" | "tree" | "flower" }) {
   );
 }
 
+function PersonShape({ kind }: { kind: "mom" | "dad" }) {
+  const hair = kind === "mom" ? "#78350f" : "#92400e";
+  const shirt = kind === "mom" ? "#f472b6" : "#60a5fa";
+
+  return (
+    <>
+      <circle cx="64" cy="48" r="25" fill="#fed7aa" />
+      <path d={kind === "mom" ? "M38 48 Q42 20 64 22 Q86 20 90 48 Q80 34 64 34 Q48 34 38 48 Z" : "M40 42 Q64 18 88 42 Q76 32 64 32 Q52 32 40 42 Z"} fill={hair} />
+      <circle cx="55" cy="48" r="4" fill="#172554" />
+      <circle cx="73" cy="48" r="4" fill="#172554" />
+      <path d="M54 62 Q64 70 74 62" fill="none" stroke="#172554" strokeWidth="4" strokeLinecap="round" />
+      <path d="M30 108 Q36 76 64 76 Q92 76 98 108 Z" fill={shirt} />
+      <path d="M42 86 Q64 98 86 86" fill="none" stroke="#fff7ed" strokeWidth="5" strokeLinecap="round" />
+    </>
+  );
+}
+
+function BusShape() {
+  return (
+    <>
+      <rect x="22" y="40" width="84" height="48" rx="12" fill="#facc15" />
+      <rect x="32" y="50" width="18" height="16" rx="4" fill="#dbeafe" />
+      <rect x="56" y="50" width="18" height="16" rx="4" fill="#dbeafe" />
+      <rect x="80" y="50" width="16" height="16" rx="4" fill="#dbeafe" />
+      <circle cx="42" cy="90" r="9" fill="#172554" />
+      <circle cx="86" cy="90" r="9" fill="#172554" />
+    </>
+  );
+}
+
+function BedShape() {
+  return (
+    <>
+      <rect x="24" y="54" width="80" height="38" rx="8" fill="#60a5fa" />
+      <rect x="28" y="42" width="28" height="22" rx="8" fill="#f8fafc" />
+      <path d="M24 76 H104" stroke="#1d4ed8" strokeWidth="7" strokeLinecap="round" />
+      <path d="M30 92 V104 M98 92 V104" stroke="#78350f" strokeWidth="7" strokeLinecap="round" />
+    </>
+  );
+}
+
+function HatShape() {
+  return (
+    <>
+      <path d="M38 70 Q42 34 64 34 Q86 34 90 70 Z" fill="#f472b6" />
+      <path d="M24 74 Q64 90 104 74" fill="none" stroke="#a855f7" strokeWidth="12" strokeLinecap="round" />
+      <circle cx="64" cy="30" r="8" fill="#facc15" />
+    </>
+  );
+}
+
+function CupShape() {
+  return (
+    <>
+      <path d="M42 42 H82 L76 96 H48 Z" fill="#38bdf8" />
+      <path d="M82 54 H94 Q104 62 96 76 Q90 84 78 78" fill="none" stroke="#0ea5e9" strokeWidth="8" strokeLinecap="round" />
+      <path d="M48 54 H76" stroke="#e0f2fe" strokeWidth="6" strokeLinecap="round" />
+    </>
+  );
+}
+
+function SimpleAnimalShape({ kind }: { kind: "pig" | "fox" | "cow" | "mouse" | "bear" }) {
+  const fill = kind === "pig" ? "#f9a8d4" : kind === "fox" ? "#fb923c" : kind === "cow" ? "#f8fafc" : kind === "mouse" ? "#94a3b8" : "#a16207";
+  const ear = kind === "fox" ? "#fb923c" : fill;
+
+  return (
+    <>
+      <circle cx="64" cy="64" r="32" fill={fill} stroke={kind === "cow" ? "#172554" : "none"} strokeWidth="4" />
+      <circle cx="42" cy="38" r="13" fill={ear} />
+      <circle cx="86" cy="38" r="13" fill={ear} />
+      {kind === "fox" && <path d="M44 42 L30 20 L58 34 M84 42 L98 20 L70 34" fill="#fb923c" />}
+      {kind === "cow" && (
+        <>
+          <path d="M46 54 Q54 42 64 54 Q56 64 46 54 Z" fill="#172554" />
+          <path d="M75 70 Q86 62 92 76 Q82 84 75 70 Z" fill="#172554" />
+        </>
+      )}
+      <circle cx="53" cy="58" r="5" fill="#172554" />
+      <circle cx="75" cy="58" r="5" fill="#172554" />
+      <ellipse cx="64" cy="72" rx={kind === "pig" ? 13 : 10} ry="8" fill={kind === "pig" ? "#fb7185" : "#fff7ed"} />
+      <path d="M54 84 Q64 92 74 84" fill="none" stroke="#172554" strokeWidth="4" strokeLinecap="round" />
+    </>
+  );
+}
+
+function InsectShape({ kind }: { kind: "ant" | "bee" | "wasp" }) {
+  if (kind === "ant") {
+    return (
+      <>
+        <circle cx="44" cy="66" r="13" fill="#78350f" />
+        <circle cx="66" cy="66" r="15" fill="#92400e" />
+        <circle cx="90" cy="66" r="18" fill="#78350f" />
+        <path d="M48 78 L36 96 M66 82 L66 102 M84 80 L98 98 M48 54 L36 36 M66 50 L66 30 M84 54 L98 36" stroke="#78350f" strokeWidth="5" strokeLinecap="round" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <ellipse cx="52" cy="54" rx="18" ry="12" fill="#dbeafe" opacity="0.9" transform="rotate(-28 52 54)" />
+      <ellipse cx="76" cy="54" rx="18" ry="12" fill="#dbeafe" opacity="0.9" transform="rotate(28 76 54)" />
+      <ellipse cx="64" cy="70" rx="28" ry="20" fill="#facc15" />
+      <path d="M52 54 V86 M66 52 V88 M80 58 V82" stroke={kind === "wasp" ? "#78350f" : "#172554"} strokeWidth="6" />
+      <circle cx="48" cy="66" r="4" fill="#172554" />
+    </>
+  );
+}
+
+function EarShape() {
+  return (
+    <>
+      <path d="M70 28 Q42 32 42 66 Q42 96 68 100 Q92 100 92 78 Q92 62 78 58 Q64 54 62 70" fill="#fed7aa" stroke="#fb923c" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M64 48 Q78 52 76 66 Q74 80 62 84" fill="none" stroke="#fb923c" strokeWidth="6" strokeLinecap="round" />
+    </>
+  );
+}
+
+function HandShape() {
+  return (
+    <>
+      <path d="M42 64 V36 Q42 28 50 28 Q58 28 58 36 V60 V30 Q58 22 66 22 Q74 22 74 30 V60 V38 Q74 30 82 30 Q90 30 90 38 V70 Q90 98 66 104 Q42 98 36 76 Q32 64 42 64 Z" fill="#fed7aa" stroke="#fb923c" strokeWidth="5" strokeLinejoin="round" />
+      <path d="M42 64 Q34 58 30 66 Q28 76 42 86" fill="#fed7aa" stroke="#fb923c" strokeWidth="5" strokeLinejoin="round" />
+    </>
+  );
+}
+
+function FootShape({ kind }: { kind: "foot" | "leg" }) {
+  return (
+    <>
+      {kind === "leg" && <rect x="58" y="26" width="22" height="52" rx="9" fill="#fed7aa" />}
+      <path d="M42 76 Q54 56 76 70 Q100 76 100 94 Q80 102 50 98 Q34 94 42 76 Z" fill="#fed7aa" stroke="#fb923c" strokeWidth="5" />
+      <circle cx="88" cy="78" r="4" fill="#fb923c" />
+      <circle cx="76" cy="74" r="4" fill="#fb923c" />
+    </>
+  );
+}
+
+function ShoeShape({ kind }: { kind: "shoe" | "sock" }) {
+  if (kind === "sock") {
+    return (
+      <>
+        <path d="M48 26 H78 V74 Q92 74 98 88 Q82 100 54 96 Q42 92 48 76 Z" fill="#f472b6" />
+        <path d="M50 44 H76" stroke="#facc15" strokeWidth="7" strokeLinecap="round" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <path d="M30 80 Q46 58 72 72 Q92 76 104 92 Q80 102 42 98 Q28 94 30 80 Z" fill="#60a5fa" />
+      <path d="M44 76 H78" stroke="#1d4ed8" strokeWidth="6" strokeLinecap="round" />
+      <path d="M50 70 L60 82 M64 70 L74 82" stroke="#f8fafc" strokeWidth="4" strokeLinecap="round" />
+    </>
+  );
+}
+
+function SmallBirdShape({ kind }: { kind: "duck" | "bird" | "hen" }) {
+  const body = kind === "duck" ? "#facc15" : kind === "hen" ? "#f8fafc" : "#38bdf8";
+
+  return (
+    <>
+      <ellipse cx="66" cy="72" rx="34" ry="23" fill={body} />
+      <circle cx="46" cy="50" r="18" fill={body} />
+      <path d="M30 50 L16 44 L30 38 Z" fill="#fb923c" />
+      {kind === "hen" && <path d="M38 34 Q46 20 54 34" fill="none" stroke="#ef4444" strokeWidth="7" strokeLinecap="round" />}
+      {kind === "bird" && <path d="M66 72 Q78 54 92 72" fill="none" stroke="#0ea5e9" strokeWidth="7" strokeLinecap="round" />}
+      <circle cx="42" cy="46" r="4" fill="#172554" />
+      <path d="M54 94 L48 104 M76 94 L82 104" stroke="#fb923c" strokeWidth="5" strokeLinecap="round" />
+    </>
+  );
+}
+
+function BookShape() {
+  return (
+    <>
+      <path d="M28 34 H60 Q68 34 68 42 V98 Q62 90 50 90 H28 Z" fill="#60a5fa" />
+      <path d="M100 34 H76 Q68 34 68 42 V98 Q74 90 86 90 H100 Z" fill="#f472b6" />
+      <path d="M68 42 V100" stroke="#172554" strokeWidth="5" strokeLinecap="round" />
+      <path d="M36 52 H56 M80 52 H94" stroke="#fff7ed" strokeWidth="5" strokeLinecap="round" />
+    </>
+  );
+}
+
+function StarShape() {
+  return <path d="M64 22 L75 50 L106 52 L82 71 L90 102 L64 84 L38 102 L46 71 L22 52 L53 50 Z" fill="#facc15" stroke="#fb923c" strokeWidth="5" strokeLinejoin="round" />;
+}
+
+function FoodShape({ kind }: { kind: "juice" | "cheese" | "rice" | "salt" }) {
+  if (kind === "cheese") {
+    return (
+      <>
+        <path d="M30 78 L96 42 V96 H30 Z" fill="#facc15" stroke="#fb923c" strokeWidth="5" strokeLinejoin="round" />
+        <circle cx="72" cy="76" r="7" fill="#fff7ed" />
+        <circle cx="90" cy="88" r="5" fill="#fff7ed" />
+      </>
+    );
+  }
+
+  if (kind === "rice") {
+    return (
+      <>
+        <path d="M30 68 H98 L88 100 H40 Z" fill="#38bdf8" />
+        <path d="M38 66 Q64 38 90 66" fill="#f8fafc" />
+        <circle cx="54" cy="64" r="4" fill="#cbd5e1" />
+        <circle cx="68" cy="58" r="4" fill="#cbd5e1" />
+        <circle cx="78" cy="66" r="4" fill="#cbd5e1" />
+      </>
+    );
+  }
+
+  if (kind === "salt") {
+    return (
+      <>
+        <rect x="48" y="38" width="32" height="62" rx="10" fill="#f8fafc" stroke="#94a3b8" strokeWidth="5" />
+        <rect x="50" y="26" width="28" height="18" rx="6" fill="#94a3b8" />
+        <circle cx="58" cy="34" r="2" fill="#172554" />
+        <circle cx="66" cy="34" r="2" fill="#172554" />
+        <circle cx="64" cy="72" r="8" fill="#e0f2fe" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <rect x="42" y="34" width="44" height="70" rx="10" fill="#fb923c" />
+      <path d="M50 50 H78 V88 H50 Z" fill="#facc15" />
+      <path d="M58 32 L72 18" stroke="#16a34a" strokeWidth="6" strokeLinecap="round" />
+    </>
+  );
+}
+
+function BlanketShape() {
+  return (
+    <>
+      <rect x="30" y="36" width="68" height="68" rx="12" fill="#f472b6" />
+      <path d="M30 58 H98 M52 36 V104 M76 36 V104" stroke="#facc15" strokeWidth="6" />
+      <path d="M36 98 Q42 108 48 98 Q54 108 60 98 Q66 108 72 98 Q78 108 84 98 Q90 108 96 98" fill="none" stroke="#a855f7" strokeWidth="5" strokeLinecap="round" />
+    </>
+  );
+}
+
 function ExampleShape({ imageId }: { imageId: string }) {
+  if (imageId === "family-mom") return <PersonShape kind="mom" />;
+  if (imageId === "family-dad") return <PersonShape kind="dad" />;
+  if (imageId === "bus") return <BusShape />;
+  if (imageId === "bed") return <BedShape />;
+  if (imageId === "hat") return <HatShape />;
+  if (imageId === "cup") return <CupShape />;
+  if (imageId === "pig" || imageId === "fox" || imageId === "cow" || imageId === "mouse" || imageId === "bear") {
+    return <SimpleAnimalShape kind={imageId} />;
+  }
+  if (imageId === "ant" || imageId === "bee" || imageId === "wasp") return <InsectShape kind={imageId} />;
+  if (imageId === "ear") return <EarShape />;
+  if (imageId === "hand") return <HandShape />;
+  if (imageId === "foot" || imageId === "leg") return <FootShape kind={imageId} />;
+  if (imageId === "shoe" || imageId === "sock") return <ShoeShape kind={imageId} />;
+  if (imageId === "duck" || imageId === "bird" || imageId === "hen") return <SmallBirdShape kind={imageId} />;
+  if (imageId === "book") return <BookShape />;
+  if (imageId === "star") return <StarShape />;
+  if (imageId === "juice" || imageId === "cheese" || imageId === "rice" || imageId === "salt") return <FoodShape kind={imageId} />;
+  if (imageId === "blanket") return <BlanketShape />;
+  if (imageId === "forest") {
+    return (
+      <>
+        <PlantShape kind="tree" />
+        <g transform="translate(-30 18) scale(0.72)">
+          <PlantShape kind="tree" />
+        </g>
+        <g transform="translate(38 18) scale(0.72)">
+          <PlantShape kind="tree" />
+        </g>
+      </>
+    );
+  }
+
   if (imageId === "fruit-red") return <FruitShape />;
   if (imageId === "orange") return <FruitShape kind="orange" />;
   if (imageId === "lemon") return <FruitShape kind="lemon" />;
@@ -512,7 +787,7 @@ function DigitShape({ digit, imageId }: { digit: string; imageId: string }) {
   );
 }
 
-export function LetterImage({ letter, compact = false }: Props) {
+export function LetterImage({ letter, compact = false, showCaption = true }: Props) {
   const sizeClasses = compact ? "h-28 w-28" : "h-40 w-40 sm:h-48 sm:w-48";
 
   if (letter.characterSet === "digits") {
@@ -529,9 +804,11 @@ export function LetterImage({ letter, compact = false }: Props) {
           <rect width="128" height="128" rx="28" fill={getPalette(imageId).bg} />
           <DigitShape digit={letter.display} imageId={imageId} />
         </svg>
-        <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
-          {letter.display}
-        </figcaption>
+        {showCaption && (
+          <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
+            {letter.display}
+          </figcaption>
+        )}
       </figure>
     );
   }
@@ -549,9 +826,11 @@ export function LetterImage({ letter, compact = false }: Props) {
         <rect width="128" height="128" rx="28" fill={getPalette(letter.example.imageId).bg} />
         <ExampleShape imageId={letter.example.imageId} />
       </svg>
-      <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
-        {letter.display} - {letter.example.word}
-      </figcaption>
+      {showCaption && (
+        <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
+          {letter.characterSet === "words" ? letter.display : `${letter.display} - ${letter.example.word}`}
+        </figcaption>
+      )}
     </figure>
   );
 }

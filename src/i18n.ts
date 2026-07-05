@@ -17,6 +17,7 @@ type Copy = {
   drawCharacter: Record<CharacterSet, string>;
   clear: string;
   check: string;
+  undo: string;
   pickMatchingSound: string;
   chooseThisSound: string;
   sayThisCharacter: Record<CharacterSet, string>;
@@ -41,6 +42,9 @@ type Copy = {
   decreaseQuestionCount: string;
   increaseQuestionCount: string;
   chooseCharacter: Record<CharacterSet, (character: string) => string>;
+  addSpellingTile: (letter: string, position: number) => string;
+  removeSpellingTile: (letter: string, position: number) => string;
+  spelledWord: string;
   playSound: (number: number) => string;
   characterExample: Record<CharacterSet, (character: string, word?: string) => string>;
   stampCharacterLabel: Record<CharacterSet, (character: string, word?: string) => string>;
@@ -55,13 +59,15 @@ const copies: Record<LanguageCode, Copy> = {
     appName: "Letters Teacher",
     headline: {
       letters: "Play with letters",
-      digits: "Play with digits"
+      digits: "Play with digits",
+      words: "Play with words"
     },
     language: "Language",
     questions: "Questions",
     characterSetTabs: {
       letters: "Letters",
-      digits: "Digits"
+      digits: "Digits",
+      words: "Words"
     },
     chooseGame: "Choose a game",
     start: "Start",
@@ -71,23 +77,28 @@ const copies: Record<LanguageCode, Copy> = {
     pointPrefix: "+",
     playCharacterSound: {
       letters: "Play letter sound",
-      digits: "Play digit sound"
+      digits: "Play digit sound",
+      words: "Play word sound"
     },
     pickCharacterYouHear: {
       letters: "Pick the letter you hear",
-      digits: "Pick the digit you hear"
+      digits: "Pick the digit you hear",
+      words: "Pick the word you hear"
     },
     drawCharacter: {
       letters: "Draw the letter",
-      digits: "Draw the digit"
+      digits: "Draw the digit",
+      words: "Spell the word"
     },
     clear: "Clear",
     check: "Check",
+    undo: "Undo",
     pickMatchingSound: "Pick the matching sound",
     chooseThisSound: "Choose this sound",
     sayThisCharacter: {
       letters: "Say this letter",
-      digits: "Say this digit"
+      digits: "Say this digit",
+      words: "Say this word"
     },
     stopRecording: "Stop recording",
     startRecording: "Start recording",
@@ -102,7 +113,8 @@ const copies: Record<LanguageCode, Copy> = {
     accuracy: "Accuracy",
     strongCharacters: {
       letters: "Strong letters",
-      digits: "Strong digits"
+      digits: "Strong digits",
+      words: "Strong words"
     },
     practiceAgain: "Practice again",
     playAgain: "Play again",
@@ -114,24 +126,32 @@ const copies: Record<LanguageCode, Copy> = {
     increaseQuestionCount: "Increase question count",
     chooseCharacter: {
       letters: (letter) => `Choose ${letter}`,
-      digits: (digit) => `Choose digit ${digit}`
+      digits: (digit) => `Choose digit ${digit}`,
+      words: (word) => `Choose word ${word}`
     },
+    addSpellingTile: (letter, position) => `Add ${letter} tile ${position}`,
+    removeSpellingTile: (letter, position) => `Remove ${letter} from slot ${position}`,
+    spelledWord: "Spelled word",
     playSound: (number) => `Play sound ${number}`,
     characterExample: {
       letters: (letter, word) => `${letter} as in ${word}`,
-      digits: (digit) => `Digit ${digit}`
+      digits: (digit) => `Digit ${digit}`,
+      words: (word) => `Word: ${word}`
     },
     stampCharacterLabel: {
       letters: (letter, word) => `${letter} as in ${word}`,
-      digits: (digit) => `Digit ${digit}`
+      digits: (digit) => `Digit ${digit}`,
+      words: (word) => `Word ${word}`
     },
     collectionCompleteLabel: {
       letters: (count) => `Completed alphabet stamp x${count}`,
-      digits: (count) => `Completed digits stamp x${count}`
+      digits: (count) => `Completed digits stamp x${count}`,
+      words: (count) => `Completed words stamp x${count}`
     },
     collectionCompleteTitle: {
       letters: "Alphabet complete",
-      digits: "Digits complete"
+      digits: "Digits complete",
+      words: "Words complete"
     },
     gameTitles: {
       letters: {
@@ -145,6 +165,12 @@ const copies: Record<LanguageCode, Copy> = {
         "hear-write": "Hear digit, write it",
         "see-pick-sound": "See digit, pick sound",
         "see-say": "See digit, say it"
+      },
+      words: {
+        "hear-pick": "Hear word, pick card",
+        "hear-write": "Hear word, spell it",
+        "see-pick-sound": "See word, pick sound",
+        "see-say": "See word, say it"
       }
     },
     feedback: {
@@ -158,13 +184,15 @@ const copies: Record<LanguageCode, Copy> = {
     appName: "Nauczyciel liter",
     headline: {
       letters: "Baw się literami",
-      digits: "Baw się cyframi"
+      digits: "Baw się cyframi",
+      words: "Baw się słowami"
     },
     language: "Język",
     questions: "Pytania",
     characterSetTabs: {
       letters: "Litery",
-      digits: "Cyfry"
+      digits: "Cyfry",
+      words: "Słowa"
     },
     chooseGame: "Wybierz grę",
     start: "Start",
@@ -174,23 +202,28 @@ const copies: Record<LanguageCode, Copy> = {
     pointPrefix: "+",
     playCharacterSound: {
       letters: "Odtwórz dźwięk litery",
-      digits: "Odtwórz dźwięk cyfry"
+      digits: "Odtwórz dźwięk cyfry",
+      words: "Odtwórz dźwięk słowa"
     },
     pickCharacterYouHear: {
       letters: "Wybierz literę, którą słyszysz",
-      digits: "Wybierz cyfrę, którą słyszysz"
+      digits: "Wybierz cyfrę, którą słyszysz",
+      words: "Wybierz słowo, które słyszysz"
     },
     drawCharacter: {
       letters: "Narysuj literę",
-      digits: "Narysuj cyfrę"
+      digits: "Narysuj cyfrę",
+      words: "Ułóż słowo"
     },
     clear: "Wyczyść",
     check: "Sprawdź",
+    undo: "Cofnij",
     pickMatchingSound: "Wybierz pasujący dźwięk",
     chooseThisSound: "Wybierz ten dźwięk",
     sayThisCharacter: {
       letters: "Powiedz tę literę",
-      digits: "Powiedz tę cyfrę"
+      digits: "Powiedz tę cyfrę",
+      words: "Powiedz to słowo"
     },
     stopRecording: "Zatrzymaj nagrywanie",
     startRecording: "Zacznij nagrywanie",
@@ -205,7 +238,8 @@ const copies: Record<LanguageCode, Copy> = {
     accuracy: "Dokładność",
     strongCharacters: {
       letters: "Mocne litery",
-      digits: "Mocne cyfry"
+      digits: "Mocne cyfry",
+      words: "Mocne słowa"
     },
     practiceAgain: "Poćwicz ponownie",
     playAgain: "Zagraj ponownie",
@@ -217,24 +251,32 @@ const copies: Record<LanguageCode, Copy> = {
     increaseQuestionCount: "Zwiększ liczbę pytań",
     chooseCharacter: {
       letters: (letter) => `Wybierz ${letter}`,
-      digits: (digit) => `Wybierz cyfrę ${digit}`
+      digits: (digit) => `Wybierz cyfrę ${digit}`,
+      words: (word) => `Wybierz słowo ${word}`
     },
+    addSpellingTile: (letter, position) => `Dodaj ${letter}, kafelek ${position}`,
+    removeSpellingTile: (letter, position) => `Usuń ${letter} z miejsca ${position}`,
+    spelledWord: "Ułożone słowo",
     playSound: (number) => `Odtwórz dźwięk ${number}`,
     characterExample: {
       letters: (letter, word) => `${letter} jak ${word}`,
-      digits: (digit) => `Cyfra ${digit}`
+      digits: (digit) => `Cyfra ${digit}`,
+      words: (word) => `Słowo: ${word}`
     },
     stampCharacterLabel: {
       letters: (letter, word) => `${letter} jak ${word}`,
-      digits: (digit) => `Cyfra ${digit}`
+      digits: (digit) => `Cyfra ${digit}`,
+      words: (word) => `Słowo ${word}`
     },
     collectionCompleteLabel: {
       letters: (count) => `Ukończony alfabet stempel x${count}`,
-      digits: (count) => `Ukończone cyfry stempel x${count}`
+      digits: (count) => `Ukończone cyfry stempel x${count}`,
+      words: (count) => `Ukończone słowa stempel x${count}`
     },
     collectionCompleteTitle: {
       letters: "Ukończony alfabet",
-      digits: "Ukończone cyfry"
+      digits: "Ukończone cyfry",
+      words: "Ukończone słowa"
     },
     gameTitles: {
       letters: {
@@ -248,6 +290,12 @@ const copies: Record<LanguageCode, Copy> = {
         "hear-write": "Usłysz cyfrę, napisz ją",
         "see-pick-sound": "Zobacz cyfrę, wybierz dźwięk",
         "see-say": "Zobacz cyfrę, powiedz ją"
+      },
+      words: {
+        "hear-pick": "Usłysz słowo, wybierz kartę",
+        "hear-write": "Usłysz słowo, ułóż je",
+        "see-pick-sound": "Zobacz słowo, wybierz dźwięk",
+        "see-say": "Zobacz słowo, powiedz je"
       }
     },
     feedback: {

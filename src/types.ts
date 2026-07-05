@@ -1,6 +1,6 @@
 export type LanguageCode = "en" | "pl";
 
-export type CharacterSet = "letters" | "digits";
+export type CharacterSet = "letters" | "digits" | "words";
 
 export type GameMode = "hear-pick" | "hear-write" | "see-pick-sound" | "see-say";
 

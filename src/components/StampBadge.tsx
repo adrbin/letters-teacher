@@ -20,7 +20,7 @@ function StampBadge({
         className={`stamp-badge ${isNew ? "stamp-badge-new" : ""} grid min-h-32 min-w-32 place-items-center rounded-3xl bg-emerald-100 p-4 text-center font-black text-emerald-950 ring-4 ring-emerald-300`}
         aria-label={copy.collectionCompleteLabel[stamp.characterSet](stamp.completedCount)}
       >
-        <span className="text-4xl leading-none">{stamp.characterSet === "digits" ? "123" : "ABC"}</span>
+        <span className="text-4xl leading-none">{stamp.characterSet === "digits" ? "123" : stamp.characterSet === "words" ? "WORD" : "ABC"}</span>
         <span className="text-sm uppercase">{copy.collectionCompleteTitle[stamp.characterSet]}</span>
         <span className="rounded-full bg-white/80 px-3 py-1 text-lg">x{stamp.completedCount}</span>
       </div>

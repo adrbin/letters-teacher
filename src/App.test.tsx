@@ -70,6 +70,17 @@ async function continueAfterCorrectAnswer(user: ReturnType<typeof userEvent.setu
   await user.click(screen.getByRole("button", { name: isFinalQuestion ? /pokaż wyniki/i : /następne pytanie/i }));
 }
 
+async function chooseSpellingTiles(user: ReturnType<typeof userEvent.setup>, word: string) {
+  for (const letter of Array.from(word)) {
+    const availableTile = screen
+      .getAllByRole("button", { name: new RegExp(`^add ${letter}`, "i") })
+      .find((button) => !(button as HTMLButtonElement).disabled);
+
+    expect(availableTile).toBeTruthy();
+    await user.click(availableTile!);
+  }
+}
+
 Object.defineProperty(window, "speechSynthesis", {
   configurable: true,
   value: {
@@ -213,6 +224,28 @@ describe("App", () => {
     expect(screen.getAllByRole("button", { name: /wybierz cyfrę/i })).toHaveLength(4);
   });
 
+  it("switches to word games and clamps question count to the word list", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+
+    const questionCount = screen.getByRole("spinbutton") as HTMLInputElement;
+    await user.clear(questionCount);
+    await user.type(questionCount, "50");
+
+    expect(questionCount).toHaveValue(36);
+    expect(questionCount).toHaveAttribute("max", "36");
+    expect(screen.getByRole("heading", { name: /play with words/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    expect(screen.getByRole("heading", { name: /pick the word you hear/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /choose word/i })).toHaveLength(4);
+  });
+
   it("starts each digit game with digit-specific labels", async () => {
     const user = userEvent.setup();
     const games = [
@@ -225,6 +258,28 @@ describe("App", () => {
     for (const { gameName, heading } of games) {
       const { unmount } = render(<App />);
       await user.click(screen.getByRole("tab", { name: /cyfry/i }));
+      await user.click(screen.getByRole("button", { name: gameName }));
+      await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+      expect(screen.getByText(/\d \/ 10/)).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+      unmount();
+    }
+  });
+
+  it("starts each word game with word-specific labels", async () => {
+    const user = userEvent.setup();
+    const games = [
+      { gameName: /hear word, pick card/i, heading: /pick the word you hear/i },
+      { gameName: /hear word, spell it/i, heading: /spell the word/i },
+      { gameName: /see word, pick sound/i, heading: /pick the matching sound/i },
+      { gameName: /see word, say it/i, heading: /say this word/i }
+    ];
+
+    for (const { gameName, heading } of games) {
+      const { unmount } = render(<App />);
+      await user.selectOptions(screen.getByLabelText(/język/i), "en");
+      await user.click(screen.getByRole("tab", { name: /words/i }));
       await user.click(screen.getByRole("button", { name: gameName }));
       await user.click(screen.getByRole("button", { name: /^start$/i }));
 
@@ -276,6 +331,32 @@ describe("App", () => {
 
     expect(screen.getByLabelText(/cyfra 4 stempel/i)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /cztery gwiazdki/i })).toBeInTheDocument();
+  });
+
+  it("shows previously earned word stamps on the words tab", async () => {
+    const user = userEvent.setup();
+    saveStamp(
+      { language: "en", characterSet: "words", gameMode: "hear-pick" },
+      {
+        totalScore: 95,
+        maxScore: 100,
+        accuracy: 95,
+        strongLetters: [],
+        practiceLetters: [],
+        results: [{ letter: "mom", attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+      },
+      "2026-06-10T10:00:00.000Z"
+    );
+
+    render(<App />);
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+
+    expect(screen.queryByLabelText(/word mom stamp/i)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+
+    expect(screen.getByLabelText(/word mom stamp/i)).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /mom/i })).toBeInTheDocument();
   });
 
   it("awards a new stamp on the results screen", async () => {
@@ -414,6 +495,40 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /check/i }));
 
     expect(screen.getByText("1 / 10")).toBeInTheDocument();
+  });
+
+  it("accepts a correctly spelled word with letter tiles", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+    await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    await chooseSpellingTiles(user, target.display);
+    await user.click(screen.getByRole("button", { name: /check/i }));
+
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.getByText("Wonderful!")).toBeInTheDocument();
+    expect(screen.getByText(`Word: ${target.display}`)).toBeInTheDocument();
+  });
+
+  it("keeps duplicate spelling tiles independent", async () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+    await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    await chooseSpellingTiles(user, "mom");
+
+    expect(screen.getByText("mom")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /^add m/i }).filter((button) => (button as HTMLButtonElement).disabled)).toHaveLength(2);
   });
 
   it("shows unavailable guidance when exposed speech recognition fails at runtime", async () => {

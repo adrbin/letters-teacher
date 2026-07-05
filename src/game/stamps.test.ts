@@ -148,6 +148,86 @@ describe("stamps", () => {
     expect(loadStamps()).toEqual([expect.objectContaining({ kind: "collection-complete", characterSet: "digits", language: "pl", completedCount: 1 })]);
   });
 
+  it("awards a word stamp from practiced words", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const saved = saveStamp({ language: "en", characterSet: "words", gameMode: "hear-pick" }, summary(80, ["mom"]), "2026-06-10T10:00:00.000Z");
+
+    expect(saved.stamp).toMatchObject({
+      kind: "character",
+      characterSet: "words",
+      language: "en",
+      character: "mom",
+      word: "mom",
+      imageId: "family-mom",
+      alt: "mom"
+    });
+    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "character", characterSet: "words", language: "en", character: "mom" })]);
+  });
+
+  it("keeps word stamp progress separate by language", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    saveStamp({ language: "en", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["mom"]), "2026-06-10T10:00:00.000Z");
+    saveStamp({ language: "pl", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["mama"]), "2026-06-10T10:01:00.000Z");
+
+    expect(loadStamps()).toEqual([
+      expect.objectContaining({ kind: "character", characterSet: "words", language: "en", character: "mom" }),
+      expect.objectContaining({ kind: "character", characterSet: "words", language: "pl", character: "mama" })
+    ]);
+  });
+
+  it("converts a full word collection into a completed words stamp", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const englishWords = [
+      "mom",
+      "dad",
+      "cat",
+      "dog",
+      "sun",
+      "car",
+      "bus",
+      "bed",
+      "hat",
+      "cup",
+      "pig",
+      "hen",
+      "fox",
+      "cow",
+      "ant",
+      "bee",
+      "egg",
+      "eye",
+      "ear",
+      "nose",
+      "hand",
+      "foot",
+      "shoe",
+      "sock",
+      "fish",
+      "duck",
+      "bird",
+      "ball",
+      "doll",
+      "book",
+      "moon",
+      "star",
+      "rain",
+      "tree",
+      "leaf",
+      "cake"
+    ];
+
+    for (const [index, word] of englishWords.slice(0, -1).entries()) {
+      saveStamp({ language: "en", characterSet: "words", gameMode: "hear-pick" }, summary(95, [word]), `2026-06-10T10:00:${String(index).padStart(2, "0")}.000Z`);
+    }
+
+    const saved = saveStamp({ language: "en", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["cake"]), "2026-06-10T10:01:00.000Z");
+
+    expect(saved.stamp).toMatchObject({ kind: "collection-complete", characterSet: "words", language: "en", completedCount: 1 });
+    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "collection-complete", characterSet: "words", language: "en", completedCount: 1 })]);
+  });
+
   it("fails gracefully when storage cannot be read", () => {
     vi.spyOn(window.localStorage, "getItem").mockImplementation(() => {
       throw new Error("blocked");

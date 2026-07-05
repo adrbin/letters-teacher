@@ -1,14 +1,15 @@
 # Letters Teacher
 
-A React PWA for helping children learn letters and digits through playful character games. The app supports Polish and English, uses browser speech APIs, includes a local handwriting practice flow, and is designed to work well on phones, tablets, and desktops.
+A React PWA for helping children learn letters, digits, and simple words through playful practice games. The app supports Polish and English, uses browser speech APIs, includes local handwriting and tile spelling practice flows, and is designed to work well on phones, tablets, and desktops.
 
 ## Features
 
-- Practice letters or digits in separate tabs.
-- Hear a character sound and pick the matching card.
+- Practice letters, digits, or simple words in separate tabs.
+- Hear a character or word sound and pick the matching card.
 - Hear a character sound and write it on a drawing canvas.
-- See a character and pick the matching sound.
-- See a character and pronounce it with speech recognition where supported.
+- Hear a word sound and spell it with large letter tiles.
+- See a character or word and pick the matching sound.
+- See a character or word and pronounce it with speech recognition where supported.
 - Configurable language and question count.
 - Scoring that rewards correct answers and reduces points after wrong attempts.
 - Results screen with progress feedback and earned stamps.
@@ -71,7 +72,7 @@ Prefer small React components, custom hooks for reusable stateful behavior, and 
 ```text
 src/
   components/      React UI components
-  data/            Letter data and locale metadata
+  data/            Letter, digit, word, and locale metadata
   game/            Session, scoring, stamps, and question generation
   handwriting/     Handwriting recognizer
   hooks/           Browser API and reusable React hooks
@@ -89,4 +90,4 @@ Speech synthesis and speech recognition are browser APIs. Speech synthesis is br
 
 ## Product Notes
 
-The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish and English are the initial supported languages, with practice for letters and digits.
+The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish and English are the initial supported languages, with practice for letters, digits, and simple beginner words.

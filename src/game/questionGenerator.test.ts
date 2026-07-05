@@ -62,4 +62,22 @@ describe("generateQuestions", () => {
     expect(digitQuestion.id).toContain("digits");
     expect(letterQuestion.id).not.toBe(digitQuestion.id);
   });
+
+  it("caps generated word questions at the word count", () => {
+    const targetDisplays = generateQuestions("en", "words", 50, "seed").map((question) => question.target.display);
+
+    expect(targetDisplays).toHaveLength(36);
+    expect(new Set(targetDisplays).size).toBe(36);
+    expect(targetDisplays).toEqual(expect.arrayContaining(["mom", "dad", "cake"]));
+  });
+
+  it("keeps word question ids separate from letters and digits", () => {
+    const letterQuestion = generateQuestions("en", "letters", 1, "seed")[0];
+    const digitQuestion = generateQuestions("en", "digits", 1, "seed")[0];
+    const wordQuestion = generateQuestions("en", "words", 1, "seed")[0];
+
+    expect(wordQuestion.id).toContain("words");
+    expect(wordQuestion.id).not.toBe(letterQuestion.id);
+    expect(wordQuestion.id).not.toBe(digitQuestion.id);
+  });
 });

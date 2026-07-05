@@ -98,4 +98,12 @@ describe("session", () => {
     expect(session.questions).toHaveLength(10);
     expect(session.questions.every((question) => /^\d$/.test(question.target.display))).toBe(true);
   });
+
+  it("creates word sessions from the word character set", () => {
+    const session = createSession({ language: "en", characterSet: "words", gameMode: "hear-pick", questionCount: 50 }, "seed");
+
+    expect(session.questions).toHaveLength(36);
+    expect(session.questions.every((question) => question.target.characterSet === "words")).toBe(true);
+    expect(session.questions.map((question) => question.target.display)).toEqual(expect.arrayContaining(["mom", "dad", "cake"]));
+  });
 });

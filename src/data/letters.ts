@@ -1,4 +1,5 @@
 import type { CharacterSet, LanguageCode, LetterItem } from "../types";
+import { wordImageIds, wordsByLanguage } from "./words";
 
 const englishNames: Record<string, string[]> = {
   A: ["a", "ay", "hey"],
@@ -321,7 +322,8 @@ export const letterImageIds = new Set([
   ...Object.values(englishExamples).map((example) => example.imageId),
   ...Object.values(polishExamples).map((example) => example.imageId),
   ...Object.values(englishDigitExamples).map((example) => example.imageId),
-  ...Object.values(polishDigitExamples).map((example) => example.imageId)
+  ...Object.values(polishDigitExamples).map((example) => example.imageId),
+  ...wordImageIds
 ]);
 
 export const languageNames: Record<LanguageCode, string> = {
@@ -338,8 +340,14 @@ export function getLetters(language: LanguageCode): LetterItem[] {
   return lettersByLanguage[language];
 }
 
+export function getWords(language: LanguageCode): LetterItem[] {
+  return wordsByLanguage[language];
+}
+
 export function getCharacters(language: LanguageCode, characterSet: CharacterSet): LetterItem[] {
-  return characterSet === "digits" ? digitsByLanguage[language] : lettersByLanguage[language];
+  if (characterSet === "digits") return digitsByLanguage[language];
+  if (characterSet === "words") return wordsByLanguage[language];
+  return lettersByLanguage[language];
 }
 
 function normalizeTranscript(value: string, language: LanguageCode): string {

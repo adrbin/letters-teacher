@@ -19,7 +19,7 @@ function isLanguage(value: unknown): value is LanguageCode {
 }
 
 function isCharacterSet(value: unknown): value is CharacterSet {
-  return value === "letters" || value === "digits";
+  return value === "letters" || value === "digits" || value === "words";
 }
 
 function isCharacterStamp(value: unknown): value is CharacterStamp {

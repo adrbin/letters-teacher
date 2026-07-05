@@ -67,4 +67,109 @@ describe("letters", () => {
     expect(matchesCharacterTranscript(englishSeven, "number 7")).toBe(true);
     expect(matchesCharacterTranscript(polishZero, "zero")).toBe(true);
   });
+
+  it("exposes simple beginner words for each language", () => {
+    expect(getCharacters("en", "words").map((word) => word.display)).toEqual([
+      "mom",
+      "dad",
+      "cat",
+      "dog",
+      "sun",
+      "car",
+      "bus",
+      "bed",
+      "hat",
+      "cup",
+      "pig",
+      "hen",
+      "fox",
+      "cow",
+      "ant",
+      "bee",
+      "egg",
+      "eye",
+      "ear",
+      "nose",
+      "hand",
+      "foot",
+      "shoe",
+      "sock",
+      "fish",
+      "duck",
+      "bird",
+      "ball",
+      "doll",
+      "book",
+      "moon",
+      "star",
+      "rain",
+      "tree",
+      "leaf",
+      "cake"
+    ]);
+    expect(getCharacters("pl", "words").map((word) => word.display)).toEqual([
+      "mama",
+      "tata",
+      "kot",
+      "pies",
+      "dom",
+      "auto",
+      "bus",
+      "las",
+      "lis",
+      "osa",
+      "ul",
+      "oko",
+      "nos",
+      "ząb",
+      "ucho",
+      "ręka",
+      "noga",
+      "but",
+      "sok",
+      "ser",
+      "ryż",
+      "sól",
+      "lód",
+      "woda",
+      "koń",
+      "miś",
+      "gęś",
+      "żaba",
+      "ryba",
+      "rak",
+      "kura",
+      "foka",
+      "mysz",
+      "lala",
+      "piłka",
+      "koc"
+    ]);
+  });
+
+  it("includes accessible example image metadata for every supported word", () => {
+    for (const language of ["en", "pl"] as const) {
+      const words = getCharacters(language, "words");
+
+      expect(new Set(words.map((word) => word.display)).size).toBe(36);
+
+      for (const word of words) {
+        expect(word.speechText).toBe(word.display);
+        expect(word.aliases).toContain(word.display);
+        expect(word.example?.word).toBe(word.display);
+        expect(word.example?.alt).toBeTruthy();
+        expect(letterImageIds.has(word.example!.imageId)).toBe(true);
+      }
+    }
+  });
+
+  it("matches Polish word transcripts without diacritics", () => {
+    const polishTooth = getCharacters("pl", "words").find((word) => word.display === "ząb")!;
+    const polishHand = getCharacters("pl", "words").find((word) => word.display === "ręka")!;
+    const polishBall = getCharacters("pl", "words").find((word) => word.display === "piłka")!;
+
+    expect(matchesCharacterTranscript(polishTooth, "zab")).toBe(true);
+    expect(matchesCharacterTranscript(polishHand, "reka")).toBe(true);
+    expect(matchesCharacterTranscript(polishBall, "pilka")).toBe(true);
+  });
 });

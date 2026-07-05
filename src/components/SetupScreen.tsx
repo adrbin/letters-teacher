@@ -4,7 +4,8 @@ import type { CharacterSet, EarnedStamp, GameMode, LanguageCode, SessionSettings
 import { StampCollection } from "./StampBadge";
 
 const MIN_QUESTION_COUNT = 3;
-const MAX_QUESTION_COUNT = 30;
+const MAX_CHARACTER_QUESTION_COUNT = 30;
+const MAX_WORD_QUESTION_COUNT = 36;
 
 const gameOptions: Array<{ mode: GameMode; accent: string }> = [
   { mode: "hear-pick", accent: "bg-orange-500" },
@@ -21,7 +22,8 @@ type Props = {
 };
 
 function getMaxQuestionCount(language: LanguageCode, characterSet: CharacterSet): number {
-  return Math.min(MAX_QUESTION_COUNT, getCharacters(language, characterSet).length);
+  const maxQuestionCount = characterSet === "words" ? MAX_WORD_QUESTION_COUNT : MAX_CHARACTER_QUESTION_COUNT;
+  return Math.min(maxQuestionCount, getCharacters(language, characterSet).length);
 }
 
 function clampQuestionCount(language: LanguageCode, characterSet: CharacterSet, questionCount: number): number {
@@ -80,8 +82,8 @@ export function SetupScreen({ settings, stamps, onSettingsChange, onStart }: Pro
                 </select>
               </label>
               <div className="grid gap-2 text-lg font-black text-slate-800">
-                <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1" role="tablist" aria-label={copy.chooseGame}>
-                  {(["letters", "digits"] as const).map((characterSet) => {
+                <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-100 p-1" role="tablist" aria-label={copy.chooseGame}>
+                  {(["letters", "digits", "words"] as const).map((characterSet) => {
                     const active = settings.characterSet === characterSet;
                     return (
                       <button

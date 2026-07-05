@@ -6,7 +6,7 @@ import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
 import { getCopy, translateFeedback } from "../i18n";
-import type { AttemptResult, LetterItem } from "../types";
+import type { AttemptResult, CharacterSet, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { LetterImage } from "./LetterImage";
 
@@ -148,7 +148,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                 />
               )}
 
-              {session.settings.gameMode === "hear-write" && (
+              {session.settings.gameMode === "hear-write" && characterSet !== "words" && (
                 <HearWriteGame
                   target={question.target}
                   strokes={strokes}
@@ -159,6 +159,17 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   letters={getCharacters(session.settings.language, characterSet)}
                   answerFeedback={answerFeedback}
                   characterSet={characterSet}
+                  copy={copy}
+                />
+              )}
+
+              {session.settings.gameMode === "hear-write" && characterSet === "words" && (
+                <SpellWordGame
+                  target={question.target}
+                  speechSupported={speechSupported}
+                  onSpeak={speak}
+                  onAnswer={(answer) => submitAnswer(answer, "spell")}
+                  answerFeedback={answerFeedback}
                   copy={copy}
                 />
               )}
@@ -214,7 +225,7 @@ function SuccessFeedback({
   feedbackKey
 }: {
   target: LetterItem;
-  characterSet: "letters" | "digits";
+  characterSet: CharacterSet;
   status: string;
   continueLabel: string;
   onContinue: () => void;
@@ -284,9 +295,11 @@ function HearPickGame({
   wrongAttempts: string[];
   onAnswer: (answer: string) => void;
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
-  characterSet: "letters" | "digits";
+  characterSet: CharacterSet;
   copy: Copy;
 }) {
+  const cardTextSize = characterSet === "words" ? "text-3xl sm:text-4xl" : "text-5xl";
+
   return (
     <div className="grid gap-7 text-center">
       <SpeakerButton letter={questionTarget} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound[characterSet]} />
@@ -298,7 +311,7 @@ function HearPickGame({
           return (
             <button
               key={option.display}
-              className={`control-button min-h-28 border-4 text-5xl ${
+              className={`control-button min-h-28 border-4 ${cardTextSize} ${
                 missed ? "border-rose-500 bg-rose-100 text-rose-950" : "border-slate-200 bg-white text-slate-950 shadow-sm"
               } ${pulsing ? (answerFeedback?.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
               type="button"
@@ -372,6 +385,138 @@ function HearWriteGame({
   );
 }
 
+type SpellingTile = {
+  id: string;
+  letter: string;
+};
+
+function createSpellingTiles(word: string): SpellingTile[] {
+  const tiles = Array.from(word).map((letter, index) => ({
+    id: `${index}-${letter}`,
+    letter
+  }));
+  const sorted = [...tiles].sort((first, second) => {
+    const firstScore = first.letter.charCodeAt(0) * 17 + first.id.charCodeAt(0);
+    const secondScore = second.letter.charCodeAt(0) * 17 + second.id.charCodeAt(0);
+    return firstScore - secondScore;
+  });
+
+  if (sorted.map((tile) => tile.id).join("|") === tiles.map((tile) => tile.id).join("|") && sorted.length > 1) {
+    return [...sorted.slice(1), sorted[0]];
+  }
+
+  return sorted;
+}
+
+function SpellWordGame({
+  target,
+  speechSupported,
+  onSpeak,
+  onAnswer,
+  answerFeedback,
+  copy
+}: SpeechProps & {
+  target: LetterItem;
+  onAnswer: (answer: string) => void;
+  answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
+  copy: Copy;
+}) {
+  const tiles = useMemo(() => createSpellingTiles(target.display), [target.display]);
+  const [selectedTileIds, setSelectedTileIds] = useState<string[]>([]);
+  const selectedTileSet = useMemo(() => new Set(selectedTileIds), [selectedTileIds]);
+  const selectedTiles = selectedTileIds
+    .map((tileId) => tiles.find((tile) => tile.id === tileId))
+    .filter((tile): tile is SpellingTile => Boolean(tile));
+  const selectedWord = selectedTiles.map((tile) => tile.letter).join("");
+  const readyToCheck = selectedTileIds.length === tiles.length;
+
+  useEffect(() => {
+    setSelectedTileIds([]);
+  }, [target.display]);
+
+  return (
+    <div className="grid gap-5 text-center">
+      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound.words} />
+      <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter.words}</h1>
+      <div className="mx-auto flex flex-wrap items-center justify-center gap-4">
+        <LetterImage letter={target} compact showCaption={false} />
+      </div>
+
+      <div className="mx-auto grid w-full max-w-2xl gap-4">
+        <p className="min-h-12 rounded-3xl bg-slate-100 px-4 py-2 text-4xl font-black tracking-wide text-slate-950" aria-label={copy.spelledWord}>
+          {selectedWord || " "}
+        </p>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(3.5rem,1fr))] gap-2">
+          {tiles.map((_, index) => {
+            const selectedTile = selectedTiles[index];
+            return (
+              <button
+                key={`slot-${index}`}
+                className="control-button min-h-16 border-4 border-dashed border-slate-200 bg-white text-3xl text-slate-950 disabled:text-slate-300"
+                type="button"
+                aria-label={selectedTile ? copy.removeSpellingTile(selectedTile.letter, index + 1) : undefined}
+                disabled={!selectedTile}
+                onClick={() => setSelectedTileIds((current) => current.filter((_, currentIndex) => currentIndex !== index))}
+              >
+                {selectedTile?.letter ?? ""}
+              </button>
+            );
+          })}
+        </div>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(3.75rem,1fr))] gap-3">
+          {tiles.map((tile, index) => {
+            const selected = selectedTileSet.has(tile.id);
+            return (
+              <button
+                key={tile.id}
+                className="control-button min-h-16 border-4 border-slate-200 bg-white text-3xl text-slate-950 shadow-sm disabled:bg-slate-100 disabled:text-slate-300 disabled:shadow-none"
+                type="button"
+                aria-label={copy.addSpellingTile(tile.letter, index + 1)}
+                disabled={selected}
+                onClick={() => setSelectedTileIds((current) => [...current, tile.id])}
+              >
+                {tile.letter}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mx-auto flex w-full max-w-2xl gap-3">
+        <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => setSelectedTileIds([])}>
+          {copy.clear}
+        </button>
+        <button
+          className="control-button flex-1 bg-slate-100 px-5 text-slate-950 disabled:text-slate-400"
+          type="button"
+          disabled={selectedTileIds.length === 0}
+          onClick={() => setSelectedTileIds((current) => current.slice(0, -1))}
+        >
+          {copy.undo}
+        </button>
+        <button
+          className={`control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none ${
+            answerFeedback?.sourceKey === "spell" ? (answerFeedback.result.correct ? "answer-correct" : "answer-incorrect") : ""
+          }`}
+          type="button"
+          disabled={!readyToCheck}
+          onClick={() => onAnswer(selectedWord === target.display ? target.display : "")}
+        >
+          {copy.check}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CharacterDisplay({ target }: { target: LetterItem }) {
+  if (target.characterSet === "words") {
+    return <p className="max-w-full break-words text-5xl font-black leading-tight text-slate-950 sm:text-7xl">{target.display}</p>;
+  }
+
+  return <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>;
+}
+
 function SeePickSoundGame({
   options,
   target,
@@ -398,7 +543,7 @@ function SeePickSoundGame({
   return (
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
-        <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+        <CharacterDisplay target={target} />
         <LetterImage letter={target} compact />
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.pickMatchingSound}</h1>
@@ -447,13 +592,13 @@ function SeeSayGame({
   transcript: string;
   recognition: ReturnType<typeof useSpeechRecognition>;
   onExit: () => void;
-  characterSet: "letters" | "digits";
+  characterSet: CharacterSet;
   copy: Copy;
 }) {
   return (
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
-        <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>
+        <CharacterDisplay target={target} />
         <LetterImage letter={target} compact />
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.sayThisCharacter[characterSet]}</h1>

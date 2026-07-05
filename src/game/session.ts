@@ -1,5 +1,6 @@
 import { generateQuestions } from "./questionGenerator";
 import type { AttemptResult, LetterResult, Question, SessionSettings, SessionSummary } from "../types";
+import { normalizeLetterCase } from "./displayCase";
 
 const MAX_POINTS_PER_QUESTION = 10;
 const WRONG_ATTEMPT_PENALTY = 3;
@@ -23,7 +24,7 @@ function createRuntimeSeed(): string {
 
 export function createSession(settings: SessionSettings, seed?: string): SessionState {
   return {
-    settings,
+    settings: { ...settings, letterCase: normalizeLetterCase(settings.letterCase) },
     questions: generateQuestions(settings.language, settings.characterSet, settings.questionCount, seed ?? createRuntimeSeed()),
     currentIndex: 0,
     score: 0,

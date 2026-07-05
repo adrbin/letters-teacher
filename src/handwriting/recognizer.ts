@@ -29,6 +29,18 @@ const BASE_LETTERS: Record<string, string> = {
   Ż: "Z"
 };
 
+const LOWER_BASE_LETTERS: Record<string, string> = {
+  ą: "a",
+  ć: "c",
+  ę: "e",
+  ł: "l",
+  ń: "n",
+  ó: "o",
+  ś: "s",
+  ź: "z",
+  ż: "z"
+};
+
 function p(x: number, y: number): Point {
   return { x, y };
 }
@@ -111,6 +123,22 @@ function slash(): Stroke {
   return [p(22, 58), p(72, 42)];
 }
 
+function lowerAcute(): Stroke {
+  return [p(58, 24), p(74, 10)];
+}
+
+function lowerDot(): Stroke {
+  return [p(52, 18), p(53, 18)];
+}
+
+function lowerOgonek(x = 62): Stroke {
+  return [p(x, 88), p(x + 10, 102), p(x - 6, 112)];
+}
+
+function lowerSlash(): Stroke {
+  return [p(24, 58), p(68, 42)];
+}
+
 const TEMPLATES: Record<string, Stroke[][]> = {
   A: [[[p(14, 94), p(50, 6), p(86, 94)], [p(30, 56), p(70, 56)]]],
   B: [[[p(20, 8), p(20, 92)], arc(42, 30, 26, 22, -Math.PI / 2, Math.PI / 2), arc(42, 70, 28, 22, -Math.PI / 2, Math.PI / 2)]],
@@ -155,7 +183,64 @@ const TEMPLATES: Record<string, Stroke[][]> = {
   "9": [[[p(76, 52), p(44, 54), p(24, 34), p(38, 12), p(74, 16), p(84, 48), p(72, 92)]]]
 };
 
+const LOWERCASE_TEMPLATES: Record<string, Stroke[][]> = {
+  a: [
+    [
+      [p(72, 44), p(44, 34), p(24, 58), p(34, 88), p(68, 88), p(76, 56)],
+      [p(76, 38), p(76, 92)]
+    ],
+    [arc(50, 64, 28, 28, 0, Math.PI * 2, 14), [p(76, 38), p(76, 92)]]
+  ],
+  b: [[[p(28, 10), p(28, 92)], [p(28, 62), p(48, 38), p(78, 52), p(76, 82), p(46, 92), p(28, 70)]]],
+  c: [[arc(56, 64, 32, 30, 0.25 * Math.PI, 1.75 * Math.PI)]],
+  d: [[[p(76, 10), p(76, 92)], [p(76, 62), p(56, 38), p(26, 52), p(28, 82), p(58, 92), p(76, 70)]]],
+  e: [[[p(24, 62), p(78, 62), p(70, 42), p(42, 36), p(24, 58), p(34, 84), p(72, 88)]]],
+  f: [[[p(66, 12), p(48, 20), p(48, 92)], [p(28, 42), p(72, 42)]]],
+  g: [[[p(74, 44), p(44, 34), p(24, 58), p(34, 86), p(68, 86), p(76, 56), p(76, 102), p(58, 112), p(38, 102)]]],
+  h: [[[p(28, 10), p(28, 92)], [p(28, 60), p(46, 40), p(72, 52), p(72, 92)]]],
+  i: [[lowerDot(), [p(52, 38), p(52, 92)]]],
+  j: [[lowerDot(), [p(56, 38), p(56, 96), p(44, 112), p(30, 100)]]],
+  k: [[[p(28, 10), p(28, 92)], [p(72, 38), p(30, 66), p(76, 92)]]],
+  l: [[[p(46, 10), p(46, 92)]]],
+  m: [[[p(22, 92), p(22, 42), p(42, 42), p(48, 92)], [p(48, 48), p(68, 42), p(76, 92)]]],
+  n: [[[p(28, 92), p(28, 42), p(48, 42), p(72, 56), p(72, 92)]]],
+  o: [[arc(52, 64, 30, 30, 0, Math.PI * 2, 14)]],
+  p: [[[p(28, 112), p(28, 42)], [p(28, 62), p(48, 38), p(78, 52), p(76, 82), p(46, 92), p(28, 70)]]],
+  q: [[[p(76, 112), p(76, 42)], [p(76, 62), p(56, 38), p(26, 52), p(28, 82), p(58, 92), p(76, 70)]]],
+  r: [[[p(30, 92), p(30, 42), p(50, 42), p(72, 50)]]],
+  s: [[arc(56, 50, 26, 14, 0.15 * Math.PI, 1.3 * Math.PI), arc(48, 76, 28, 16, 1.25 * Math.PI, 2.1 * Math.PI)]],
+  t: [[[p(52, 18), p(52, 92)], [p(28, 42), p(76, 42)]]],
+  u: [[[p(28, 42), p(28, 78), p(44, 92), p(70, 78), p(70, 42)], [p(70, 42), p(70, 92)]]],
+  v: [[[p(24, 42), p(50, 92), p(78, 42)]]],
+  w: [[[p(16, 42), p(32, 92), p(50, 58), p(68, 92), p(86, 42)]]],
+  x: [[[p(26, 42), p(76, 92)], [p(76, 42), p(26, 92)]]],
+  y: [[[p(24, 42), p(50, 92), p(76, 42)], [p(50, 92), p(36, 112)]]],
+  z: [[[p(24, 42), p(78, 42), p(26, 88), p(80, 88)]]]
+};
+
+function isLowercaseLetter(letter: string): boolean {
+  const lower = letter.toLocaleLowerCase("pl-PL");
+  const upper = letter.toLocaleUpperCase("pl-PL");
+  return letter === lower && lower !== upper;
+}
+
 function makeTemplates(letter: string): Stroke[][] {
+  if (isLowercaseLetter(letter)) {
+    const lower = letter.toLocaleLowerCase("pl-PL");
+    const base = LOWER_BASE_LETTERS[lower] ?? lower;
+    const templates = LOWERCASE_TEMPLATES[base];
+    if (!templates) return [];
+
+    return templates.map((template) => {
+      if (lower === "ą") return [...template, lowerOgonek(62)];
+      if (lower === "ć" || lower === "ń" || lower === "ó" || lower === "ś" || lower === "ź") return [...template, lowerAcute()];
+      if (lower === "ę") return [...template, lowerOgonek(52)];
+      if (lower === "ł") return [...template, lowerSlash()];
+      if (lower === "ż") return [...template, lowerDot()];
+      return template;
+    });
+  }
+
   const upper = letter.toUpperCase();
   const base = BASE_LETTERS[upper] ?? upper;
   const templates = TEMPLATES[base];

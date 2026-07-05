@@ -1,10 +1,12 @@
-import type { CharacterSet, GameMode, LanguageCode } from "./types";
+import type { CharacterSet, GameMode, LanguageCode, LetterCase } from "./types";
 
 type Copy = {
   appName: string;
   headline: Record<CharacterSet, string>;
   language: string;
   questions: string;
+  letterCase: string;
+  letterCaseOptions: Record<LetterCase, string>;
   characterSetTabs: Record<CharacterSet, string>;
   chooseGame: string;
   start: string;
@@ -64,6 +66,11 @@ const copies: Record<LanguageCode, Copy> = {
     },
     language: "Language",
     questions: "Questions",
+    letterCase: "Letter case",
+    letterCaseOptions: {
+      uppercase: "Capital letters",
+      lowercase: "Small letters"
+    },
     characterSetTabs: {
       letters: "Letters",
       digits: "Digits",
@@ -189,6 +196,11 @@ const copies: Record<LanguageCode, Copy> = {
     },
     language: "Język",
     questions: "Pytania",
+    letterCase: "Wielkość liter",
+    letterCaseOptions: {
+      uppercase: "Wielkie litery",
+      lowercase: "Małe litery"
+    },
     characterSetTabs: {
       letters: "Litery",
       digits: "Cyfry",

@@ -4,6 +4,8 @@ type Props = {
   letter: LetterItem;
   compact?: boolean;
   showCaption?: boolean;
+  displayText?: string;
+  exampleWord?: string;
 };
 
 const warmIds = new Set(["fruit-red", "orange", "lemon", "sun", "cake", "gift", "count-star", "count-flower", "family-mom", "family-dad", "hat", "cup", "pig", "hen", "fox", "cow", "ant", "bee", "wasp", "egg", "ear", "hand", "shoe", "sock", "duck", "bird", "book", "star", "juice", "cheese", "rice", "salt", "bear", "mouse", "blanket"]);
@@ -787,7 +789,7 @@ function DigitShape({ digit, imageId }: { digit: string; imageId: string }) {
   );
 }
 
-export function LetterImage({ letter, compact = false, showCaption = true }: Props) {
+export function LetterImage({ letter, compact = false, showCaption = true, displayText = letter.display, exampleWord = letter.example?.word }: Props) {
   const sizeClasses = compact ? "h-28 w-28" : "h-40 w-40 sm:h-48 sm:w-48";
 
   if (letter.characterSet === "digits") {
@@ -799,14 +801,14 @@ export function LetterImage({ letter, compact = false, showCaption = true }: Pro
           className={`${sizeClasses} drop-shadow-lg`}
           viewBox="0 0 128 128"
           role="img"
-          aria-label={letter.example?.alt ?? `digit ${letter.display}`}
+          aria-label={letter.example?.alt ?? `digit ${displayText}`}
         >
           <rect width="128" height="128" rx="28" fill={getPalette(imageId).bg} />
           <DigitShape digit={letter.display} imageId={imageId} />
         </svg>
         {showCaption && (
           <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
-            {letter.display}
+            {displayText}
           </figcaption>
         )}
       </figure>
@@ -828,7 +830,7 @@ export function LetterImage({ letter, compact = false, showCaption = true }: Pro
       </svg>
       {showCaption && (
         <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
-          {letter.characterSet === "words" ? letter.display : `${letter.display} - ${letter.example.word}`}
+          {letter.characterSet === "words" ? displayText : `${displayText} - ${exampleWord}`}
         </figcaption>
       )}
     </figure>

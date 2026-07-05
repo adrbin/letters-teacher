@@ -4,6 +4,8 @@ export type CharacterSet = "letters" | "digits" | "words";
 
 export type GameMode = "hear-pick" | "hear-write" | "see-pick-sound" | "see-say";
 
+export type LetterCase = "uppercase" | "lowercase";
+
 export type CharacterItem = {
   display: string;
   speechText: string;
@@ -24,6 +26,7 @@ export type SessionSettings = {
   characterSet: CharacterSet;
   gameMode: GameMode;
   questionCount: number;
+  letterCase?: LetterCase;
 };
 
 export type Question = {

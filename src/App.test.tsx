@@ -159,7 +159,7 @@ describe("App", () => {
 
     expect(screen.getByText("1 / 10")).toBeInTheDocument();
     expect(screen.getByText("Wspaniale!")).toBeInTheDocument();
-    expect(screen.getByText(`${target.display} jak ${target.example!.word}`)).toBeInTheDocument();
+    expect(screen.getByText(`${target.display} jak ${target.example!.word.toLocaleUpperCase("pl-PL")}`)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /wybierz/i })).not.toBeInTheDocument();
 
@@ -226,6 +226,7 @@ describe("App", () => {
 
   it("switches to word games and clamps question count to the word list", async () => {
     const user = userEvent.setup();
+    const target = generateQuestions("en", "words", 36, "session-1000-0.00289")[0].target;
     render(<App />);
 
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
@@ -244,6 +245,32 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { name: /pick the word you hear/i })).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /choose word/i })).toHaveLength(4);
+    expect(screen.getByRole("button", { name: `Choose word ${target.display.toLocaleUpperCase("en-US")}` })).toBeInTheDocument();
+  });
+
+  it("uses lowercase letter cards when small letters are selected", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
+    const displayTarget = target.display.toLocaleLowerCase("pl-PL");
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /małe litery/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    expect(screen.getByRole("button", { name: `Wybierz ${displayTarget}` })).toBeInTheDocument();
+  });
+
+  it("uses lowercase word cards when small letters are selected", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+    await user.click(screen.getByRole("button", { name: /small letters/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    expect(screen.getByRole("button", { name: `Choose word ${target.display}` })).toBeInTheDocument();
   });
 
   it("starts each digit game with digit-specific labels", async () => {
@@ -507,6 +534,25 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
+    await chooseSpellingTiles(user, target.display.toLocaleUpperCase("en-US"));
+    await user.click(screen.getByRole("button", { name: /check/i }));
+
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.getByText("Wonderful!")).toBeInTheDocument();
+    expect(screen.getByText(`Word: ${target.display.toLocaleUpperCase("en-US")}`)).toBeInTheDocument();
+  });
+
+  it("accepts a lowercase spelled word with letter tiles", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
+    await user.click(screen.getByRole("tab", { name: /words/i }));
+    await user.click(screen.getByRole("button", { name: /small letters/i }));
+    await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
     await chooseSpellingTiles(user, target.display);
     await user.click(screen.getByRole("button", { name: /check/i }));
 
@@ -525,9 +571,9 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
-    await chooseSpellingTiles(user, "mom");
+    await chooseSpellingTiles(user, "MOM");
 
-    expect(screen.getByText("mom")).toBeInTheDocument();
+    expect(screen.getByText("MOM")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /^add m/i }).filter((button) => (button as HTMLButtonElement).disabled)).toHaveLength(2);
   });
 

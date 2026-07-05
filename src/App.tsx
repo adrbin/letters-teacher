@@ -11,7 +11,8 @@ const defaultSettings: SessionSettings = {
   language: "pl",
   characterSet: "letters",
   gameMode: "hear-pick",
-  questionCount: 10
+  questionCount: 10,
+  letterCase: "uppercase"
 };
 
 export default function App() {

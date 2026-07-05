@@ -110,6 +110,103 @@ describe("handwriting recognizer", () => {
     expect(recognizeExpectedLetter(lSlash.slice(0, 1), "Ł", ["L", "Ł"]).matches).toBe(false);
   });
 
+  it("validates common lowercase letters against the target", () => {
+    const fixtures: Array<[string, Stroke[]]> = [
+      [
+        "a",
+        [
+          [
+            { x: 72, y: 44 },
+            { x: 44, y: 34 },
+            { x: 24, y: 58 },
+            { x: 34, y: 88 },
+            { x: 68, y: 88 },
+            { x: 76, y: 56 }
+          ],
+          [
+            { x: 76, y: 38 },
+            { x: 76, y: 92 }
+          ]
+        ]
+      ],
+      [
+        "l",
+        [
+          [
+            { x: 46, y: 10 },
+            { x: 46, y: 92 }
+          ]
+        ]
+      ],
+      [
+        "t",
+        [
+          [
+            { x: 52, y: 18 },
+            { x: 52, y: 92 }
+          ],
+          [
+            { x: 28, y: 42 },
+            { x: 76, y: 42 }
+          ]
+        ]
+      ]
+    ];
+
+    for (const [letter, strokes] of fixtures) {
+      expect(recognizeExpectedLetter(strokes, letter, ["a", "l", "t"]).matches).toBe(true);
+    }
+  });
+
+  it("supports Polish lowercase diacritic templates when their marks are drawn", () => {
+    const aOgonek: Stroke[] = [
+      [
+        { x: 72, y: 44 },
+        { x: 44, y: 34 },
+        { x: 24, y: 58 },
+        { x: 34, y: 88 },
+        { x: 68, y: 88 },
+        { x: 76, y: 56 }
+      ],
+      [
+        { x: 76, y: 38 },
+        { x: 76, y: 92 }
+      ],
+      [
+        { x: 62, y: 88 },
+        { x: 72, y: 102 },
+        { x: 56, y: 112 }
+      ]
+    ];
+    const lSlash: Stroke[] = [
+      [
+        { x: 46, y: 10 },
+        { x: 46, y: 92 }
+      ],
+      [
+        { x: 24, y: 58 },
+        { x: 68, y: 42 }
+      ]
+    ];
+    const zDot: Stroke[] = [
+      [
+        { x: 24, y: 42 },
+        { x: 78, y: 42 },
+        { x: 26, y: 88 },
+        { x: 80, y: 88 }
+      ],
+      [
+        { x: 52, y: 18 },
+        { x: 53, y: 18 }
+      ]
+    ];
+
+    expect(recognizeExpectedLetter(aOgonek, "ą", ["a", "ą"]).matches).toBe(true);
+    expect(recognizeExpectedLetter(lSlash, "ł", ["l", "ł"]).matches).toBe(true);
+    expect(recognizeExpectedLetter(zDot, "ż", ["z", "ż"]).matches).toBe(true);
+    expect(recognizeExpectedLetter(lSlash.slice(0, 1), "ł", ["l", "ł"]).matches).toBe(false);
+  });
+
   it("validates common digit drawings against the target", () => {
     const fixtures: Array<[string, Stroke[]]> = [
       ["0", [[{ x: 50, y: 8 }, { x: 82, y: 20 }, { x: 88, y: 58 }, { x: 74, y: 92 }, { x: 28, y: 90 }, { x: 14, y: 56 }, { x: 22, y: 18 }, { x: 50, y: 8 }]]],

@@ -1,6 +1,6 @@
 import { getCharacters, languageNames } from "../data/letters";
 import { getCopy } from "../i18n";
-import type { CharacterSet, EarnedStamp, GameMode, LanguageCode, SessionSettings } from "../types";
+import type { CharacterSet, EarnedStamp, GameMode, LanguageCode, LetterCase, SessionSettings } from "../types";
 import { StampCollection } from "./StampBadge";
 
 const MIN_QUESTION_COUNT = 3;
@@ -102,6 +102,30 @@ export function SetupScreen({ settings, stamps, onSettingsChange, onStart }: Pro
                   })}
                 </div>
               </div>
+              {settings.characterSet !== "digits" && (
+                <div className="grid gap-2 text-lg font-black text-slate-800">
+                  <span>{copy.letterCase}</span>
+                  <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1" role="group" aria-label={copy.letterCase}>
+                    {(["uppercase", "lowercase"] as const).map((letterCase) => {
+                      const active = settings.letterCase !== "lowercase" ? letterCase === "uppercase" : letterCase === "lowercase";
+                      return (
+                        <button
+                          key={letterCase}
+                          className={`min-h-12 rounded-xl px-4 text-lg font-black transition ${
+                            active ? "bg-white text-slate-950 shadow-sm" : "text-slate-600"
+                          }`}
+                          type="button"
+                          aria-pressed={active}
+                          aria-label={copy.letterCaseOptions[letterCase]}
+                          onClick={() => setValue("letterCase", letterCase as LetterCase)}
+                        >
+                          {letterCase === "uppercase" ? "ABC" : "abc"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               <label className="grid gap-2 text-lg font-black text-slate-800">
                 {copy.questions}
                 <div className="flex items-center gap-3">

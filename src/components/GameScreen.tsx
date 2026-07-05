@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getCharacters, matchesCharacterTranscript } from "../data/letters";
+import { getCharacterDisplayText, getExampleDisplayWord } from "../game/displayCase";
 import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } from "../game/session";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
 import { getCopy, translateFeedback } from "../i18n";
-import type { AttemptResult, CharacterSet, LetterItem } from "../types";
+import type { AttemptResult, CharacterSet, LetterCase, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { LetterImage } from "./LetterImage";
 
@@ -22,6 +23,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
   const characterSet = session.settings.characterSet;
+  const letterCase = session.settings.letterCase;
   const { speak, supported: speechSupported, error: speechError } = useSpeechSynthesis();
   const playFeedbackSound = useFeedbackSound();
   const feedbackSequence = useRef(0);
@@ -131,6 +133,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               onContinue={handleContinue}
               copy={copy}
               feedbackKey={answerFeedback.feedbackKey}
+              letterCase={letterCase}
             />
           ) : (
             <>
@@ -145,6 +148,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   answerFeedback={answerFeedback}
                   characterSet={characterSet}
                   copy={copy}
+                  letterCase={letterCase}
                 />
               )}
 
@@ -160,6 +164,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   answerFeedback={answerFeedback}
                   characterSet={characterSet}
                   copy={copy}
+                  letterCase={letterCase}
                 />
               )}
 
@@ -171,6 +176,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   onAnswer={(answer) => submitAnswer(answer, "spell")}
                   answerFeedback={answerFeedback}
                   copy={copy}
+                  letterCase={letterCase}
                 />
               )}
 
@@ -183,6 +189,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   onAnswer={(answer) => submitAnswer(answer, answer)}
                   answerFeedback={answerFeedback}
                   copy={copy}
+                  letterCase={letterCase}
                 />
               )}
 
@@ -194,6 +201,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   onExit={onExit}
                   characterSet={characterSet}
                   copy={copy}
+                  letterCase={letterCase}
                 />
               )}
             </>
@@ -222,7 +230,8 @@ function SuccessFeedback({
   continueLabel,
   onContinue,
   copy,
-  feedbackKey
+  feedbackKey,
+  letterCase
 }: {
   target: LetterItem;
   characterSet: CharacterSet;
@@ -231,7 +240,11 @@ function SuccessFeedback({
   onContinue: () => void;
   copy: Copy;
   feedbackKey: number;
+  letterCase: LetterCase | undefined;
 }) {
+  const displayTarget = getCharacterDisplayText(target, letterCase);
+  const displayExampleWord = getExampleDisplayWord(target, letterCase);
+
   return (
     <div
       key={`success-${feedbackKey}`}
@@ -246,8 +259,8 @@ function SuccessFeedback({
       </div>
       <p className="text-3xl font-black">{status}</p>
       <div className="mx-auto flex w-full max-w-xl flex-wrap items-center justify-center gap-4 rounded-3xl bg-white/75 p-4">
-        <LetterImage letter={target} compact />
-        <p className="text-2xl font-black">{copy.characterExample[characterSet](target.display, target.example?.word)}</p>
+        <LetterImage letter={target} compact displayText={displayTarget} exampleWord={displayExampleWord} />
+        <p className="text-2xl font-black">{copy.characterExample[characterSet](displayTarget, displayExampleWord)}</p>
       </div>
       <button
         className="control-button mx-auto w-full max-w-md bg-emerald-600 px-6 py-4 text-2xl text-white shadow-lg shadow-emerald-200"
@@ -288,7 +301,8 @@ function HearPickGame({
   onAnswer,
   answerFeedback,
   characterSet,
-  copy
+  copy,
+  letterCase
 }: SpeechProps & {
   questionTarget: LetterItem;
   options: LetterItem[];
@@ -297,6 +311,7 @@ function HearPickGame({
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   characterSet: CharacterSet;
   copy: Copy;
+  letterCase: LetterCase | undefined;
 }) {
   const cardTextSize = characterSet === "words" ? "text-3xl sm:text-4xl" : "text-5xl";
 
@@ -306,6 +321,7 @@ function HearPickGame({
       <h1 className="text-3xl font-black text-slate-950">{copy.pickCharacterYouHear[characterSet]}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option) => {
+          const displayText = getCharacterDisplayText(option, letterCase);
           const missed = wrongAttempts.includes(option.display);
           const pulsing = answerFeedback?.sourceKey === option.display;
           return (
@@ -315,11 +331,11 @@ function HearPickGame({
                 missed ? "border-rose-500 bg-rose-100 text-rose-950" : "border-slate-200 bg-white text-slate-950 shadow-sm"
               } ${pulsing ? (answerFeedback?.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
               type="button"
-              aria-label={copy.chooseCharacter[characterSet](option.display)}
+              aria-label={copy.chooseCharacter[characterSet](displayText)}
               onClick={() => onAnswer(option.display)}
             >
               {missed ? "✕ " : ""}
-              {option.display}
+              {displayText}
             </button>
           );
         })}
@@ -338,7 +354,8 @@ function HearWriteGame({
   letters,
   answerFeedback,
   characterSet,
-  copy
+  copy,
+  letterCase
 }: SpeechProps & {
   target: LetterItem;
   strokes: Stroke[];
@@ -348,15 +365,18 @@ function HearWriteGame({
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   characterSet: "letters" | "digits";
   copy: Copy;
+  letterCase: LetterCase | undefined;
 }) {
+  const expectedDisplay = getCharacterDisplayText(target, letterCase);
+  const candidateDisplays = useMemo(() => letters.map((letter) => getCharacterDisplayText(letter, letterCase)), [letterCase, letters]);
   const recognized = useMemo(
     () =>
       recognizeExpectedLetter(
         strokes,
-        target.display,
-        letters.map((letter) => letter.display)
+        expectedDisplay,
+        candidateDisplays
       ),
-    [letters, strokes, target.display]
+    [candidateDisplays, expectedDisplay, strokes]
   );
 
   return (
@@ -414,14 +434,17 @@ function SpellWordGame({
   onSpeak,
   onAnswer,
   answerFeedback,
-  copy
+  copy,
+  letterCase
 }: SpeechProps & {
   target: LetterItem;
   onAnswer: (answer: string) => void;
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
+  letterCase: LetterCase | undefined;
 }) {
-  const tiles = useMemo(() => createSpellingTiles(target.display), [target.display]);
+  const displayWord = getCharacterDisplayText(target, letterCase);
+  const tiles = useMemo(() => createSpellingTiles(displayWord), [displayWord]);
   const [selectedTileIds, setSelectedTileIds] = useState<string[]>([]);
   const selectedTileSet = useMemo(() => new Set(selectedTileIds), [selectedTileIds]);
   const selectedTiles = selectedTileIds
@@ -432,14 +455,14 @@ function SpellWordGame({
 
   useEffect(() => {
     setSelectedTileIds([]);
-  }, [target.display]);
+  }, [displayWord]);
 
   return (
     <div className="grid gap-5 text-center">
       <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound.words} />
       <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter.words}</h1>
       <div className="mx-auto flex flex-wrap items-center justify-center gap-4">
-        <LetterImage letter={target} compact showCaption={false} />
+        <LetterImage letter={target} compact showCaption={false} displayText={displayWord} />
       </div>
 
       <div className="mx-auto grid w-full max-w-2xl gap-4">
@@ -500,7 +523,7 @@ function SpellWordGame({
           }`}
           type="button"
           disabled={!readyToCheck}
-          onClick={() => onAnswer(selectedWord === target.display ? target.display : "")}
+          onClick={() => onAnswer(selectedWord === displayWord ? target.display : "")}
         >
           {copy.check}
         </button>
@@ -509,12 +532,14 @@ function SpellWordGame({
   );
 }
 
-function CharacterDisplay({ target }: { target: LetterItem }) {
+function CharacterDisplay({ target, letterCase }: { target: LetterItem; letterCase: LetterCase | undefined }) {
+  const displayText = getCharacterDisplayText(target, letterCase);
+
   if (target.characterSet === "words") {
-    return <p className="max-w-full break-words text-5xl font-black leading-tight text-slate-950 sm:text-7xl">{target.display}</p>;
+    return <p className="max-w-full break-words text-5xl font-black leading-tight text-slate-950 sm:text-7xl">{displayText}</p>;
   }
 
-  return <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{target.display}</p>;
+  return <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{displayText}</p>;
 }
 
 function SeePickSoundGame({
@@ -524,7 +549,8 @@ function SeePickSoundGame({
   onSpeak,
   onAnswer,
   answerFeedback,
-  copy
+  copy,
+  letterCase
 }: {
   options: LetterItem[];
   target: LetterItem;
@@ -533,6 +559,7 @@ function SeePickSoundGame({
   onAnswer: (answer: string) => void;
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
+  letterCase: LetterCase | undefined;
 }) {
   const [previewedLetter, setPreviewedLetter] = useState<LetterItem | null>(null);
 
@@ -543,8 +570,8 @@ function SeePickSoundGame({
   return (
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
-        <CharacterDisplay target={target} />
-        <LetterImage letter={target} compact />
+        <CharacterDisplay target={target} letterCase={letterCase} />
+        <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.pickMatchingSound}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
@@ -586,7 +613,8 @@ function SeeSayGame({
   recognition,
   onExit,
   characterSet,
-  copy
+  copy,
+  letterCase
 }: {
   target: LetterItem;
   transcript: string;
@@ -594,12 +622,13 @@ function SeeSayGame({
   onExit: () => void;
   characterSet: CharacterSet;
   copy: Copy;
+  letterCase: LetterCase | undefined;
 }) {
   return (
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
-        <CharacterDisplay target={target} />
-        <LetterImage letter={target} compact />
+        <CharacterDisplay target={target} letterCase={letterCase} />
+        <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.sayThisCharacter[characterSet]}</h1>
       {recognition.supported ? (

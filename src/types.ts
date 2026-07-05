@@ -29,6 +29,11 @@ export type SessionSettings = {
   letterCase?: LetterCase;
 };
 
+export type AppSettings = {
+  session: SessionSettings;
+  readUiActionsAloud: boolean;
+};
+
 export type Question = {
   id: string;
   target: LetterItem;

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -81,6 +81,14 @@ async function chooseSpellingTiles(user: ReturnType<typeof userEvent.setup>, wor
   }
 }
 
+async function openSettings(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: /ustawienia|settings/i }));
+}
+
+async function closeSettings(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: /gotowe|done/i }));
+}
+
 Object.defineProperty(window, "speechSynthesis", {
   configurable: true,
   value: {
@@ -126,12 +134,75 @@ describe("App", () => {
     vi.restoreAllMocks();
   });
 
+  it("starts on a child-friendly home screen with setup controls moved to settings", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    expect(screen.getByRole("button", { name: /^start$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /ustawienia/i })).toBeInTheDocument();
+    expect(screen.queryByLabelText(/język/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("spinbutton")).not.toBeInTheDocument();
+
+    await openSettings(user);
+
+    expect(screen.getByRole("heading", { name: /ustawienia/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/język/i)).toBeInTheDocument();
+    expect(screen.getByRole("spinbutton")).toBeInTheDocument();
+  });
+
+  it("uses decorative SVG icons without changing button accessible names", () => {
+    render(<App />);
+
+    const settingsButton = screen.getByRole("button", { name: /ustawienia/i });
+
+    expect(settingsButton).toHaveTextContent("Ustawienia");
+    expect(settingsButton.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("reads UI action labels aloud when the setting is enabled", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await openSettings(user);
+
+    const utterance = speakMock.mock.calls.at(-1)?.[0] as SpeechSynthesisUtterance;
+    expect(utterance.text).toBe("Ustawienia");
+    expect(utterance.lang).toBe("pl-PL");
+  });
+
+  it("does not read the Start action over the first question prompt", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    await waitFor(() => expect(speakMock).toHaveBeenCalled());
+    const spokenTexts = speakMock.mock.calls.map(([utterance]) => (utterance as SpeechSynthesisUtterance).text);
+
+    expect(spokenTexts).not.toContain("Start");
+  });
+
+  it("does not read UI action labels aloud when the setting is disabled", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await openSettings(user);
+    await user.click(screen.getByRole("button", { name: /czytaj przyciski/i }));
+    speakMock.mockClear();
+
+    await closeSettings(user);
+
+    expect(speakMock).not.toHaveBeenCalled();
+  });
+
   it("updates setup settings and starts a game", async () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
     await user.click(screen.getByRole("button", { name: /hear letter, write it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("heading", { name: /draw the letter/i })).toBeInTheDocument();
@@ -172,7 +243,9 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, wybierz dźwięk/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     const progress = screen.getByText("1 / 10");
@@ -187,7 +260,9 @@ describe("App", () => {
     const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, wybierz dźwięk/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
@@ -199,7 +274,9 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { name: /baw się literami/i })).toBeInTheDocument();
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
+    await closeSettings(user);
 
     expect(screen.getByRole("heading", { name: /play with letters/i })).toBeInTheDocument();
   });
@@ -208,6 +285,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     const questionCount = screen.getByRole("spinbutton") as HTMLInputElement;
     await user.clear(questionCount);
     await user.type(questionCount, "30");
@@ -216,8 +294,9 @@ describe("App", () => {
 
     expect(questionCount).toHaveValue(10);
     expect(questionCount).toHaveAttribute("max", "10");
-    expect(screen.getByRole("heading", { name: /baw się cyframi/i })).toBeInTheDocument();
+    expect(screen.getByText(/baw się cyframi/i)).toBeInTheDocument();
 
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("heading", { name: /wybierz cyfrę/i })).toBeInTheDocument();
@@ -229,6 +308,7 @@ describe("App", () => {
     const target = generateQuestions("en", "words", 36, "session-1000-0.00289")[0].target;
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
 
     await user.click(screen.getByRole("tab", { name: /words/i }));
@@ -239,8 +319,9 @@ describe("App", () => {
 
     expect(questionCount).toHaveValue(36);
     expect(questionCount).toHaveAttribute("max", "36");
-    expect(screen.getByRole("heading", { name: /play with words/i })).toBeInTheDocument();
+    expect(screen.getByText(/play with words/i)).toBeInTheDocument();
 
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("heading", { name: /pick the word you hear/i })).toBeInTheDocument();
@@ -254,7 +335,9 @@ describe("App", () => {
     const displayTarget = target.display.toLocaleLowerCase("pl-PL");
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /małe litery/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("button", { name: `Wybierz ${displayTarget}` })).toBeInTheDocument();
@@ -265,9 +348,11 @@ describe("App", () => {
     const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
     await user.click(screen.getByRole("tab", { name: /words/i }));
     await user.click(screen.getByRole("button", { name: /small letters/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("button", { name: `Choose word ${target.display}` })).toBeInTheDocument();
@@ -284,8 +369,10 @@ describe("App", () => {
 
     for (const { gameName, heading } of games) {
       const { unmount } = render(<App />);
+      await openSettings(user);
       await user.click(screen.getByRole("tab", { name: /cyfry/i }));
       await user.click(screen.getByRole("button", { name: gameName }));
+      await closeSettings(user);
       await user.click(screen.getByRole("button", { name: /^start$/i }));
 
       expect(screen.getByText(/\d \/ 10/)).toBeInTheDocument();
@@ -305,9 +392,11 @@ describe("App", () => {
 
     for (const { gameName, heading } of games) {
       const { unmount } = render(<App />);
-      await user.selectOptions(screen.getByLabelText(/język/i), "en");
+      await openSettings(user);
+      await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
       await user.click(screen.getByRole("tab", { name: /words/i }));
       await user.click(screen.getByRole("button", { name: gameName }));
+      await closeSettings(user);
       await user.click(screen.getByRole("button", { name: /^start$/i }));
 
       expect(screen.getByText(/\d \/ 10/)).toBeInTheDocument();
@@ -316,7 +405,7 @@ describe("App", () => {
     }
   });
 
-  it("shows previously earned stamps on setup", () => {
+  it("shows previously earned stamps on home", () => {
     saveStamp(
       { language: "pl", characterSet: "letters", gameMode: "hear-pick" },
       {
@@ -354,7 +443,9 @@ describe("App", () => {
 
     expect(screen.queryByLabelText(/cyfra 4 stempel/i)).not.toBeInTheDocument();
 
+    await openSettings(user);
     await user.click(screen.getByRole("tab", { name: /cyfry/i }));
+    await closeSettings(user);
 
     expect(screen.getByLabelText(/cyfra 4 stempel/i)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /cztery gwiazdki/i })).toBeInTheDocument();
@@ -376,11 +467,13 @@ describe("App", () => {
     );
 
     render(<App />);
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
 
     expect(screen.queryByLabelText(/word mom stamp/i)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("tab", { name: /words/i }));
+    await closeSettings(user);
 
     expect(screen.getByLabelText(/word mom stamp/i)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /mom/i })).toBeInTheDocument();
@@ -391,9 +484,11 @@ describe("App", () => {
     const questions = generateQuestions("pl", "letters", 3, "session-1000-0.00289");
     render(<App />);
 
+    await openSettings(user);
     for (let count = 0; count < 7; count += 1) {
       await user.click(screen.getByRole("button", { name: /zmniejsz liczbę pytań/i }));
     }
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     for (const [index, question] of questions.entries()) {
@@ -427,9 +522,11 @@ describe("App", () => {
 
     render(<App />);
 
+    await openSettings(user);
     for (let count = 0; count < 7; count += 1) {
       await user.click(screen.getByRole("button", { name: /zmniejsz liczbę pytań/i }));
     }
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     for (const [index, question] of questions.entries()) {
@@ -445,6 +542,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     const questionCount = screen.getByRole("spinbutton") as HTMLInputElement;
     await user.clear(questionCount);
     await user.type(questionCount, "30");
@@ -478,8 +576,10 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
     await user.click(screen.getByRole("button", { name: /hear letter, write it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     const canvas = screen.getByRole("img", { name: /drawing area/i });
@@ -507,8 +607,10 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język/i), "en");
     await user.click(screen.getByRole("button", { name: /hear letter, write it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     const canvas = screen.getByRole("img", { name: /drawing area/i });
@@ -529,9 +631,11 @@ describe("App", () => {
     const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
     await user.click(screen.getByRole("tab", { name: /words/i }));
     await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     await chooseSpellingTiles(user, target.display.toLocaleUpperCase("en-US"));
@@ -547,10 +651,12 @@ describe("App", () => {
     const target = generateQuestions("en", "words", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
     await user.click(screen.getByRole("tab", { name: /words/i }));
     await user.click(screen.getByRole("button", { name: /small letters/i }));
     await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     await chooseSpellingTiles(user, target.display);
@@ -566,9 +672,11 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.selectOptions(screen.getByLabelText(/język|language/i), "en");
     await user.click(screen.getByRole("tab", { name: /words/i }));
     await user.click(screen.getByRole("button", { name: /hear word, spell it/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     await chooseSpellingTiles(user, "MOM");
@@ -596,7 +704,9 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, powiedz ją/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
     await user.click(screen.getByRole("button", { name: /zacznij nagrywanie/i }));
 
@@ -609,22 +719,24 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, powiedz ją/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     const startRecordingButton = screen.getByRole("button", { name: /zacznij nagrywanie/i });
-    expect(startRecordingButton).toHaveTextContent("●");
+    expect(startRecordingButton).toHaveTextContent("Zacznij nagrywanie");
 
     await user.click(startRecordingButton);
 
     const stopRecordingButton = screen.getByRole("button", { name: /zatrzymaj nagrywanie/i });
     expect(stopRecordingButton).toBeInTheDocument();
-    expect(stopRecordingButton).toHaveTextContent("■");
+    expect(stopRecordingButton).toHaveTextContent("Zatrzymaj nagrywanie");
 
     await user.click(stopRecordingButton);
 
     expect(WorkingSpeechRecognition.instances[0].stop).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /zacznij nagrywanie/i })).toHaveTextContent("●");
+    expect(screen.getByRole("button", { name: /zacznij nagrywanie/i })).toHaveTextContent("Zacznij nagrywanie");
   });
 
   it("cleans up speech recognition when a spoken answer shows success feedback", async () => {
@@ -633,7 +745,9 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, powiedz ją/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
     await user.click(screen.getByRole("button", { name: /zacznij nagrywanie/i }));
 
@@ -657,7 +771,9 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await openSettings(user);
     await user.click(screen.getByRole("button", { name: /zobacz literę, powiedz ją/i }));
+    await closeSettings(user);
     await user.click(screen.getByRole("button", { name: /^start$/i }));
     await user.click(screen.getByRole("button", { name: /zacznij nagrywanie/i }));
 

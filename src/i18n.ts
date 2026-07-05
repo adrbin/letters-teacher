@@ -9,11 +9,17 @@ type Copy = {
   letterCaseOptions: Record<LetterCase, string>;
   characterSetTabs: Record<CharacterSet, string>;
   chooseGame: string;
+  settings: string;
+  done: string;
   start: string;
   back: string;
   score: string;
   ready: string;
   pointPrefix: string;
+  readUiActionsAloud: string;
+  readUiActionsOn: string;
+  readUiActionsOff: string;
+  playSoundAction: string;
   playCharacterSound: Record<CharacterSet, string>;
   pickCharacterYouHear: Record<CharacterSet, string>;
   drawCharacter: Record<CharacterSet, string>;
@@ -77,11 +83,17 @@ const copies: Record<LanguageCode, Copy> = {
       words: "Words"
     },
     chooseGame: "Choose a game",
+    settings: "Settings",
+    done: "Done",
     start: "Start",
     back: "Back",
     score: "Score",
     ready: "Ready!",
     pointPrefix: "+",
+    readUiActionsAloud: "Read buttons aloud",
+    readUiActionsOn: "On",
+    readUiActionsOff: "Off",
+    playSoundAction: "Play",
     playCharacterSound: {
       letters: "Play letter sound",
       digits: "Play digit sound",
@@ -207,11 +219,17 @@ const copies: Record<LanguageCode, Copy> = {
       words: "Słowa"
     },
     chooseGame: "Wybierz grę",
+    settings: "Ustawienia",
+    done: "Gotowe",
     start: "Start",
     back: "Wróć",
     score: "Punkty",
     ready: "Gotowe!",
     pointPrefix: "+",
+    readUiActionsAloud: "Czytaj przyciski",
+    readUiActionsOn: "Włączone",
+    readUiActionsOff: "Wyłączone",
+    playSoundAction: "Odtwórz",
     playCharacterSound: {
       letters: "Odtwórz dźwięk litery",
       digits: "Odtwórz dźwięk cyfry",

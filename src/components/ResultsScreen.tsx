@@ -1,6 +1,8 @@
+import { Gamepad2, RotateCcw } from "lucide-react";
 import { languageNames } from "../data/letters";
 import { getCopy } from "../i18n";
 import type { EarnedStamp, SessionSettings, SessionSummary } from "../types";
+import { IconLabel } from "./IconLabel";
 import { StampBadge, StampCollection } from "./StampBadge";
 
 type Props = {
@@ -10,10 +12,15 @@ type Props = {
   newStamp: EarnedStamp | null;
   onPlayAgain: () => void;
   onChooseGame: () => void;
+  onUiAction: (label: string) => void;
 };
 
-export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain, onChooseGame }: Props) {
+export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain, onChooseGame, onUiAction }: Props) {
   const copy = getCopy(settings.language);
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
 
   return (
     <main className="page-shell flex min-h-screen items-center justify-center p-4 sm:p-8">
@@ -51,11 +58,19 @@ export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain
         </div>
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-          <button className="control-button flex-1 bg-orange-500 px-6 py-4 text-xl text-white shadow-lg shadow-orange-200" type="button" onClick={onPlayAgain}>
-            {copy.playAgain}
+          <button
+            className="control-button flex-1 bg-orange-500 px-6 py-4 text-xl text-white shadow-lg shadow-orange-200"
+            type="button"
+            onClick={() => handleAction(copy.playAgain, onPlayAgain)}
+          >
+            <IconLabel icon={RotateCcw}>{copy.playAgain}</IconLabel>
           </button>
-          <button className="control-button flex-1 bg-slate-100 px-6 py-4 text-xl text-slate-950" type="button" onClick={onChooseGame}>
-            {copy.chooseAnotherGame}
+          <button
+            className="control-button flex-1 bg-slate-100 px-6 py-4 text-xl text-slate-950"
+            type="button"
+            onClick={() => handleAction(copy.chooseAnotherGame, onChooseGame)}
+          >
+            <IconLabel icon={Gamepad2}>{copy.chooseAnotherGame}</IconLabel>
           </button>
         </div>
       </section>

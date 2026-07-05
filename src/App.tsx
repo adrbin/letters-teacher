@@ -1,28 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
+import { HomeScreen } from "./components/HomeScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
-import { SetupScreen } from "./components/SetupScreen";
+import { SettingsScreen } from "./components/SettingsScreen";
 import { speechLocales } from "./data/letters";
 import { createSession, summarizeSession, type SessionState } from "./game/session";
+import { loadAppSettings, saveAppSettings } from "./game/settings";
 import { loadStamps, saveStamp } from "./game/stamps";
-import type { EarnedStamp, SessionSettings } from "./types";
+import { useSpeechSynthesis } from "./hooks/useSpeechSynthesis";
+import type { AppSettings, EarnedStamp, SessionSettings } from "./types";
 
-const defaultSettings: SessionSettings = {
-  language: "pl",
-  characterSet: "letters",
-  gameMode: "hear-pick",
-  questionCount: 10,
-  letterCase: "uppercase"
-};
+type AppView = "home" | "settings";
 
 export default function App() {
-  const [settings, setSettings] = useState(defaultSettings);
+  const [appSettings, setAppSettings] = useState<AppSettings>(() => loadAppSettings());
+  const [view, setView] = useState<AppView>("home");
   const [session, setSession] = useState<SessionState | null>(null);
   const [stamps, setStamps] = useState<EarnedStamp[]>(() => loadStamps());
   const [newStamp, setNewStamp] = useState<EarnedStamp | null>(null);
+  const { speakText } = useSpeechSynthesis();
 
   const summary = useMemo(() => (session?.completed ? summarizeSession(session) : null), [session]);
+  const settings = appSettings.session;
   const activeLanguage = session?.settings.language ?? settings.language;
+
+  useEffect(() => {
+    saveAppSettings(appSettings);
+  }, [appSettings]);
 
   useEffect(() => {
     document.documentElement.lang = speechLocales[activeLanguage];
@@ -39,6 +43,30 @@ export default function App() {
     setNewStamp(saved.isNew ? saved.stamp : null);
   }, [session, summary]);
 
+  const setSettings = (settings: SessionSettings) => {
+    setAppSettings((current) => ({ ...current, session: settings }));
+  };
+
+  const setReadUiActionsAloud = (readUiActionsAloud: boolean) => {
+    setAppSettings((current) => ({ ...current, readUiActionsAloud }));
+  };
+
+  const speakUiAction = (label: string) => {
+    if (appSettings.readUiActionsAloud) {
+      speakText(label, activeLanguage);
+    }
+  };
+
+  const startSession = () => {
+    setSession(createSession(settings));
+    setView("home");
+  };
+
+  const chooseHome = () => {
+    setSession(null);
+    setView("home");
+  };
+
   if (summary && session) {
     return (
       <ResultsScreen
@@ -47,21 +75,36 @@ export default function App() {
         stamps={stamps.filter((stamp) => stamp.language === session.settings.language && stamp.characterSet === session.settings.characterSet)}
         newStamp={newStamp}
         onPlayAgain={() => setSession(createSession(session.settings))}
-        onChooseGame={() => setSession(null)}
+        onChooseGame={chooseHome}
+        onUiAction={speakUiAction}
       />
     );
   }
 
   if (session) {
-    return <GameScreen session={session} onSessionChange={setSession} onExit={() => setSession(null)} />;
+    return <GameScreen session={session} onSessionChange={setSession} onExit={chooseHome} onUiAction={speakUiAction} />;
+  }
+
+  if (view === "settings") {
+    return (
+      <SettingsScreen
+        settings={settings}
+        readUiActionsAloud={appSettings.readUiActionsAloud}
+        onSettingsChange={setSettings}
+        onReadUiActionsAloudChange={setReadUiActionsAloud}
+        onClose={() => setView("home")}
+        onUiAction={speakUiAction}
+      />
+    );
   }
 
   return (
-    <SetupScreen
+    <HomeScreen
       settings={settings}
       stamps={stamps.filter((stamp) => stamp.language === settings.language && stamp.characterSet === settings.characterSet)}
-      onSettingsChange={setSettings}
-      onStart={() => setSession(createSession(settings))}
+      onStart={startSession}
+      onOpenSettings={() => setView("settings")}
+      onUiAction={speakUiAction}
     />
   );
 }

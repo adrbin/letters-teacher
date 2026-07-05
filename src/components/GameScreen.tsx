@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Check, Eraser, Gamepad2, Mic, Square, Undo2, Volume2 } from "lucide-react";
 import { getCharacters, matchesCharacterTranscript } from "../data/letters";
 import { getCharacterDisplayText, getExampleDisplayWord } from "../game/displayCase";
 import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } from "../game/session";
@@ -9,17 +10,19 @@ import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
 import { getCopy, translateFeedback } from "../i18n";
 import type { AttemptResult, CharacterSet, LetterCase, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
+import { IconLabel } from "./IconLabel";
 import { LetterImage } from "./LetterImage";
 
 type Props = {
   session: SessionState;
   onSessionChange: (session: SessionState) => void;
   onExit: () => void;
+  onUiAction: (label: string) => void;
 };
 
 type Copy = ReturnType<typeof getCopy>;
 
-export function GameScreen({ session, onSessionChange, onExit }: Props) {
+export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
   const characterSet = session.settings.characterSet;
@@ -91,6 +94,10 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
   const availablePoints = remainingPoints(session.wrongAttempts.length);
   const status = translateFeedback(session.settings.language, session.lastFeedback) || speechError || copy.ready;
   const feedbackTone = answerFeedback ? "answer-incorrect" : "";
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
 
   return (
     <main className="page-shell min-h-screen p-4 sm:p-6">
@@ -104,8 +111,8 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
         )}
         <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <button className="control-button bg-slate-100 px-4 text-slate-900" type="button" onClick={onExit}>
-              {copy.back}
+            <button className="control-button bg-slate-100 px-4 text-slate-900" type="button" onClick={() => handleAction(copy.back, onExit)}>
+              <IconLabel icon={ArrowLeft}>{copy.back}</IconLabel>
             </button>
             <p className="rounded-full bg-blue-100 px-4 py-2 text-lg font-black text-blue-900">{progressLabel}</p>
           </div>
@@ -130,7 +137,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
               characterSet={characterSet}
               status={status}
               continueLabel={isFinalQuestion ? copy.showResults : copy.nextQuestion}
-              onContinue={handleContinue}
+              onContinue={() => handleAction(isFinalQuestion ? copy.showResults : copy.nextQuestion, handleContinue)}
               copy={copy}
               feedbackKey={answerFeedback.feedbackKey}
               letterCase={letterCase}
@@ -165,6 +172,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   characterSet={characterSet}
                   copy={copy}
                   letterCase={letterCase}
+                  onUiAction={onUiAction}
                 />
               )}
 
@@ -177,6 +185,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   answerFeedback={answerFeedback}
                   copy={copy}
                   letterCase={letterCase}
+                  onUiAction={onUiAction}
                 />
               )}
 
@@ -190,6 +199,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   answerFeedback={answerFeedback}
                   copy={copy}
                   letterCase={letterCase}
+                  onUiAction={onUiAction}
                 />
               )}
 
@@ -202,6 +212,7 @@ export function GameScreen({ session, onSessionChange, onExit }: Props) {
                   characterSet={characterSet}
                   copy={copy}
                   letterCase={letterCase}
+                  onUiAction={onUiAction}
                 />
               )}
             </>
@@ -267,7 +278,7 @@ function SuccessFeedback({
         type="button"
         onClick={onContinue}
       >
-        {continueLabel}
+        <IconLabel icon={Check}>{continueLabel}</IconLabel>
       </button>
     </div>
   );
@@ -278,16 +289,18 @@ type SpeechProps = {
   onSpeak: (letter: LetterItem) => boolean;
 };
 
-function SpeakerButton({ letter, speechSupported, onSpeak, label }: SpeechProps & { letter: LetterItem; label: string }) {
+function SpeakerButton({ letter, speechSupported, onSpeak, label, visibleLabel }: SpeechProps & { letter: LetterItem; label: string; visibleLabel: string }) {
   return (
     <button
-      className="control-button mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-orange-500 text-5xl text-white shadow-lg shadow-orange-200"
+      className="control-button mx-auto flex min-h-24 items-center justify-center rounded-full bg-orange-500 px-8 text-2xl text-white shadow-lg shadow-orange-200"
       type="button"
       aria-label={label}
       onClick={() => onSpeak(letter)}
       disabled={!speechSupported}
     >
-      ▶
+      <IconLabel icon={Volume2} iconClassName="h-9 w-9">
+        {visibleLabel}
+      </IconLabel>
     </button>
   );
 }
@@ -317,7 +330,13 @@ function HearPickGame({
 
   return (
     <div className="grid gap-7 text-center">
-      <SpeakerButton letter={questionTarget} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound[characterSet]} />
+      <SpeakerButton
+        letter={questionTarget}
+        speechSupported={speechSupported}
+        onSpeak={onSpeak}
+        label={copy.playCharacterSound[characterSet]}
+        visibleLabel={copy.playSoundAction}
+      />
       <h1 className="text-3xl font-black text-slate-950">{copy.pickCharacterYouHear[characterSet]}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option) => {
@@ -355,7 +374,8 @@ function HearWriteGame({
   answerFeedback,
   characterSet,
   copy,
-  letterCase
+  letterCase,
+  onUiAction
 }: SpeechProps & {
   target: LetterItem;
   strokes: Stroke[];
@@ -366,6 +386,7 @@ function HearWriteGame({
   characterSet: "letters" | "digits";
   copy: Copy;
   letterCase: LetterCase | undefined;
+  onUiAction: (label: string) => void;
 }) {
   const expectedDisplay = getCharacterDisplayText(target, letterCase);
   const candidateDisplays = useMemo(() => letters.map((letter) => getCharacterDisplayText(letter, letterCase)), [letterCase, letters]);
@@ -378,15 +399,25 @@ function HearWriteGame({
       ),
     [candidateDisplays, expectedDisplay, strokes]
   );
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
 
   return (
     <div className="grid gap-5 text-center">
-      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound[characterSet]} />
+      <SpeakerButton
+        letter={target}
+        speechSupported={speechSupported}
+        onSpeak={onSpeak}
+        label={copy.playCharacterSound[characterSet]}
+        visibleLabel={copy.playSoundAction}
+      />
       <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter[characterSet]}</h1>
       <DrawingCanvas strokes={strokes} onChange={onStrokesChange} />
       <div className="mx-auto flex w-full max-w-2xl gap-3">
-        <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => onStrokesChange([])}>
-          {copy.clear}
+        <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => handleAction(copy.clear, () => onStrokesChange([]))}>
+          <IconLabel icon={Eraser}>{copy.clear}</IconLabel>
         </button>
         <button
           className={`control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200 ${
@@ -396,9 +427,9 @@ function HearWriteGame({
           data-recognized-letter={recognized.letter ?? ""}
           data-recognition-confidence={recognized.confidence.toFixed(3)}
           data-recognition-matches={recognized.matches ? "true" : "false"}
-          onClick={() => onAnswer(recognized.matches ? target.display : "")}
+          onClick={() => handleAction(copy.check, () => onAnswer(recognized.matches ? target.display : ""))}
         >
-          {copy.check}
+          <IconLabel icon={Check}>{copy.check}</IconLabel>
         </button>
       </div>
     </div>
@@ -435,13 +466,15 @@ function SpellWordGame({
   onAnswer,
   answerFeedback,
   copy,
-  letterCase
+  letterCase,
+  onUiAction
 }: SpeechProps & {
   target: LetterItem;
   onAnswer: (answer: string) => void;
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
   letterCase: LetterCase | undefined;
+  onUiAction: (label: string) => void;
 }) {
   const displayWord = getCharacterDisplayText(target, letterCase);
   const tiles = useMemo(() => createSpellingTiles(displayWord), [displayWord]);
@@ -452,6 +485,10 @@ function SpellWordGame({
     .filter((tile): tile is SpellingTile => Boolean(tile));
   const selectedWord = selectedTiles.map((tile) => tile.letter).join("");
   const readyToCheck = selectedTileIds.length === tiles.length;
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
 
   useEffect(() => {
     setSelectedTileIds([]);
@@ -459,7 +496,7 @@ function SpellWordGame({
 
   return (
     <div className="grid gap-5 text-center">
-      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound.words} />
+      <SpeakerButton letter={target} speechSupported={speechSupported} onSpeak={onSpeak} label={copy.playCharacterSound.words} visibleLabel={copy.playSoundAction} />
       <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter.words}</h1>
       <div className="mx-auto flex flex-wrap items-center justify-center gap-4">
         <LetterImage letter={target} compact showCaption={false} displayText={displayWord} />
@@ -506,16 +543,16 @@ function SpellWordGame({
       </div>
 
       <div className="mx-auto flex w-full max-w-2xl gap-3">
-        <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => setSelectedTileIds([])}>
-          {copy.clear}
+        <button className="control-button flex-1 bg-slate-100 px-5 text-slate-950" type="button" onClick={() => handleAction(copy.clear, () => setSelectedTileIds([]))}>
+          <IconLabel icon={Eraser}>{copy.clear}</IconLabel>
         </button>
         <button
           className="control-button flex-1 bg-slate-100 px-5 text-slate-950 disabled:text-slate-400"
           type="button"
           disabled={selectedTileIds.length === 0}
-          onClick={() => setSelectedTileIds((current) => current.slice(0, -1))}
+          onClick={() => handleAction(copy.undo, () => setSelectedTileIds((current) => current.slice(0, -1)))}
         >
-          {copy.undo}
+          <IconLabel icon={Undo2}>{copy.undo}</IconLabel>
         </button>
         <button
           className={`control-button flex-1 bg-sky-500 px-5 text-white shadow-lg shadow-sky-200 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none ${
@@ -523,9 +560,9 @@ function SpellWordGame({
           }`}
           type="button"
           disabled={!readyToCheck}
-          onClick={() => onAnswer(selectedWord === displayWord ? target.display : "")}
+          onClick={() => handleAction(copy.check, () => onAnswer(selectedWord === displayWord ? target.display : ""))}
         >
-          {copy.check}
+          <IconLabel icon={Check}>{copy.check}</IconLabel>
         </button>
       </div>
     </div>
@@ -550,7 +587,8 @@ function SeePickSoundGame({
   onAnswer,
   answerFeedback,
   copy,
-  letterCase
+  letterCase,
+  onUiAction
 }: {
   options: LetterItem[];
   target: LetterItem;
@@ -560,8 +598,13 @@ function SeePickSoundGame({
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
   letterCase: LetterCase | undefined;
+  onUiAction: (label: string) => void;
 }) {
   const [previewedLetter, setPreviewedLetter] = useState<LetterItem | null>(null);
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
 
   useEffect(() => {
     setPreviewedLetter(null);
@@ -591,7 +634,7 @@ function SeePickSoundGame({
               setPreviewedLetter(option);
             }}
           >
-            ▶
+            <Volume2 aria-hidden="true" focusable="false" className="mx-auto h-12 w-12" />
           </button>
         ))}
       </div>
@@ -599,9 +642,9 @@ function SeePickSoundGame({
         className="control-button mx-auto w-full max-w-md bg-emerald-500 px-6 py-4 text-xl text-white shadow-lg shadow-emerald-200 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none"
         type="button"
         disabled={!previewedLetter}
-        onClick={() => previewedLetter && onAnswer(previewedLetter.display)}
+        onClick={() => previewedLetter && handleAction(copy.chooseThisSound, () => onAnswer(previewedLetter.display))}
       >
-        {copy.chooseThisSound}
+        <IconLabel icon={Check}>{copy.chooseThisSound}</IconLabel>
       </button>
     </div>
   );
@@ -614,7 +657,8 @@ function SeeSayGame({
   onExit,
   characterSet,
   copy,
-  letterCase
+  letterCase,
+  onUiAction
 }: {
   target: LetterItem;
   transcript: string;
@@ -623,7 +667,13 @@ function SeeSayGame({
   characterSet: CharacterSet;
   copy: Copy;
   letterCase: LetterCase | undefined;
+  onUiAction: (label: string) => void;
 }) {
+  const handleAction = (label: string, action: () => void) => {
+    onUiAction(label);
+    action();
+  };
+
   return (
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
@@ -634,22 +684,28 @@ function SeeSayGame({
       {recognition.supported ? (
         <>
           <button
-            className={`control-button mx-auto h-28 w-28 rounded-full text-5xl text-white shadow-lg ${
+            className={`control-button mx-auto min-h-24 rounded-full px-8 text-xl text-white shadow-lg ${
               recognition.listening ? "bg-rose-500 shadow-rose-200" : "bg-fuchsia-500 shadow-fuchsia-200"
             }`}
             type="button"
             aria-label={recognition.listening ? copy.stopRecording : copy.startRecording}
-            onClick={recognition.listening ? recognition.stop : recognition.start}
+            onClick={() =>
+              recognition.listening
+                ? handleAction(copy.stopRecording, recognition.stop)
+                : handleAction(copy.startRecording, recognition.start)
+            }
           >
-            <span aria-hidden="true">{recognition.listening ? "■" : "●"}</span>
+            <IconLabel icon={recognition.listening ? Square : Mic} iconClassName="h-8 w-8">
+              {recognition.listening ? copy.stopRecording : copy.startRecording}
+            </IconLabel>
           </button>
           <p className="min-h-8 text-xl font-black text-slate-700">{transcript ? `${copy.heard}: ${transcript}` : recognition.error}</p>
         </>
       ) : (
         <div className="mx-auto grid max-w-xl gap-4 rounded-3xl bg-rose-100 p-5 text-rose-950">
           <p className="text-xl font-black">{copy.speechRecognitionUnavailable}</p>
-          <button className="control-button bg-rose-600 px-5 text-white" type="button" onClick={onExit}>
-            {copy.chooseAnotherGame}
+          <button className="control-button bg-rose-600 px-5 text-white" type="button" onClick={() => handleAction(copy.chooseAnotherGame, onExit)}>
+            <IconLabel icon={Gamepad2}>{copy.chooseAnotherGame}</IconLabel>
           </button>
         </div>
       )}

@@ -7,10 +7,14 @@ import { speechLocales } from "./data/letters";
 import { createSession, summarizeSession, type SessionState } from "./game/session";
 import { loadAppSettings, saveAppSettings, updateSessionSetting } from "./game/settings";
 import { loadStamps, saveStamp } from "./game/stamps";
-import { useSpeechSynthesis } from "./hooks/useSpeechSynthesis";
+import { useAudioPlayback } from "./hooks/useAudioPlayback";
 import type { AppSettings, CharacterSet, EarnedStamp, GameMode, SessionSettings } from "./types";
 
 type AppView = "home" | "settings";
+
+function shouldPlayQuestionPrompt(session: SessionState): boolean {
+  return session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write";
+}
 
 export default function App() {
   const [appSettings, setAppSettings] = useState<AppSettings>(() => loadAppSettings());
@@ -18,7 +22,7 @@ export default function App() {
   const [session, setSession] = useState<SessionState | null>(null);
   const [stamps, setStamps] = useState<EarnedStamp[]>(() => loadStamps());
   const [newStamp, setNewStamp] = useState<EarnedStamp | null>(null);
-  const { speakText } = useSpeechSynthesis();
+  const audio = useAudioPlayback();
 
   const summary = useMemo(() => (session?.completed ? summarizeSession(session) : null), [session]);
   const settings = appSettings.session;
@@ -57,13 +61,21 @@ export default function App() {
 
   const speakUiAction = (label: string) => {
     if (appSettings.readUiActionsAloud) {
-      speakText(label, activeLanguage);
+      audio.speakText(label, activeLanguage);
+    }
+  };
+
+  const playOpeningPrompt = (session: SessionState) => {
+    if (shouldPlayQuestionPrompt(session)) {
+      audio.speak(session.questions[session.currentIndex].target);
     }
   };
 
   const startSession = () => {
-    setSession(createSession(settings));
+    const nextSession = createSession(settings);
+    setSession(nextSession);
     setView("home");
+    playOpeningPrompt(nextSession);
   };
 
   const chooseHome = () => {
@@ -78,7 +90,11 @@ export default function App() {
         summary={summary}
         stamps={stamps.filter((stamp) => stamp.language === session.settings.language && stamp.characterSet === session.settings.characterSet)}
         newStamp={newStamp}
-        onPlayAgain={() => setSession(createSession(session.settings))}
+        onPlayAgain={() => {
+          const nextSession = createSession(session.settings);
+          setSession(nextSession);
+          playOpeningPrompt(nextSession);
+        }}
         onChooseGame={chooseHome}
         onUiAction={speakUiAction}
       />
@@ -86,7 +102,7 @@ export default function App() {
   }
 
   if (session) {
-    return <GameScreen session={session} onSessionChange={setSession} onExit={chooseHome} onUiAction={speakUiAction} />;
+    return <GameScreen session={session} onSessionChange={setSession} onExit={chooseHome} onUiAction={speakUiAction} audio={audio} />;
   }
 
   if (view === "settings") {

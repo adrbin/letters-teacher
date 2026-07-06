@@ -6,7 +6,7 @@ import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } f
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
-import { useSpeechSynthesis } from "../hooks/useSpeechSynthesis";
+import type { AudioPlaybackControls } from "../hooks/useAudioPlayback";
 import { getCopy, translateFeedback } from "../i18n";
 import type { AttemptResult, CharacterSet, LetterCase, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
@@ -18,6 +18,7 @@ type Props = {
   onSessionChange: (session: SessionState) => void;
   onExit: () => void;
   onUiAction: (label: string) => void;
+  audio: AudioPlaybackControls;
 };
 
 type Copy = ReturnType<typeof getCopy>;
@@ -39,12 +40,16 @@ function WordWithHanzi({ word, hanzi }: { word: string; hanzi?: string }) {
   );
 }
 
-export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Props) {
+function shouldPlayQuestionPrompt(session: SessionState): boolean {
+  return session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write";
+}
+
+export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
   const characterSet = session.settings.characterSet;
   const letterCase = session.settings.letterCase;
-  const { speak, supported: speechSupported, error: speechError } = useSpeechSynthesis();
+  const { speak, supported: speechSupported, error: speechError } = audio;
   const playFeedbackSound = useFeedbackSound();
   const feedbackSequence = useRef(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
@@ -83,23 +88,22 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Pro
   const isFinalQuestion = session.currentIndex >= session.questions.length - 1;
 
   const handleContinue = useCallback(() => {
+    const nextSession = advanceQuestion(session);
     setAnswerFeedback(null);
-    onSessionChange(advanceQuestion(session));
-  }, [onSessionChange, session]);
+    onSessionChange(nextSession);
+    if (!nextSession.completed && shouldPlayQuestionPrompt(nextSession)) {
+      speak(nextSession.questions[nextSession.currentIndex].target);
+    }
+  }, [onSessionChange, session, speak]);
 
   useEffect(() => {
     setStrokes([]);
     setHeardTranscript("");
     setAnswerFeedback(null);
-    let speakTimeout: number | undefined;
-    if (session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write") {
-      speakTimeout = window.setTimeout(() => speak(question.target), 250);
-    }
     return () => {
-      if (speakTimeout) window.clearTimeout(speakTimeout);
       recognition.abort();
     };
-  }, [question.id, question.target, recognition.abort, session.settings.gameMode, speak]);
+  }, [question.id, recognition.abort]);
 
   useEffect(() => {
     if (session.pendingResult?.correct) {
@@ -114,6 +118,15 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Pro
   const handleAction = (label: string, action: () => void) => {
     onUiAction(label);
     action();
+  };
+  const continueLabel = isFinalQuestion ? copy.showResults : copy.nextQuestion;
+  const continueAfterSuccess = () => {
+    if (!isFinalQuestion && shouldPlayQuestionPrompt(session)) {
+      handleContinue();
+      return;
+    }
+
+    handleAction(continueLabel, handleContinue);
   };
 
   return (
@@ -153,8 +166,8 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Pro
               target={answerFeedback.target}
               characterSet={characterSet}
               status={status}
-              continueLabel={isFinalQuestion ? copy.showResults : copy.nextQuestion}
-              onContinue={() => handleAction(isFinalQuestion ? copy.showResults : copy.nextQuestion, handleContinue)}
+              continueLabel={continueLabel}
+              onContinue={continueAfterSuccess}
               copy={copy}
               feedbackKey={answerFeedback.feedbackKey}
               letterCase={letterCase}

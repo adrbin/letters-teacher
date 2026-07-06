@@ -2,17 +2,23 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { generatedAudioManifest, getAudioManifestEntry } from "./audio/generatedAudioManifest";
 import { getLetters } from "./data/letters";
 import { generateQuestions } from "./game/questionGenerator";
 import { saveStamp } from "./game/stamps";
 
-const cancelSpeechMock = vi.fn();
-const getVoicesMock = vi.fn(() => [
-  { lang: "pl-PL", name: "Polish", default: false, localService: true, voiceURI: "pl" },
-  { lang: "en-US", name: "English", default: true, localService: true, voiceURI: "en" },
-  { lang: "zh-CN", name: "Chinese", default: false, localService: true, voiceURI: "zh" }
-] as SpeechSynthesisVoice[]);
-const speakMock = vi.fn();
+const audioInstances: MockAudio[] = [];
+
+class MockAudio {
+  currentTime = 0;
+  preload = "";
+  play = vi.fn(() => Promise.resolve());
+  pause = vi.fn();
+
+  constructor(public src = "") {
+    audioInstances.push(this);
+  }
+}
 
 type MockSpeechRecognitionEvent = { results: ArrayLike<ArrayLike<{ transcript: string }>> };
 
@@ -109,39 +115,18 @@ async function chooseHomeGame(user: ReturnType<typeof userEvent.setup>, name: Re
   await user.click(screen.getByRole("button", { name }));
 }
 
-Object.defineProperty(window, "speechSynthesis", {
+Object.defineProperty(window, "Audio", {
   configurable: true,
-  value: {
-    cancel: cancelSpeechMock,
-    getVoices: getVoicesMock,
-    speak: speakMock
-  }
+  value: MockAudio
 });
-
-class MockSpeechSynthesisUtterance {
-  lang = "";
-  pitch = 1;
-  rate = 1;
-  voice: SpeechSynthesisVoice | null = null;
-  onerror: (() => void) | null = null;
-
-  constructor(public text: string) {}
-}
-
-Object.defineProperty(window, "SpeechSynthesisUtterance", {
+Object.defineProperty(globalThis, "Audio", {
   configurable: true,
-  value: MockSpeechSynthesisUtterance
-});
-Object.defineProperty(globalThis, "SpeechSynthesisUtterance", {
-  configurable: true,
-  value: MockSpeechSynthesisUtterance
+  value: MockAudio
 });
 
 describe("App", () => {
   beforeEach(() => {
-    cancelSpeechMock.mockClear();
-    getVoicesMock.mockClear();
-    speakMock.mockClear();
+    audioInstances.length = 0;
     window.localStorage.clear();
     WorkingSpeechRecognition.instances = [];
     vi.spyOn(Date, "now").mockReturnValue(1000);
@@ -209,21 +194,22 @@ describe("App", () => {
 
     await openSettings(user);
 
-    const utterance = speakMock.mock.calls.at(-1)?.[0] as SpeechSynthesisUtterance;
-    expect(utterance.text).toBe("Ustawienia");
-    expect(utterance.lang).toBe("pl-PL");
+    expect(audioInstances.at(-1)?.src).toBe(getAudioManifestEntry(generatedAudioManifest, "pl", "Ustawienia")?.path);
+    expect(audioInstances.at(-1)?.play).toHaveBeenCalledTimes(1);
   });
 
-  it("does not read the Start action over the first question prompt", async () => {
+  it("plays the first question prompt from static audio without reading Start aloud", async () => {
     const user = userEvent.setup();
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
-    await waitFor(() => expect(speakMock).toHaveBeenCalled());
-    const spokenTexts = speakMock.mock.calls.map(([utterance]) => (utterance as SpeechSynthesisUtterance).text);
+    await waitFor(() => expect(audioInstances.length).toBeGreaterThan(0));
+    const playedPaths = audioInstances.map((audio) => audio.src);
 
-    expect(spokenTexts).not.toContain("Start");
+    expect(audioInstances.at(-1)?.src).toBe(getAudioManifestEntry(generatedAudioManifest, "pl", target.speechText)?.path);
+    expect(playedPaths).not.toContain(getAudioManifestEntry(generatedAudioManifest, "pl", "Start")?.path ?? "missing-start-audio");
   });
 
   it("does not read UI action labels aloud when the setting is disabled", async () => {
@@ -232,11 +218,11 @@ describe("App", () => {
 
     await openSettings(user);
     await user.click(screen.getByRole("button", { name: /czytaj przyciski/i }));
-    speakMock.mockClear();
+    audioInstances.length = 0;
 
     await closeSettings(user);
 
-    expect(speakMock).not.toHaveBeenCalled();
+    expect(audioInstances).toHaveLength(0);
   });
 
   it("updates setup settings and starts a game", async () => {
@@ -642,17 +628,17 @@ describe("App", () => {
     expect(questionCount).toHaveValue(26);
   });
 
-  it("uses a locale-matched voice and speakable letter text", async () => {
+  it("plays static Polish audio for the speakable letter text", async () => {
     const user = userEvent.setup();
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /^start$/i }));
+    audioInstances.length = 0;
     await user.click(screen.getByRole("button", { name: /odtwórz dźwięk litery/i }));
 
-    const utterance = speakMock.mock.calls.at(-1)?.[0] as SpeechSynthesisUtterance;
-    expect(utterance.lang).toBe("pl-PL");
-    expect(utterance.voice?.lang).toBe("pl-PL");
-    expect(utterance.text).not.toMatch(/^[A-ZĄĆĘŁŃÓŚŹŻ]$/);
+    expect(target.speechText).not.toMatch(/^[A-ZĄĆĘŁŃÓŚŹŻ]$/);
+    expect(audioInstances.at(-1)?.src).toBe(getAudioManifestEntry(generatedAudioManifest, "pl", target.speechText)?.path);
   });
 
   it("accepts a correct target drawing on the write screen", async () => {
@@ -750,7 +736,7 @@ describe("App", () => {
     expect(screen.getByText(`Word: ${target.display}`)).toBeInTheDocument();
   });
 
-  it("spells Chinese words with tone-marked pinyin while showing Hanzi and speaking zh-CN", async () => {
+  it("spells Chinese words with tone-marked pinyin while showing Hanzi and playing static Hanzi audio", async () => {
     const user = userEvent.setup();
     const target = generateQuestions("zh", "words", 10, "session-1000-0.00289")[0].target;
     render(<App />);
@@ -761,13 +747,11 @@ describe("App", () => {
     await closeSettings(user);
     await chooseHomeCharacterSet(user, /词语/i);
     await chooseHomeGame(user, /听词语.*拼出来/i);
-    speakMock.mockClear();
+    audioInstances.length = 0;
     await user.click(screen.getByRole("button", { name: /^开始$/i }));
 
-    await waitFor(() => expect(speakMock).toHaveBeenCalled());
-    const utterance = speakMock.mock.calls.at(-1)?.[0] as SpeechSynthesisUtterance;
-    expect(utterance.lang).toBe("zh-CN");
-    expect(utterance.text).toBe(target.example!.hanzi);
+    await waitFor(() => expect(audioInstances.length).toBeGreaterThan(0));
+    expect(audioInstances.at(-1)?.src).toBe(getAudioManifestEntry(generatedAudioManifest, "zh", target.example!.hanzi!)?.path);
     expect(screen.getByRole("heading", { name: /拼这个词/i })).toBeInTheDocument();
     expect(screen.getByText(target.example!.hanzi!)).toBeInTheDocument();
 

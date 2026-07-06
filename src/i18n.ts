@@ -38,7 +38,7 @@ type Copy = {
   showResults: string;
   speechRecognitionUnavailable: string;
   speechRecognitionTryAgain: string;
-  speechSynthesisUnavailable: string;
+  audioPlaybackUnavailable: string;
   heard: string;
   greatWork: string;
   accuracy: string;
@@ -131,7 +131,7 @@ const copies: Record<LanguageCode, Copy> = {
     showResults: "Show results",
     speechRecognitionUnavailable: "Speech recognition is not available in this browser.",
     speechRecognitionTryAgain: "I could not hear that. Try again.",
-    speechSynthesisUnavailable: "Speech is not available in this browser.",
+    audioPlaybackUnavailable: "Audio is not available in this browser.",
     heard: "Heard",
     greatWork: "Great work!",
     accuracy: "Accuracy",
@@ -289,7 +289,7 @@ const copies: Record<LanguageCode, Copy> = {
     showResults: "Pokaż wyniki",
     speechRecognitionUnavailable: "Rozpoznawanie mowy nie jest dostępne w tej przeglądarce.",
     speechRecognitionTryAgain: "Nie udało mi się usłyszeć. Spróbuj jeszcze raz.",
-    speechSynthesisUnavailable: "Odtwarzanie mowy nie jest dostępne w tej przeglądarce.",
+    audioPlaybackUnavailable: "Odtwarzanie dźwięku nie jest dostępne w tej przeglądarce.",
     heard: "Usłyszano",
     greatWork: "Świetna robota!",
     accuracy: "Dokładność",
@@ -447,7 +447,7 @@ const copies: Record<LanguageCode, Copy> = {
     showResults: "看结果",
     speechRecognitionUnavailable: "这个浏览器不能语音识别。",
     speechRecognitionTryAgain: "没听清，再试一次。",
-    speechSynthesisUnavailable: "这个浏览器不能播放语音。",
+    audioPlaybackUnavailable: "这个浏览器不能播放声音。",
     heard: "听到",
     greatWork: "真棒！",
     accuracy: "正确率",

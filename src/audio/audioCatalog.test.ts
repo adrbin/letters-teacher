@@ -9,6 +9,16 @@ describe("audio catalog", () => {
     const entries = buildAudioCatalogEntries();
     const uniqueEntries = buildUniqueAudioCatalogEntries();
 
+    expect(languageVoiceIds).toEqual({
+      pl: "pl-PL-ZofiaNeural",
+      en: "en-US-AnaNeural",
+      zh: "zh-CN-XiaoxiaoNeural"
+    });
+    expect(languageCodes).toEqual({
+      pl: "pl-PL",
+      en: "en-US",
+      zh: "zh-CN"
+    });
     expect(entries).toHaveLength(321);
     expect(uniqueEntries).toHaveLength(319);
     expect(entries).toContainEqual(
@@ -25,8 +35,8 @@ describe("audio catalog", () => {
   it("maps every unique catalog utterance to an existing static MP3", () => {
     const uniqueEntries = buildUniqueAudioCatalogEntries();
 
-    expect(generatedAudioManifest.modelId).toBe("eleven_v3");
-    expect(generatedAudioManifest.outputFormat).toBe("mp3_44100_128");
+    expect(generatedAudioManifest.modelId).toBe("edge-tts@7.2.8");
+    expect(generatedAudioManifest.outputFormat).toBe("audio-24khz-48kbitrate-mono-mp3");
     expect(generatedAudioManifest.entries).toHaveLength(uniqueEntries.length);
 
     for (const entry of uniqueEntries) {

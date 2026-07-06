@@ -1,4 +1,4 @@
-const CACHE_NAME = "letters-teacher-v3";
+const CACHE_NAME = "letters-teacher-v4";
 const APP_SHELL = ["/", "/index.html", "/manifest.webmanifest", "/icons/icon-192.svg", "/icons/icon-512.svg"];
 const AUDIO_MANIFEST_URL = "/audio/audio-manifest.json";
 

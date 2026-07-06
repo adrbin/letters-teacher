@@ -1,10 +1,12 @@
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
 
-const MODEL_ID = "eleven_v3";
-const OUTPUT_FORMAT = "mp3_44100_128";
+const EDGE_TTS_PACKAGE = "edge-tts==7.2.8";
+const MODEL_ID = "edge-tts@7.2.8";
+const OUTPUT_FORMAT = "audio-24khz-48kbitrate-mono-mp3";
 const MANIFEST_VERSION = 1;
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP_MANIFEST_PATH = path.join(PROJECT_ROOT, "src/audio/generatedAudioManifest.json");
@@ -98,6 +100,12 @@ async function checkGeneratedAudio(manifest) {
     const audioPath = publicFilePath(entry.path);
     if (!(await pathExists(audioPath))) {
       failures.push(`Missing audio: ${path.relative(PROJECT_ROOT, audioPath)}`);
+      continue;
+    }
+
+    const audioStats = await stat(audioPath);
+    if (audioStats.size === 0) {
+      failures.push(`Empty audio: ${path.relative(PROJECT_ROOT, audioPath)}`);
     }
   }
 
@@ -106,53 +114,6 @@ async function checkGeneratedAudio(manifest) {
   }
 
   console.log(`Static audio check passed for ${manifest.entries.length} files.`);
-}
-
-function getRetryDelayMs(response, attempt) {
-  const retryAfter = Number(response.headers.get("retry-after"));
-  if (Number.isFinite(retryAfter) && retryAfter > 0) {
-    return retryAfter * 1000;
-  }
-  return 1000 * attempt;
-}
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function createSpeech(entry, apiKey) {
-  const url = new URL(`https://api.elevenlabs.io/v1/text-to-speech/${entry.voiceId}`);
-  url.searchParams.set("output_format", OUTPUT_FORMAT);
-
-  for (let attempt = 1; attempt <= 4; attempt += 1) {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "audio/mpeg",
-        "Content-Type": "application/json",
-        "xi-api-key": apiKey
-      },
-      body: JSON.stringify({
-        text: entry.text,
-        model_id: MODEL_ID,
-        language_code: entry.languageCode
-      })
-    });
-
-    if (response.ok) {
-      return Buffer.from(await response.arrayBuffer());
-    }
-
-    const details = await response.text();
-    if (attempt < 4 && (response.status === 429 || response.status >= 500)) {
-      await sleep(getRetryDelayMs(response, attempt));
-      continue;
-    }
-
-    throw new Error(`ElevenLabs request failed with ${response.status} for ${entry.language} ${entry.id}: ${details.slice(0, 500)}`);
-  }
-
-  throw new Error(`ElevenLabs request failed for ${entry.language} ${entry.id}`);
 }
 
 function filterEntriesByLanguage(entries, languages) {
@@ -169,12 +130,42 @@ function filterEntriesByLanguage(entries, languages) {
   return entries.filter((entry) => requestedLanguages.has(entry.language));
 }
 
-async function generateAudio(entries, force) {
-  const apiKey = process.env.ELEVENLABS_API_KEY;
-  if (!apiKey) {
-    throw new Error("Set ELEVENLABS_API_KEY before running audio generation.");
-  }
+function runEdgeTts(entry, audioPath) {
+  const args = ["--from", EDGE_TTS_PACKAGE, "edge-tts", "--voice", entry.voiceId, "--text", entry.text, "--write-media", audioPath];
 
+  return new Promise((resolve, reject) => {
+    const child = spawn("uvx", args, { stdio: ["ignore", "pipe", "pipe"] });
+    let stderr = "";
+
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
+
+    child.stdout.on("data", (chunk) => {
+      process.stdout.write(chunk);
+    });
+
+    child.on("error", (error) => {
+      if (error.code === "ENOENT") {
+        reject(new Error("uvx is required to generate Edge TTS audio. Install uv, then rerun pnpm run generate:audio."));
+        return;
+      }
+      reject(error);
+    });
+
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+
+      const details = stderr.trim();
+      reject(new Error(`Edge TTS failed with exit code ${code} for ${entry.language} ${entry.id}${details ? `:\n${details}` : ""}`));
+    });
+  });
+}
+
+async function generateAudio(entries, force) {
   for (const [index, entry] of entries.entries()) {
     const audioPath = publicFilePath(entry.path);
     await mkdir(path.dirname(audioPath), { recursive: true });
@@ -184,8 +175,7 @@ async function generateAudio(entries, force) {
       continue;
     }
 
-    const audio = await createSpeech(entry, apiKey);
-    await writeFile(audioPath, audio);
+    await runEdgeTts(entry, audioPath);
     console.log(`${index + 1}/${entries.length} generated ${entry.path}`);
   }
 }

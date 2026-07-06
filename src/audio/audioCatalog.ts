@@ -7,15 +7,15 @@ export const audioCharacterSets = ["letters", "digits", "words"] as const satisf
 export const audioGameModes = ["hear-pick", "hear-write", "see-pick-sound", "see-say"] as const satisfies GameMode[];
 
 export const languageVoiceIds: Record<LanguageCode, string> = {
-  pl: "Xb7hH8MSUJpSbSDYk0k2",
-  en: "EXAVITQu4vr4xnSDxMaL",
-  zh: "cgSgspJ2msm6clMCkdW9"
+  pl: "pl-PL-ZofiaNeural",
+  en: "en-US-AnaNeural",
+  zh: "zh-CN-XiaoxiaoNeural"
 };
 
 export const languageCodes: Record<LanguageCode, string> = {
-  pl: "pl",
-  en: "en",
-  zh: "zh"
+  pl: "pl-PL",
+  en: "en-US",
+  zh: "zh-CN"
 };
 
 export type AudioCatalogEntry = {

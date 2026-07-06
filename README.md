@@ -91,13 +91,15 @@ public/
 
 ## Static Audio Generation
 
-All TTS-style audio is pre-generated as MP3 files and served from `public/audio`. The app does not call browser speech synthesis or ElevenLabs at runtime.
+All TTS-style audio is pre-generated as MP3 files and served from `public/audio`. The app does not call browser speech synthesis or any TTS service at runtime.
 
 Generate or refresh audio:
 
 ```bash
-ELEVENLABS_API_KEY=... pnpm run generate:audio
+pnpm run generate:audio
 ```
+
+Audio generation uses Edge TTS through `uvx`, so install `uv` before regenerating files. The generator pins `edge-tts==7.2.8` and uses Zofia for Polish, Ana for English, and Xiaoxiao for Chinese.
 
 Verify that manifests and MP3 files match the current app catalog:
 

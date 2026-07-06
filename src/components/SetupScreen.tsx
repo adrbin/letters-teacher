@@ -79,6 +79,7 @@ export function SetupScreen({ settings, stamps, onSettingsChange, onStart }: Pro
                 >
                   <option value="pl">{languageNames.pl}</option>
                   <option value="en">{languageNames.en}</option>
+                  <option value="zh">{languageNames.zh}</option>
                 </select>
               </label>
               <div className="grid gap-2 text-lg font-black text-slate-800">

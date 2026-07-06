@@ -2,7 +2,8 @@ import type { LetterCase, LetterItem, LanguageCode } from "../types";
 
 const languageLocales: Record<LanguageCode, string> = {
   en: "en-US",
-  pl: "pl-PL"
+  pl: "pl-PL",
+  zh: "zh-CN"
 };
 
 export function normalizeLetterCase(letterCase: LetterCase | undefined): LetterCase {
@@ -24,4 +25,8 @@ export function getExampleDisplayWord(character: LetterItem, letterCase: LetterC
   if (!character.example?.word) return undefined;
   if (character.characterSet === "digits") return character.example.word;
   return formatText(character.example.word, character.language, letterCase);
+}
+
+export function getExampleDisplayHanzi(character: LetterItem): string | undefined {
+  return character.example?.hanzi;
 }

@@ -170,11 +170,55 @@ describe("stamps", () => {
 
     saveStamp({ language: "en", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["mom"]), "2026-06-10T10:00:00.000Z");
     saveStamp({ language: "pl", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["mama"]), "2026-06-10T10:01:00.000Z");
+    saveStamp({ language: "zh", characterSet: "words", gameMode: "hear-pick" }, summary(95, ["māma"]), "2026-06-10T10:02:00.000Z");
 
     expect(loadStamps()).toEqual([
       expect.objectContaining({ kind: "character", characterSet: "words", language: "en", character: "mom" }),
-      expect.objectContaining({ kind: "character", characterSet: "words", language: "pl", character: "mama" })
+      expect.objectContaining({ kind: "character", characterSet: "words", language: "pl", character: "mama" }),
+      expect.objectContaining({ kind: "character", characterSet: "words", language: "zh", character: "māma", hanzi: "妈妈" })
     ]);
+  });
+
+  it("awards Chinese word stamps with Hanzi metadata", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const saved = saveStamp({ language: "zh", characterSet: "words", gameMode: "hear-pick" }, summary(80, ["māo"]), "2026-06-10T10:00:00.000Z");
+
+    expect(saved.stamp).toMatchObject({
+      kind: "character",
+      characterSet: "words",
+      language: "zh",
+      character: "māo",
+      word: "māo",
+      hanzi: "猫",
+      imageId: "cat",
+      alt: "猫"
+    });
+    expect(loadStamps()).toEqual([expect.objectContaining({ kind: "character", characterSet: "words", language: "zh", character: "māo", hanzi: "猫" })]);
+  });
+
+  it("loads stored Chinese stamps with Hanzi metadata", () => {
+    window.localStorage.setItem(
+      "letters-teacher:stamps",
+      JSON.stringify([
+        {
+          kind: "character",
+          id: "zh:words:character:māo",
+          language: "zh",
+          characterSet: "words",
+          character: "māo",
+          word: "māo",
+          hanzi: "猫",
+          imageId: "cat",
+          alt: "猫",
+          earnedAt: "2026-06-10T10:00:00.000Z",
+          score: 80,
+          maxScore: 100
+        }
+      ])
+    );
+
+    expect(loadStamps()).toEqual([expect.objectContaining({ language: "zh", characterSet: "words", character: "māo", hanzi: "猫" })]);
   });
 
   it("converts a full word collection into a completed words stamp", () => {

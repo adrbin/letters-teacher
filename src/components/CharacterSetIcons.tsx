@@ -49,5 +49,5 @@ function createGlyphIcon(glyph: string, fontSize: string, textLength: string, di
   return GlyphIcon;
 }
 
-export const LettersIcon = createGlyphIcon("ABC", "22", "24", "LettersIcon");
-export const DigitsIcon = createGlyphIcon("123", "22", "24", "DigitsIcon");
+export const LettersIcon = createGlyphIcon("ABC", "18.5", "24", "LettersIcon");
+export const DigitsIcon = createGlyphIcon("123", "19.5", "24", "DigitsIcon");

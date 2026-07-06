@@ -12,7 +12,7 @@ describe("settings", () => {
 
   it("persists app settings separately from session scoring state", () => {
     const settings = {
-      session: { language: "en", characterSet: "words", gameMode: "hear-write", questionCount: 36, letterCase: "lowercase" } as const,
+      session: { language: "zh", characterSet: "words", gameMode: "hear-write", questionCount: 36, letterCase: "lowercase" } as const,
       readUiActionsAloud: false
     };
 
@@ -31,17 +31,18 @@ describe("settings", () => {
     const highCountSettings = { ...defaultAppSettings.session, questionCount: 30 };
 
     expect(updateSessionSetting(highCountSettings, "language", "en").questionCount).toBe(26);
+    expect(updateSessionSetting(highCountSettings, "language", "zh").questionCount).toBe(26);
     expect(updateSessionSetting(highCountSettings, "characterSet", "digits").questionCount).toBe(10);
   });
 
   it("normalizes partial stored settings", () => {
     expect(
       normalizeAppSettings({
-        session: { language: "en", characterSet: "digits", questionCount: 99 },
+        session: { language: "zh", characterSet: "digits", questionCount: 99 },
         readUiActionsAloud: false
       })
     ).toEqual({
-      session: { ...defaultAppSettings.session, language: "en", characterSet: "digits", questionCount: 10 },
+      session: { ...defaultAppSettings.session, language: "zh", characterSet: "digits", questionCount: 10 },
       readUiActionsAloud: false
     });
   });

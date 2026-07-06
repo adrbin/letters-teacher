@@ -381,6 +381,164 @@ const copies: Record<LanguageCode, Copy> = {
       "Wonderful!": "Wspaniale!",
       "You got it!": "Udało się!"
     }
+  },
+  zh: {
+    appName: "字母老师",
+    headline: {
+      letters: "玩字母",
+      digits: "玩数字",
+      words: "玩词语"
+    },
+    language: "语言",
+    questions: "题数",
+    questionCountSummary: (count) => `${count} 题`,
+    letterCase: "字母大小写",
+    letterCaseOptions: {
+      uppercase: "大写字母",
+      lowercase: "小写字母"
+    },
+    characterSetTabs: {
+      letters: "字母",
+      digits: "数字",
+      words: "词语"
+    },
+    choosePractice: "练什么？",
+    chooseGame: "选游戏",
+    settings: "设置",
+    done: "完成",
+    start: "开始",
+    back: "返回",
+    score: "分数",
+    ready: "准备好！",
+    pointPrefix: "+",
+    readUiActionsAloud: "读按钮",
+    readUiActionsOn: "开",
+    readUiActionsOff: "关",
+    playSoundAction: "播放",
+    playCharacterSound: {
+      letters: "播放字母音",
+      digits: "播放数字音",
+      words: "播放词语音"
+    },
+    pickCharacterYouHear: {
+      letters: "选听到的字母",
+      digits: "选听到的数字",
+      words: "选听到的词语"
+    },
+    drawCharacter: {
+      letters: "写这个字母",
+      digits: "写这个数字",
+      words: "拼这个词"
+    },
+    clear: "清除",
+    check: "检查",
+    undo: "撤销",
+    pickMatchingSound: "选匹配的声音",
+    chooseThisSound: "选这个声音",
+    sayThisCharacter: {
+      letters: "说这个字母",
+      digits: "说这个数字",
+      words: "说这个词语"
+    },
+    stopRecording: "停止录音",
+    startRecording: "开始录音",
+    chooseAnotherGame: "换一个游戏",
+    nextQuestion: "下一题",
+    showResults: "看结果",
+    speechRecognitionUnavailable: "这个浏览器不能语音识别。",
+    speechRecognitionTryAgain: "没听清，再试一次。",
+    speechSynthesisUnavailable: "这个浏览器不能播放语音。",
+    heard: "听到",
+    greatWork: "真棒！",
+    accuracy: "正确率",
+    strongCharacters: {
+      letters: "强项字母",
+      digits: "强项数字",
+      words: "强项词语"
+    },
+    practiceAgain: "再练习",
+    playAgain: "再玩一次",
+    stamp: "印章",
+    stampCollection: "印章收藏",
+    newStamp: "新印章！",
+    noStampsYet: "赢一局来收集印章。",
+    decreaseQuestionCount: "减少题数",
+    increaseQuestionCount: "增加题数",
+    chooseCharacter: {
+      letters: (letter) => `选择 ${letter}`,
+      digits: (digit) => `选择数字 ${digit}`,
+      words: (word) => `选择词语 ${word}`
+    },
+    addSpellingTile: (letter, position) => `添加 ${letter} 第 ${position} 块`,
+    removeSpellingTile: (letter, position) => `移除 ${letter} 第 ${position} 格`,
+    spelledWord: "拼出的词",
+    playSound: (number) => `播放声音 ${number}`,
+    characterExample: {
+      letters: (letter, word) => `${letter}，例：${word}`,
+      digits: (digit) => `数字 ${digit}`,
+      words: (word, label) => `词语：${label ?? word}`
+    },
+    stampCharacterLabel: {
+      letters: (letter, word) => `${letter}，例：${word}`,
+      digits: (digit) => `数字 ${digit}`,
+      words: (word, label) => `词语 ${label ?? word}`
+    },
+    collectionCompleteLabel: {
+      letters: (count) => `完成字母印章 x${count}`,
+      digits: (count) => `完成数字印章 x${count}`,
+      words: (count) => `完成词语印章 x${count}`
+    },
+    collectionCompleteTitle: {
+      letters: "字母完成",
+      digits: "数字完成",
+      words: "词语完成"
+    },
+    gameTitles: {
+      letters: {
+        "hear-pick": "听字母，选卡片",
+        "hear-write": "听字母，写出来",
+        "see-pick-sound": "看字母，选声音",
+        "see-say": "看字母，说出来"
+      },
+      digits: {
+        "hear-pick": "听数字，选卡片",
+        "hear-write": "听数字，写出来",
+        "see-pick-sound": "看数字，选声音",
+        "see-say": "看数字，说出来"
+      },
+      words: {
+        "hear-pick": "听词语，选卡片",
+        "hear-write": "听词语，拼出来",
+        "see-pick-sound": "看词语，选声音",
+        "see-say": "看词语，说出来"
+      }
+    },
+    gameShortTitles: {
+      letters: {
+        "hear-pick": "听一听选一选",
+        "hear-write": "听一听写一写",
+        "see-pick-sound": "配声音",
+        "see-say": "看一看说一说"
+      },
+      digits: {
+        "hear-pick": "听一听选一选",
+        "hear-write": "听一听写一写",
+        "see-pick-sound": "配声音",
+        "see-say": "看一看说一说"
+      },
+      words: {
+        "hear-pick": "听一听选一选",
+        "hear-write": "听一听拼一拼",
+        "see-pick-sound": "配声音",
+        "see-say": "看一看说一说"
+      }
+    },
+    feedback: {
+      "This game is finished.": "游戏结束了。",
+      "Almost. Try once more.": "差一点，再试一次。",
+      "Wonderful!": "太棒了！",
+      "You got it!": "答对了！"
+    }
   }
 };
 

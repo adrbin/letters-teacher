@@ -1,4 +1,4 @@
-export type LanguageCode = "en" | "pl";
+export type LanguageCode = "en" | "pl" | "zh";
 
 export type CharacterSet = "letters" | "digits" | "words";
 
@@ -14,6 +14,7 @@ export type CharacterItem = {
   characterSet: CharacterSet;
   example?: {
     word: string;
+    hanzi?: string;
     imageId: string;
     alt: string;
   };
@@ -71,6 +72,7 @@ export type CharacterStamp = {
   characterSet: CharacterSet;
   character: string;
   word?: string;
+  hanzi?: string;
   imageId?: string;
   alt?: string;
   earnedAt: string;

@@ -1,5 +1,14 @@
 import type { CharacterSet, LanguageCode, LetterItem } from "../types";
+import { stripPinyinToneMarks } from "./pinyin";
 import { wordImageIds, wordsByLanguage } from "./words";
+
+type ExampleDefinition = { word: string; hanzi?: string; imageId: string; alt: string };
+
+const languageLocales: Record<LanguageCode, string> = {
+  en: "en-US",
+  pl: "pl-PL",
+  zh: "zh-CN"
+};
 
 const englishNames: Record<string, string[]> = {
   A: ["a", "ay", "hey"],
@@ -86,6 +95,68 @@ const englishExamples: Record<string, { word: string; imageId: string; alt: stri
   X: { word: "x-ray", imageId: "xray", alt: "x-ray card" },
   Y: { word: "yarn", imageId: "yarn", alt: "ball of yarn" },
   Z: { word: "zip", imageId: "zip", alt: "zipper" }
+};
+
+const chineseSpeechNames: Record<string, string> = {
+  A: "a",
+  B: "bê",
+  C: "cê",
+  D: "dê",
+  E: "e",
+  F: "êf",
+  G: "gê",
+  H: "ha",
+  I: "yi",
+  J: "jie",
+  K: "kê",
+  L: "êl",
+  M: "êm",
+  N: "nê",
+  O: "o",
+  P: "pê",
+  Q: "qiu",
+  R: "ar",
+  S: "ês",
+  T: "tê",
+  U: "wu",
+  V: "vê",
+  W: "wa",
+  X: "xi",
+  Y: "ya",
+  Z: "zê"
+};
+
+const chineseNames: Record<string, string[]> = Object.fromEntries(
+  Object.entries(chineseSpeechNames).map(([letter, name]) => [letter, Array.from(new Set([name, stripPinyinToneMarks(name)]))])
+);
+
+const chineseExamples: Record<string, ExampleDefinition> = {
+  A: { word: "āyí", hanzi: "阿姨", imageId: "family-mom", alt: "阿姨" },
+  B: { word: "bāshì", hanzi: "巴士", imageId: "bus", alt: "巴士" },
+  C: { word: "chē", hanzi: "车", imageId: "vehicle", alt: "车" },
+  D: { word: "dàngāo", hanzi: "蛋糕", imageId: "cake", alt: "蛋糕" },
+  E: { word: "ěrduo", hanzi: "耳朵", imageId: "ear", alt: "耳朵" },
+  F: { word: "fángzi", hanzi: "房子", imageId: "house", alt: "房子" },
+  G: { word: "gǒu", hanzi: "狗", imageId: "dog", alt: "狗" },
+  H: { word: "huā", hanzi: "花", imageId: "count-flower", alt: "花" },
+  I: { word: "yī", hanzi: "一", imageId: "count-flower", alt: "一朵花" },
+  J: { word: "jīdàn", hanzi: "鸡蛋", imageId: "egg", alt: "鸡蛋" },
+  K: { word: "kǎchē", hanzi: "卡车", imageId: "vehicle", alt: "卡车" },
+  L: { word: "lǜyè", hanzi: "绿叶", imageId: "leaf", alt: "绿叶" },
+  M: { word: "māo", hanzi: "猫", imageId: "cat", alt: "猫" },
+  N: { word: "niú", hanzi: "牛", imageId: "cow", alt: "牛" },
+  O: { word: "o", imageId: "orange", alt: "橙子" },
+  P: { word: "píngguǒ", hanzi: "苹果", imageId: "fruit-red", alt: "苹果" },
+  Q: { word: "qiú", hanzi: "球", imageId: "ball", alt: "球" },
+  R: { word: "rén", hanzi: "人", imageId: "family-dad", alt: "人" },
+  S: { word: "shù", hanzi: "树", imageId: "tree", alt: "树" },
+  T: { word: "tàiyáng", hanzi: "太阳", imageId: "sun", alt: "太阳" },
+  U: { word: "wǔ", hanzi: "五", imageId: "count-flower", alt: "五朵花" },
+  V: { word: "vê", imageId: "vehicle", alt: "vê" },
+  W: { word: "wáwa", hanzi: "娃娃", imageId: "doll", alt: "娃娃" },
+  X: { word: "xīngxing", hanzi: "星星", imageId: "star", alt: "星星" },
+  Y: { word: "yú", hanzi: "鱼", imageId: "fish", alt: "鱼" },
+  Z: { word: "zhū", hanzi: "猪", imageId: "pig", alt: "猪" }
 };
 
 const polishAliases: Record<string, string[]> = {
@@ -249,6 +320,32 @@ const polishDigitSpeechNames: Record<string, string> = {
   "9": "dziewięć"
 };
 
+const chineseDigitNames: Record<string, string[]> = {
+  "0": ["零", "líng", "ling"],
+  "1": ["一", "yī", "yi"],
+  "2": ["二", "èr", "er"],
+  "3": ["三", "sān", "san"],
+  "4": ["四", "sì", "si"],
+  "5": ["五", "wǔ", "wu"],
+  "6": ["六", "liù", "liu"],
+  "7": ["七", "qī", "qi"],
+  "8": ["八", "bā", "ba"],
+  "9": ["九", "jiǔ", "jiu"]
+};
+
+const chineseDigitSpeechNames: Record<string, string> = {
+  "0": "零",
+  "1": "一",
+  "2": "二",
+  "3": "三",
+  "4": "四",
+  "5": "五",
+  "6": "六",
+  "7": "七",
+  "8": "八",
+  "9": "九"
+};
+
 const englishDigitExamples: Record<string, { word: string; imageId: string; alt: string }> = {
   "0": { word: "empty basket", imageId: "count-empty", alt: "empty basket" },
   "1": { word: "one flower", imageId: "count-flower", alt: "one flower" },
@@ -275,16 +372,29 @@ const polishDigitExamples: Record<string, { word: string; imageId: string; alt: 
   "9": { word: "dziewięć kwiatków", imageId: "count-flower", alt: "dziewiec kwiatkow" }
 };
 
+const chineseDigitExamples: Record<string, ExampleDefinition> = {
+  "0": { word: "零", hanzi: "零", imageId: "count-empty", alt: "空篮子" },
+  "1": { word: "一朵花", hanzi: "一", imageId: "count-flower", alt: "一朵花" },
+  "2": { word: "两只蝴蝶", hanzi: "二", imageId: "count-butterfly", alt: "两只蝴蝶" },
+  "3": { word: "三片叶子", hanzi: "三", imageId: "count-leaf", alt: "三片叶子" },
+  "4": { word: "四颗星星", hanzi: "四", imageId: "count-star", alt: "四颗星星" },
+  "5": { word: "五朵花", hanzi: "五", imageId: "count-flower", alt: "五朵花" },
+  "6": { word: "六只蝴蝶", hanzi: "六", imageId: "count-butterfly", alt: "六只蝴蝶" },
+  "7": { word: "七片叶子", hanzi: "七", imageId: "count-leaf", alt: "七片叶子" },
+  "8": { word: "八颗星星", hanzi: "八", imageId: "count-star", alt: "八颗星星" },
+  "9": { word: "九朵花", hanzi: "九", imageId: "count-flower", alt: "九朵花" }
+};
+
 function makeLetters(
   language: LanguageCode,
   alphabet: string[],
   aliases: Record<string, string[]>,
   speechNames: Record<string, string>,
-  examples: Record<string, { word: string; imageId: string; alt: string }>
+  examples: Record<string, ExampleDefinition>
 ): LetterItem[] {
   return alphabet.map((letter) => ({
     display: letter,
-    speechText: speechNames[letter] ?? letter.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US"),
+    speechText: speechNames[letter] ?? letter.toLocaleLowerCase(languageLocales[language]),
     aliases: [letter.toLowerCase(), ...(aliases[letter] ?? [])],
     language,
     characterSet: "letters",
@@ -296,7 +406,7 @@ function makeDigits(
   language: LanguageCode,
   aliases: Record<string, string[]>,
   speechNames: Record<string, string>,
-  examples: Record<string, { word: string; imageId: string; alt: string }>
+  examples: Record<string, ExampleDefinition>
 ): LetterItem[] {
   return digits.map((digit) => ({
     display: digit,
@@ -310,31 +420,33 @@ function makeDigits(
 
 export const lettersByLanguage: Record<LanguageCode, LetterItem[]> = {
   en: makeLetters("en", englishAlphabet, englishNames, englishSpeechNames, englishExamples),
-  pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames, polishExamples)
+  pl: makeLetters("pl", polishAlphabet, polishAliases, polishSpeechNames, polishExamples),
+  zh: makeLetters("zh", englishAlphabet, chineseNames, chineseSpeechNames, chineseExamples)
 };
 
 export const digitsByLanguage: Record<LanguageCode, LetterItem[]> = {
   en: makeDigits("en", englishDigitNames, englishDigitSpeechNames, englishDigitExamples),
-  pl: makeDigits("pl", polishDigitNames, polishDigitSpeechNames, polishDigitExamples)
+  pl: makeDigits("pl", polishDigitNames, polishDigitSpeechNames, polishDigitExamples),
+  zh: makeDigits("zh", chineseDigitNames, chineseDigitSpeechNames, chineseDigitExamples)
 };
 
 export const letterImageIds = new Set([
   ...Object.values(englishExamples).map((example) => example.imageId),
   ...Object.values(polishExamples).map((example) => example.imageId),
+  ...Object.values(chineseExamples).map((example) => example.imageId),
   ...Object.values(englishDigitExamples).map((example) => example.imageId),
   ...Object.values(polishDigitExamples).map((example) => example.imageId),
+  ...Object.values(chineseDigitExamples).map((example) => example.imageId),
   ...wordImageIds
 ]);
 
 export const languageNames: Record<LanguageCode, string> = {
   en: "English",
-  pl: "Polski"
+  pl: "Polski",
+  zh: "Chinese"
 };
 
-export const speechLocales: Record<LanguageCode, string> = {
-  en: "en-US",
-  pl: "pl-PL"
-};
+export const speechLocales: Record<LanguageCode, string> = languageLocales;
 
 export function getLetters(language: LanguageCode): LetterItem[] {
   return lettersByLanguage[language];
@@ -353,7 +465,7 @@ export function getCharacters(language: LanguageCode, characterSet: CharacterSet
 function normalizeTranscript(value: string, language: LanguageCode): string {
   return value
     .trim()
-    .toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")
+    .toLocaleLowerCase(languageLocales[language])
     .replace(/[^\p{L}\p{N}\s]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();

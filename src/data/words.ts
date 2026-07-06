@@ -1,7 +1,9 @@
 import type { LanguageCode, LetterItem } from "../types";
+import { stripPinyinToneMarks } from "./pinyin";
 
 type WordDefinition = {
   word: string;
+  hanzi?: string;
   imageId: string;
   alt: string;
   aliases?: string[];
@@ -85,15 +87,55 @@ const polishWords: WordDefinition[] = [
   { word: "koc", imageId: "blanket", alt: "koc" }
 ];
 
+const chineseWords: WordDefinition[] = [
+  { word: "māma", hanzi: "妈妈", imageId: "family-mom", alt: "妈妈" },
+  { word: "bàba", hanzi: "爸爸", imageId: "family-dad", alt: "爸爸" },
+  { word: "māo", hanzi: "猫", imageId: "cat", alt: "猫" },
+  { word: "gǒu", hanzi: "狗", imageId: "dog", alt: "狗" },
+  { word: "tàiyáng", hanzi: "太阳", imageId: "sun", alt: "太阳" },
+  { word: "chē", hanzi: "车", imageId: "vehicle", alt: "车" },
+  { word: "bāshì", hanzi: "巴士", imageId: "bus", alt: "巴士" },
+  { word: "chuáng", hanzi: "床", imageId: "bed", alt: "床" },
+  { word: "màozi", hanzi: "帽子", imageId: "hat", alt: "帽子" },
+  { word: "bēizi", hanzi: "杯子", imageId: "cup", alt: "杯子" },
+  { word: "zhū", hanzi: "猪", imageId: "pig", alt: "猪" },
+  { word: "jī", hanzi: "鸡", imageId: "hen", alt: "鸡" },
+  { word: "húli", hanzi: "狐狸", imageId: "fox", alt: "狐狸" },
+  { word: "niú", hanzi: "牛", imageId: "cow", alt: "牛" },
+  { word: "mǎyǐ", hanzi: "蚂蚁", imageId: "ant", alt: "蚂蚁" },
+  { word: "mìfēng", hanzi: "蜜蜂", imageId: "bee", alt: "蜜蜂" },
+  { word: "jīdàn", hanzi: "鸡蛋", imageId: "egg", alt: "鸡蛋" },
+  { word: "yǎnjing", hanzi: "眼睛", imageId: "eye", alt: "眼睛" },
+  { word: "ěrduo", hanzi: "耳朵", imageId: "ear", alt: "耳朵" },
+  { word: "bízi", hanzi: "鼻子", imageId: "nose", alt: "鼻子" },
+  { word: "shǒu", hanzi: "手", imageId: "hand", alt: "手" },
+  { word: "jiǎo", hanzi: "脚", imageId: "foot", alt: "脚" },
+  { word: "xié", hanzi: "鞋", imageId: "shoe", alt: "鞋" },
+  { word: "wàzi", hanzi: "袜子", imageId: "sock", alt: "袜子" },
+  { word: "yú", hanzi: "鱼", imageId: "fish", alt: "鱼" },
+  { word: "yā", hanzi: "鸭", imageId: "duck", alt: "鸭" },
+  { word: "niǎo", hanzi: "鸟", imageId: "bird", alt: "鸟" },
+  { word: "qiú", hanzi: "球", imageId: "ball", alt: "球" },
+  { word: "wáwa", hanzi: "娃娃", imageId: "doll", alt: "娃娃" },
+  { word: "shū", hanzi: "书", imageId: "book", alt: "书" },
+  { word: "yuèliang", hanzi: "月亮", imageId: "moon", alt: "月亮" },
+  { word: "xīngxing", hanzi: "星星", imageId: "star", alt: "星星" },
+  { word: "yǔ", hanzi: "雨", imageId: "rain", alt: "雨" },
+  { word: "shù", hanzi: "树", imageId: "tree", alt: "树" },
+  { word: "yèzi", hanzi: "叶子", imageId: "leaf", alt: "叶子" },
+  { word: "dàngāo", hanzi: "蛋糕", imageId: "cake", alt: "蛋糕" }
+];
+
 function makeWords(language: LanguageCode, words: WordDefinition[]): LetterItem[] {
   return words.map((item) => ({
     display: item.word,
-    speechText: item.word,
-    aliases: [item.word, ...(item.aliases ?? [])],
+    speechText: item.hanzi ?? item.word,
+    aliases: Array.from(new Set([item.word, stripPinyinToneMarks(item.word), item.hanzi, ...(item.aliases ?? [])].filter((alias): alias is string => Boolean(alias)))),
     language,
     characterSet: "words",
     example: {
       word: item.word,
+      hanzi: item.hanzi,
       imageId: item.imageId,
       alt: item.alt
     }
@@ -102,7 +144,8 @@ function makeWords(language: LanguageCode, words: WordDefinition[]): LetterItem[
 
 export const wordsByLanguage: Record<LanguageCode, LetterItem[]> = {
   en: makeWords("en", englishWords),
-  pl: makeWords("pl", polishWords)
+  pl: makeWords("pl", polishWords),
+  zh: makeWords("zh", chineseWords)
 };
 
-export const wordImageIds = new Set([...englishWords, ...polishWords].map((word) => word.imageId));
+export const wordImageIds = new Set([...englishWords, ...polishWords, ...chineseWords].map((word) => word.imageId));

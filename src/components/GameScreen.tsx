@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Check, Eraser, Gamepad2, Mic, Square, Undo2, Volume2 } from "lucide-react";
 import { getCharacters, matchesCharacterTranscript } from "../data/letters";
-import { getCharacterDisplayText, getExampleDisplayWord } from "../game/displayCase";
+import { getCharacterDisplayText, getExampleDisplayHanzi, getExampleDisplayWord } from "../game/displayCase";
 import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } from "../game/session";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
@@ -21,6 +21,23 @@ type Props = {
 };
 
 type Copy = ReturnType<typeof getCopy>;
+
+function appendHanzi(value: string | undefined, target: LetterItem): string | undefined {
+  const hanzi = getExampleDisplayHanzi(target);
+  if (!value) return hanzi;
+  return hanzi ? `${value} ${hanzi}` : value;
+}
+
+function WordWithHanzi({ word, hanzi }: { word: string; hanzi?: string }) {
+  if (!hanzi) return <>{word}</>;
+
+  return (
+    <span className="grid gap-1 leading-tight">
+      <span>{word}</span>
+      <span className="text-2xl sm:text-3xl">{hanzi}</span>
+    </span>
+  );
+}
 
 export function GameScreen({ session, onSessionChange, onExit, onUiAction }: Props) {
   const question = session.questions[session.currentIndex];
@@ -255,6 +272,7 @@ function SuccessFeedback({
 }) {
   const displayTarget = getCharacterDisplayText(target, letterCase);
   const displayExampleWord = getExampleDisplayWord(target, letterCase);
+  const displayExampleLabel = appendHanzi(displayExampleWord, target);
 
   return (
     <div
@@ -271,7 +289,7 @@ function SuccessFeedback({
       <p className="text-3xl font-black">{status}</p>
       <div className="mx-auto flex w-full max-w-xl flex-wrap items-center justify-center gap-4 rounded-3xl bg-white/75 p-4">
         <LetterImage letter={target} compact displayText={displayTarget} exampleWord={displayExampleWord} />
-        <p className="text-2xl font-black">{copy.characterExample[characterSet](displayTarget, displayExampleWord)}</p>
+        <p className="text-2xl font-black">{copy.characterExample[characterSet](displayTarget, displayExampleLabel)}</p>
       </div>
       <button
         className="control-button mx-auto w-full max-w-md bg-emerald-600 px-6 py-4 text-2xl text-white shadow-lg shadow-emerald-200"
@@ -341,6 +359,7 @@ function HearPickGame({
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
         {options.map((option) => {
           const displayText = getCharacterDisplayText(option, letterCase);
+          const displayLabel = appendHanzi(displayText, option) ?? displayText;
           const missed = wrongAttempts.includes(option.display);
           const pulsing = answerFeedback?.sourceKey === option.display;
           return (
@@ -350,11 +369,11 @@ function HearPickGame({
                 missed ? "border-rose-500 bg-rose-100 text-rose-950" : "border-slate-200 bg-white text-slate-950 shadow-sm"
               } ${pulsing ? (answerFeedback?.result.correct ? "answer-correct" : "answer-incorrect") : ""}`}
               type="button"
-              aria-label={copy.chooseCharacter[characterSet](displayText)}
+              aria-label={copy.chooseCharacter[characterSet](displayLabel)}
               onClick={() => onAnswer(option.display)}
             >
               {missed ? "✕ " : ""}
-              {displayText}
+              {option.characterSet === "words" ? <WordWithHanzi word={displayText} hanzi={getExampleDisplayHanzi(option)} /> : displayText}
             </button>
           );
         })}
@@ -500,6 +519,7 @@ function SpellWordGame({
       <h1 className="text-3xl font-black text-slate-950">{copy.drawCharacter.words}</h1>
       <div className="mx-auto flex flex-wrap items-center justify-center gap-4">
         <LetterImage letter={target} compact showCaption={false} displayText={displayWord} />
+        {target.example?.hanzi && <p className="text-5xl font-black text-slate-950">{target.example.hanzi}</p>}
       </div>
 
       <div className="mx-auto grid w-full max-w-2xl gap-4">
@@ -573,7 +593,12 @@ function CharacterDisplay({ target, letterCase }: { target: LetterItem; letterCa
   const displayText = getCharacterDisplayText(target, letterCase);
 
   if (target.characterSet === "words") {
-    return <p className="max-w-full break-words text-5xl font-black leading-tight text-slate-950 sm:text-7xl">{displayText}</p>;
+    return (
+      <div className="grid max-w-full justify-items-center gap-2 break-words text-slate-950">
+        <p className="text-5xl font-black leading-tight sm:text-7xl">{displayText}</p>
+        {target.example?.hanzi && <p className="text-4xl font-black leading-tight sm:text-5xl">{target.example.hanzi}</p>}
+      </div>
+    );
   }
 
   return <p className="text-[7rem] font-black leading-none text-slate-950 sm:text-[10rem]">{displayText}</p>;

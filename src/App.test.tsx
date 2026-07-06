@@ -9,7 +9,8 @@ import { saveStamp } from "./game/stamps";
 const cancelSpeechMock = vi.fn();
 const getVoicesMock = vi.fn(() => [
   { lang: "pl-PL", name: "Polish", default: false, localService: true, voiceURI: "pl" },
-  { lang: "en-US", name: "English", default: true, localService: true, voiceURI: "en" }
+  { lang: "en-US", name: "English", default: true, localService: true, voiceURI: "en" },
+  { lang: "zh-CN", name: "Chinese", default: false, localService: true, voiceURI: "zh" }
 ] as SpeechSynthesisVoice[]);
 const speakMock = vi.fn();
 
@@ -81,12 +82,23 @@ async function chooseSpellingTiles(user: ReturnType<typeof userEvent.setup>, wor
   }
 }
 
+async function chooseVisibleTiles(user: ReturnType<typeof userEvent.setup>, word: string) {
+  for (const letter of Array.from(word)) {
+    const availableTile = screen
+      .getAllByRole("button")
+      .find((button) => button.textContent === letter && !(button as HTMLButtonElement).disabled);
+
+    expect(availableTile).toBeTruthy();
+    await user.click(availableTile!);
+  }
+}
+
 async function openSettings(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: /ustawienia|settings/i }));
+  await user.click(screen.getByRole("button", { name: /ustawienia|settings|设置/i }));
 }
 
 async function closeSettings(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: /gotowe|done/i }));
+  await user.click(screen.getByRole("button", { name: /gotowe|done|完成/i }));
 }
 
 async function chooseHomeCharacterSet(user: ReturnType<typeof userEvent.setup>, name: RegExp) {
@@ -309,6 +321,19 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: /play with letters/i })).toBeInTheDocument();
   });
 
+  it("translates the app to Chinese when Chinese is selected", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "zh");
+    await closeSettings(user);
+
+    expect(screen.getByRole("heading", { name: /玩字母/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^开始$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /设置/i })).toBeInTheDocument();
+  });
+
   it("switches to digit games and clamps question count to ten", async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -509,6 +534,34 @@ describe("App", () => {
     expect(screen.getByRole("img", { name: /mom/i })).toBeInTheDocument();
   });
 
+  it("shows previously earned Chinese word stamps with Hanzi on the words tab", async () => {
+    const user = userEvent.setup();
+    saveStamp(
+      { language: "zh", characterSet: "words", gameMode: "hear-pick" },
+      {
+        totalScore: 95,
+        maxScore: 100,
+        accuracy: 95,
+        strongLetters: [],
+        practiceLetters: [],
+        results: [{ letter: "māo", attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+      },
+      "2026-06-10T10:00:00.000Z"
+    );
+
+    render(<App />);
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "zh");
+    await closeSettings(user);
+
+    expect(screen.queryByLabelText(/词语 māo 猫 印章/i)).not.toBeInTheDocument();
+
+    await chooseHomeCharacterSet(user, /词语/i);
+
+    expect(screen.getByLabelText(/词语 māo 猫 印章/i)).toBeInTheDocument();
+    expect(screen.getByText("猫")).toBeInTheDocument();
+  });
+
   it("awards a new stamp on the results screen", async () => {
     const user = userEvent.setup();
     const questions = generateQuestions("pl", "letters", 3, "session-1000-0.00289");
@@ -695,6 +748,35 @@ describe("App", () => {
     expect(screen.getByText("1 / 10")).toBeInTheDocument();
     expect(screen.getByText("Wonderful!")).toBeInTheDocument();
     expect(screen.getByText(`Word: ${target.display}`)).toBeInTheDocument();
+  });
+
+  it("spells Chinese words with tone-marked pinyin while showing Hanzi and speaking zh-CN", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("zh", "words", 10, "session-1000-0.00289")[0].target;
+    render(<App />);
+
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "zh");
+    await user.click(screen.getByRole("button", { name: /小写字母/i }));
+    await closeSettings(user);
+    await chooseHomeCharacterSet(user, /词语/i);
+    await chooseHomeGame(user, /听词语.*拼出来/i);
+    speakMock.mockClear();
+    await user.click(screen.getByRole("button", { name: /^开始$/i }));
+
+    await waitFor(() => expect(speakMock).toHaveBeenCalled());
+    const utterance = speakMock.mock.calls.at(-1)?.[0] as SpeechSynthesisUtterance;
+    expect(utterance.lang).toBe("zh-CN");
+    expect(utterance.text).toBe(target.example!.hanzi);
+    expect(screen.getByRole("heading", { name: /拼这个词/i })).toBeInTheDocument();
+    expect(screen.getByText(target.example!.hanzi!)).toBeInTheDocument();
+
+    await chooseVisibleTiles(user, target.display);
+    await user.click(screen.getByRole("button", { name: /检查/i }));
+
+    expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(screen.getByText("太棒了！")).toBeInTheDocument();
+    expect(screen.getByText(`词语：${target.display} ${target.example!.hanzi}`)).toBeInTheDocument();
   });
 
   it("keeps duplicate spelling tiles independent", async () => {

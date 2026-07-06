@@ -31,7 +31,7 @@ function getStorage(): Storage | null {
 }
 
 function isLanguage(value: unknown): value is LanguageCode {
-  return value === "en" || value === "pl";
+  return value === "en" || value === "pl" || value === "zh";
 }
 
 function isCharacterSet(value: unknown): value is CharacterSet {

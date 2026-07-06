@@ -3,6 +3,12 @@ import { getCharacters } from "../data/letters";
 import type { EarnedStamp, LanguageCode, LetterItem } from "../types";
 import { LetterImage } from "./LetterImage";
 
+const languageLocales: Record<LanguageCode, string> = {
+  en: "en-US",
+  pl: "pl-PL",
+  zh: "zh-CN"
+};
+
 function StampBadge({
   stamp,
   language,
@@ -20,7 +26,9 @@ function StampBadge({
         className={`stamp-badge ${isNew ? "stamp-badge-new" : ""} grid min-h-32 min-w-32 place-items-center rounded-3xl bg-emerald-100 p-4 text-center font-black text-emerald-950 ring-4 ring-emerald-300`}
         aria-label={copy.collectionCompleteLabel[stamp.characterSet](stamp.completedCount)}
       >
-        <span className="text-4xl leading-none">{stamp.characterSet === "digits" ? "123" : stamp.characterSet === "words" ? "WORD" : "ABC"}</span>
+        <span className="text-4xl leading-none">
+          {stamp.characterSet === "digits" ? "123" : stamp.characterSet === "words" ? (stamp.language === "zh" ? "词语" : "WORD") : "ABC"}
+        </span>
         <span className="text-sm uppercase">{copy.collectionCompleteTitle[stamp.characterSet]}</span>
         <span className="rounded-full bg-white/80 px-3 py-1 text-lg">x{stamp.completedCount}</span>
       </div>
@@ -32,23 +40,25 @@ function StampBadge({
     stamp.word && stamp.imageId && stamp.alt
       ? {
           word: stamp.word,
+          hanzi: stamp.hanzi,
           imageId: stamp.imageId,
           alt: stamp.alt
         }
       : currentItem?.example;
   const letter: LetterItem = {
     display: stamp.character,
-    speechText: stamp.character,
-    aliases: [stamp.character.toLocaleLowerCase(language === "pl" ? "pl-PL" : "en-US")],
+    speechText: stamp.hanzi ?? currentItem?.speechText ?? stamp.character,
+    aliases: [stamp.character.toLocaleLowerCase(languageLocales[language])],
     language,
     characterSet: stamp.characterSet,
     example
   };
+  const stampWord = stamp.hanzi && (stamp.word ?? stamp.character) ? `${stamp.word ?? stamp.character} ${stamp.hanzi}` : stamp.word;
 
   return (
     <div
       className={`stamp-badge ${isNew ? "stamp-badge-new" : ""} rounded-3xl bg-white p-3 text-center font-black text-slate-950 shadow-sm ring-4 ring-amber-200`}
-      aria-label={`${copy.stampCharacterLabel[stamp.characterSet](stamp.character, stamp.word)} ${copy.stamp}`}
+      aria-label={`${copy.stampCharacterLabel[stamp.characterSet](stamp.character, stampWord)} ${copy.stamp}`}
     >
       <LetterImage letter={letter} compact />
     </div>

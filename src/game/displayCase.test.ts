@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getCharacters, getLetters } from "../data/letters";
-import { getCharacterDisplayText, getExampleDisplayWord, normalizeLetterCase } from "./displayCase";
+import { getCharacterDisplayText, getExampleDisplayHanzi, getExampleDisplayWord, normalizeLetterCase } from "./displayCase";
 
 describe("display case", () => {
   it("defaults missing letter case settings to uppercase", () => {
@@ -34,5 +34,14 @@ describe("display case", () => {
 
     expect(getExampleDisplayWord(polishA, "uppercase")).toBe("AUTO");
     expect(getExampleDisplayWord(polishA, "lowercase")).toBe("auto");
+  });
+
+  it("formats Chinese tone-marked pinyin while leaving Hanzi unchanged", () => {
+    const chineseCat = getCharacters("zh", "words").find((word) => word.display === "māo")!;
+
+    expect(getCharacterDisplayText(chineseCat, "uppercase")).toBe("MĀO");
+    expect(getCharacterDisplayText(chineseCat, "lowercase")).toBe("māo");
+    expect(getExampleDisplayWord(chineseCat, "uppercase")).toBe("MĀO");
+    expect(getExampleDisplayHanzi(chineseCat)).toBe("猫");
   });
 });

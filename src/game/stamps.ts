@@ -15,7 +15,7 @@ function getStorage(): Storage | null {
 }
 
 function isLanguage(value: unknown): value is LanguageCode {
-  return value === "en" || value === "pl";
+  return value === "en" || value === "pl" || value === "zh";
 }
 
 function isCharacterSet(value: unknown): value is CharacterSet {
@@ -31,6 +31,7 @@ function isCharacterStamp(value: unknown): value is CharacterStamp {
     isCharacterSet(stamp.characterSet) &&
     typeof stamp.character === "string" &&
     (typeof stamp.word === "undefined" || typeof stamp.word === "string") &&
+    (typeof stamp.hanzi === "undefined" || typeof stamp.hanzi === "string") &&
     (typeof stamp.imageId === "undefined" || typeof stamp.imageId === "string") &&
     (typeof stamp.alt === "undefined" || typeof stamp.alt === "string") &&
     typeof stamp.earnedAt === "string" &&
@@ -77,6 +78,7 @@ function createCharacterStamp(
     characterSet,
     character: item.display,
     word: item.example?.word,
+    hanzi: item.example?.hanzi,
     imageId: item.example?.imageId,
     alt: item.example?.alt,
     earnedAt,

@@ -1,12 +1,13 @@
 # Letters Teacher
 
-A React PWA for helping children learn letters, digits, and simple words through playful practice games. The app supports Polish and English, uses browser speech APIs, includes local handwriting and tile spelling practice flows, and is designed to work well on phones, tablets, and desktops.
+A React PWA for helping children learn letters, digits, and simple words through playful practice games. The app supports Polish, English, and Chinese, uses browser speech APIs, includes local handwriting and tile spelling practice flows, and is designed to work well on phones, tablets, and desktops.
 
 Try it at: https://letters-teacher.netlify.app
 
 ## Features
 
 - Practice letters, digits, or simple words in separate tabs.
+- Practice Chinese with A-Z pinyin letters, Mandarin digit names, tone-marked pinyin words, and Simplified Chinese character hints.
 - Hear a character or word sound and pick the matching card.
 - Hear a character sound and write it on a drawing canvas.
 - Hear a word sound and spell it with large letter tiles.
@@ -92,4 +93,4 @@ Speech synthesis and speech recognition are browser APIs. Speech synthesis is br
 
 ## Product Notes
 
-The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish and English are the initial supported languages, with practice for letters, digits, and simple beginner words.
+The app is intended for children age 4+ with setup by a parent. Gameplay screens should stay simple, visual, accessible, and touch-friendly. Polish, English, and Chinese are supported, with practice for letters, digits, and simple beginner words. Chinese word practice keeps pinyin as the spelling target while showing Simplified Chinese characters for familiarity.

@@ -72,6 +72,7 @@ export function SettingsScreen({
             >
               <option value="pl">{languageNames.pl}</option>
               <option value="en">{languageNames.en}</option>
+              <option value="zh">{languageNames.zh}</option>
             </select>
           </label>
 

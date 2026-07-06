@@ -791,6 +791,7 @@ function DigitShape({ digit, imageId }: { digit: string; imageId: string }) {
 
 export function LetterImage({ letter, compact = false, showCaption = true, displayText = letter.display, exampleWord = letter.example?.word }: Props) {
   const sizeClasses = compact ? "h-28 w-28" : "h-40 w-40 sm:h-48 sm:w-48";
+  const hanzi = letter.example?.hanzi;
 
   if (letter.characterSet === "digits") {
     const imageId = letter.example?.imageId ?? "count-empty";
@@ -830,7 +831,14 @@ export function LetterImage({ letter, compact = false, showCaption = true, displ
       </svg>
       {showCaption && (
         <figcaption className="rounded-full bg-white/85 px-4 py-1 text-lg font-black text-slate-950 shadow-sm">
-          {letter.characterSet === "words" ? displayText : `${displayText} - ${exampleWord}`}
+          {letter.characterSet === "words" ? (
+            <span className="grid gap-0.5 leading-tight">
+              <span>{displayText}</span>
+              {hanzi && <span className="text-2xl">{hanzi}</span>}
+            </span>
+          ) : (
+            `${displayText} - ${exampleWord}${hanzi ? ` ${hanzi}` : ""}`
+          )}
         </figcaption>
       )}
     </figure>

@@ -12,7 +12,14 @@ describe("settings", () => {
 
   it("persists app settings separately from session scoring state", () => {
     const settings = {
-      session: { language: "zh", characterSet: "words", gameMode: "hear-write", questionCount: 36, letterCase: "lowercase" } as const,
+      session: {
+        language: "zh",
+        characterSet: "words",
+        gameMode: "hear-write",
+        questionCount: 36,
+        letterCase: "lowercase",
+        showHints: false
+      } as const,
       readUiActionsAloud: false
     };
 
@@ -38,7 +45,7 @@ describe("settings", () => {
   it("normalizes partial stored settings", () => {
     expect(
       normalizeAppSettings({
-        session: { language: "zh", characterSet: "digits", questionCount: 99 },
+        session: { language: "zh", characterSet: "digits", questionCount: 99, showHints: "sometimes" },
         readUiActionsAloud: false
       })
     ).toEqual({

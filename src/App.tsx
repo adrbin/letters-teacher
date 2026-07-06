@@ -126,7 +126,16 @@ export default function App() {
   }
 
   if (session) {
-    return <GameScreen session={session} onSessionChange={setSession} onExit={chooseHome} onUiAction={speakUiAction} audio={audio} />;
+    return (
+      <GameScreen
+        session={session}
+        onSessionChange={setSession}
+        onExit={chooseHome}
+        onUiAction={speakUiAction}
+        onStampSpeak={speakStaticText}
+        audio={audio}
+      />
+    );
   }
 
   if (view === "settings") {

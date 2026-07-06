@@ -3,6 +3,8 @@ import {
   CaseSensitive,
   Check,
   Languages,
+  Lightbulb,
+  LightbulbOff,
   ListChecks,
   Settings as SettingsIcon,
   Volume2,
@@ -33,6 +35,7 @@ export function SettingsScreen({
 }: Props) {
   const copy = getCopy(settings.language);
   const maxQuestionCount = getMaxQuestionCount(settings.language, settings.characterSet);
+  const showHints = settings.showHints !== false;
 
   const handleAction = (label: string, action: () => void) => {
     onUiAction(label);
@@ -145,6 +148,21 @@ export function SettingsScreen({
             </IconLabel>
             <span className="rounded-full bg-white px-3 py-1 text-base font-black">
               {readUiActionsAloud ? copy.readUiActionsOn : copy.readUiActionsOff}
+            </span>
+          </button>
+
+          <button
+            className="control-button flex min-h-16 items-center justify-between gap-4 bg-slate-100 px-5 text-left text-slate-950"
+            type="button"
+            aria-label={copy.showHints}
+            aria-pressed={showHints}
+            onClick={() => handleAction(copy.showHints, () => setValue("showHints", !showHints))}
+          >
+            <IconLabel icon={showHints ? Lightbulb : LightbulbOff} className="justify-start">
+              {copy.showHints}
+            </IconLabel>
+            <span className="rounded-full bg-white px-3 py-1 text-base font-black">
+              {showHints ? copy.readUiActionsOn : copy.readUiActionsOff}
             </span>
           </button>
 

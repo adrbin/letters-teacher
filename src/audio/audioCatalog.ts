@@ -70,6 +70,7 @@ function getUiActionTexts(language: LanguageCode): string[] {
     copy.decreaseQuestionCount,
     copy.increaseQuestionCount,
     copy.readUiActionsAloud,
+    copy.showHints,
     copy.playAgain,
     copy.chooseAnotherGame,
     copy.nextQuestion,

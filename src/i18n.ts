@@ -29,6 +29,7 @@ type Copy = {
   readUiActionsAloud: string;
   readUiActionsOn: string;
   readUiActionsOff: string;
+  showHints: string;
   playSoundAction: string;
   playCharacterSound: Record<CharacterSet, string>;
   pickCharacterYouHear: Record<CharacterSet, string>;
@@ -107,6 +108,7 @@ const copies: Record<LanguageCode, Copy> = {
     readUiActionsAloud: "Read buttons aloud",
     readUiActionsOn: "On",
     readUiActionsOff: "Off",
+    showHints: "Show hints",
     playSoundAction: "Play",
     playCharacterSound: {
       letters: "Play letter sound",
@@ -272,6 +274,7 @@ const copies: Record<LanguageCode, Copy> = {
     readUiActionsAloud: "Czytaj przyciski",
     readUiActionsOn: "Włączone",
     readUiActionsOff: "Wyłączone",
+    showHints: "Pokaż podpowiedzi",
     playSoundAction: "Odtwórz",
     playCharacterSound: {
       letters: "Odtwórz dźwięk litery",
@@ -437,6 +440,7 @@ const copies: Record<LanguageCode, Copy> = {
     readUiActionsAloud: "读按钮",
     readUiActionsOn: "开",
     readUiActionsOff: "关",
+    showHints: "显示提示",
     playSoundAction: "播放",
     playCharacterSound: {
       letters: "播放字母音",

@@ -676,6 +676,14 @@
       "voiceId": "pl-PL-ZofiaNeural"
     },
     {
+      "id": "pl-h-14tz6fm",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Pokaż podpowiedzi",
+      "path": "/audio/pl/pl-h-14tz6fm.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
       "id": "pl-f-1nncgu7",
       "language": "pl",
       "languageCode": "pl-PL",
@@ -2500,6 +2508,14 @@
       "voiceId": "en-US-AnaNeural"
     },
     {
+      "id": "en-a-h174vu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Show hints",
+      "path": "/audio/en/en-a-h174vu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
       "id": "en-a-1pob5wr",
       "language": "en",
       "languageCode": "en-US",
@@ -4289,6 +4305,14 @@
       "languageCode": "zh-CN",
       "text": "读按钮",
       "path": "/audio/zh/zh-3-1dbhb9h.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-6d7vaz",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "显示提示",
+      "path": "/audio/zh/zh-4-6d7vaz.mp3",
       "voiceId": "zh-CN-XiaoxiaoNeural"
     },
     {

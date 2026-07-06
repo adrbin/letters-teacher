@@ -31,6 +31,15 @@ describe("audio catalog", () => {
       expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Letters Teacher. Play with letters", voiceId: languageVoiceIds.en })
     );
     expect(entries).toContainEqual(
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Show hints", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "pl", languageCode: languageCodes.pl, text: "Pokaż podpowiedzi", voiceId: languageVoiceIds.pl })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "zh", languageCode: languageCodes.zh, text: "显示提示", voiceId: languageVoiceIds.zh })
+    );
+    expect(entries).toContainEqual(
       expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Great work! Very good", voiceId: languageVoiceIds.en })
     );
     expect(entries).toContainEqual(

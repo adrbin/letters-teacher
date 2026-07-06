@@ -3,12 +3,13 @@ import { ArrowLeft, Check, Eraser, Gamepad2, Mic, Square, Undo2, Volume2 } from 
 import { getCharacters, matchesCharacterTranscript } from "../data/letters";
 import { getCharacterDisplayText, getExampleDisplayHanzi, getExampleDisplayWord } from "../game/displayCase";
 import { advanceQuestion, answerQuestion, remainingPoints, type SessionState } from "../game/session";
+import { getCharacterStampSpeechLabel } from "../game/stampSpeech";
 import { recognizeExpectedLetter, type Stroke } from "../handwriting/recognizer";
 import { useFeedbackSound } from "../hooks/useFeedbackSound";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import type { AudioPlaybackControls } from "../hooks/useAudioPlayback";
 import { getCopy, translateFeedback } from "../i18n";
-import type { AttemptResult, CharacterSet, LetterCase, LetterItem } from "../types";
+import type { AttemptResult, CharacterSet, LanguageCode, LetterCase, LetterItem } from "../types";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { IconLabel } from "./IconLabel";
 import { LetterImage } from "./LetterImage";
@@ -18,6 +19,7 @@ type Props = {
   onSessionChange: (session: SessionState) => void;
   onExit: () => void;
   onUiAction: (label: string) => void;
+  onStampSpeak: (label: string, language: LanguageCode) => void;
   audio: AudioPlaybackControls;
 };
 
@@ -44,11 +46,12 @@ function shouldPlayQuestionPrompt(session: SessionState): boolean {
   return session.settings.gameMode === "hear-pick" || session.settings.gameMode === "hear-write";
 }
 
-export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio }: Props) {
+export function GameScreen({ session, onSessionChange, onExit, onUiAction, onStampSpeak, audio }: Props) {
   const question = session.questions[session.currentIndex];
   const copy = getCopy(session.settings.language);
   const characterSet = session.settings.characterSet;
   const letterCase = session.settings.letterCase;
+  const showHints = session.settings.showHints !== false;
   const { speak, speakText, supported: speechSupported, error: speechError } = audio;
   const playFeedbackSound = useFeedbackSound();
   const feedbackSequence = useRef(0);
@@ -172,6 +175,7 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
               copy={copy}
               feedbackKey={answerFeedback.feedbackKey}
               letterCase={letterCase}
+              onStampSpeak={onStampSpeak}
             />
           ) : (
             <>
@@ -230,6 +234,7 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
                   answerFeedback={answerFeedback}
                   copy={copy}
                   letterCase={letterCase}
+                  showHints={showHints}
                 />
               )}
 
@@ -242,6 +247,7 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
                   characterSet={characterSet}
                   copy={copy}
                   letterCase={letterCase}
+                  showHints={showHints}
                   onUiAction={onUiAction}
                 />
               )}
@@ -272,7 +278,8 @@ function SuccessFeedback({
   onContinue,
   copy,
   feedbackKey,
-  letterCase
+  letterCase,
+  onStampSpeak
 }: {
   target: LetterItem;
   characterSet: CharacterSet;
@@ -282,10 +289,12 @@ function SuccessFeedback({
   copy: Copy;
   feedbackKey: number;
   letterCase: LetterCase | undefined;
+  onStampSpeak: (label: string, language: LanguageCode) => void;
 }) {
   const displayTarget = getCharacterDisplayText(target, letterCase);
   const displayExampleWord = getExampleDisplayWord(target, letterCase);
   const displayExampleLabel = appendHanzi(displayExampleWord, target);
+  const stampSpeechLabel = getCharacterStampSpeechLabel(target.language, target.characterSet, target.display, target.example?.word, target.example?.hanzi);
 
   return (
     <div
@@ -300,10 +309,15 @@ function SuccessFeedback({
         <span>★</span>
       </div>
       <p className="text-3xl font-black">{status}</p>
-      <div className="mx-auto flex w-full max-w-xl flex-wrap items-center justify-center gap-4 rounded-3xl bg-white/75 p-4">
+      <button
+        className="control-button mx-auto flex w-full max-w-xl flex-wrap items-center justify-center gap-4 rounded-3xl bg-white/75 p-4 text-slate-950"
+        type="button"
+        aria-label={stampSpeechLabel}
+        onClick={() => onStampSpeak(stampSpeechLabel, target.language)}
+      >
         <LetterImage letter={target} compact displayText={displayTarget} exampleWord={displayExampleWord} />
         <p className="text-2xl font-black">{copy.characterExample[characterSet](displayTarget, displayExampleLabel)}</p>
-      </div>
+      </button>
       <button
         className="control-button mx-auto w-full max-w-md bg-emerald-600 px-6 py-4 text-2xl text-white shadow-lg shadow-emerald-200"
         type="button"
@@ -625,7 +639,8 @@ function SeePickSoundGame({
   onAnswer,
   answerFeedback,
   copy,
-  letterCase
+  letterCase,
+  showHints
 }: {
   options: LetterItem[];
   target: LetterItem;
@@ -635,6 +650,7 @@ function SeePickSoundGame({
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
   letterCase: LetterCase | undefined;
+  showHints: boolean;
 }) {
   const [previewedLetter, setPreviewedLetter] = useState<LetterItem | null>(null);
 
@@ -646,7 +662,9 @@ function SeePickSoundGame({
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
         <CharacterDisplay target={target} letterCase={letterCase} />
-        <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
+        {showHints && (
+          <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
+        )}
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.pickMatchingSound}</h1>
       <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-4">
@@ -690,6 +708,7 @@ function SeeSayGame({
   characterSet,
   copy,
   letterCase,
+  showHints,
   onUiAction
 }: {
   target: LetterItem;
@@ -699,6 +718,7 @@ function SeeSayGame({
   characterSet: CharacterSet;
   copy: Copy;
   letterCase: LetterCase | undefined;
+  showHints: boolean;
   onUiAction: (label: string) => void;
 }) {
   const handleAction = (label: string, action: () => void) => {
@@ -710,7 +730,9 @@ function SeeSayGame({
     <div className="grid gap-7 text-center">
       <div className="mx-auto flex flex-wrap items-center justify-center gap-6">
         <CharacterDisplay target={target} letterCase={letterCase} />
-        <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
+        {showHints && (
+          <LetterImage letter={target} compact displayText={getCharacterDisplayText(target, letterCase)} exampleWord={getExampleDisplayWord(target, letterCase)} />
+        )}
       </div>
       <h1 className="text-3xl font-black text-slate-950">{copy.sayThisCharacter[characterSet]}</h1>
       {recognition.supported ? (

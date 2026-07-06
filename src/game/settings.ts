@@ -12,7 +12,8 @@ export const defaultSessionSettings: SessionSettings = {
   characterSet: "letters",
   gameMode: "hear-pick",
   questionCount: 10,
-  letterCase: "uppercase"
+  letterCase: "uppercase",
+  showHints: true
 };
 
 export const defaultAppSettings: AppSettings = {
@@ -65,7 +66,8 @@ export function normalizeSessionSettings(value: unknown): SessionSettings {
     characterSet,
     gameMode: isGameMode(candidate?.gameMode) ? candidate.gameMode : defaultSessionSettings.gameMode,
     questionCount: clampQuestionCount(language, characterSet, Number(candidate?.questionCount)),
-    letterCase: isLetterCase(candidate?.letterCase) ? candidate.letterCase : defaultSessionSettings.letterCase
+    letterCase: isLetterCase(candidate?.letterCase) ? candidate.letterCase : defaultSessionSettings.letterCase,
+    showHints: typeof candidate?.showHints === "boolean" ? candidate.showHints : defaultSessionSettings.showHints
   };
 }
 

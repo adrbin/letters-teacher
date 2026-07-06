@@ -167,6 +167,7 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: /ustawienia/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/język/i)).toBeInTheDocument();
     expect(screen.getByRole("spinbutton")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /pokaż podpowiedzi/i })).toHaveAttribute("aria-pressed", "true");
     expect(screen.queryByRole("button", { name: /cyfry/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /usłysz literę, wybierz kartę/i })).not.toBeInTheDocument();
   });
@@ -322,6 +323,7 @@ describe("App", () => {
   it("shows success feedback with a letter image after a correct card", async () => {
     const user = userEvent.setup();
     const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
+    const stampSpeechLabel = `${target.display} jak ${target.example!.word}`;
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /^start$/i }));
@@ -333,7 +335,15 @@ describe("App", () => {
     expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", "Wspaniale!"));
     expect(screen.getByText(`${target.display} jak ${target.example!.word.toLocaleUpperCase("pl-PL")}`)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
+    const successStamp = screen.getByRole("button", { name: stampSpeechLabel });
+    expect(successStamp).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /wybierz/i })).not.toBeInTheDocument();
+
+    audioInstances.length = 0;
+    await user.click(successStamp);
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", stampSpeechLabel));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("pl", `${stampSpeechLabel} stempel`));
 
     await continueAfterCorrectAnswer(user);
 
@@ -370,7 +380,7 @@ describe("App", () => {
     expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("pl", "Wybierz ten dźwięk"));
   });
 
-  it("shows letter images in see-letter games", async () => {
+  it("shows letter image hints by default in see-letter games", async () => {
     const user = userEvent.setup();
     const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
     render(<App />);
@@ -379,6 +389,34 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /^start$/i }));
 
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
+  });
+
+  it("hides letter image hints in see-letter games when hints are off", async () => {
+    const user = userEvent.setup();
+    const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
+    const games = [
+      { gameName: /zobacz literę, wybierz dźwięk/i, heading: /wybierz pasujący dźwięk/i },
+      { gameName: /zobacz literę, powiedz ją/i, heading: /powiedz tę literę/i }
+    ];
+
+    for (const { gameName, heading } of games) {
+      window.localStorage.clear();
+      const { unmount } = render(<App />);
+
+      await openSettings(user);
+      await user.click(screen.getByRole("button", { name: /pokaż podpowiedzi/i }));
+      await waitFor(() => expect(screen.getByRole("button", { name: /pokaż podpowiedzi/i })).toHaveAttribute("aria-pressed", "false"));
+      await closeSettings(user);
+
+      await chooseHomeGame(user, gameName);
+      await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+      expect(screen.getByText(target.display)).toBeInTheDocument();
+      expect(screen.queryByRole("img", { name: target.example!.alt })).not.toBeInTheDocument();
+
+      unmount();
+    }
   });
 
   it("translates setup UI when the language changes", async () => {

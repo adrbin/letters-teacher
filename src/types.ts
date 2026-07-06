@@ -30,6 +30,7 @@ export type SessionSettings = {
   gameMode: GameMode;
   questionCount: number;
   letterCase?: LetterCase;
+  showHints?: boolean;
 };
 
 export type AppSettings = {

@@ -9,11 +9,16 @@ import { generateQuestions } from "./game/questionGenerator";
 import { saveStamp } from "./game/stamps";
 
 const audioInstances: MockAudio[] = [];
+let nextAudioPlayShouldReject = false;
 
 class MockAudio {
   currentTime = 0;
   preload = "";
-  play = vi.fn(() => Promise.resolve());
+  play = vi.fn(() => {
+    if (!nextAudioPlayShouldReject) return Promise.resolve();
+    nextAudioPlayShouldReject = false;
+    return Promise.reject(new Error("Audio playback was blocked."));
+  });
   pause = vi.fn();
 
   constructor(public src = "") {
@@ -109,7 +114,10 @@ async function closeSettings(user: ReturnType<typeof userEvent.setup>) {
 }
 
 async function chooseHomeCharacterSet(user: ReturnType<typeof userEvent.setup>, name: RegExp) {
-  await user.click(screen.getByRole("button", { name }));
+  const button = screen.getAllByRole("button", { name }).find((button) => button.closest("[aria-labelledby='practice-type-heading']"));
+
+  expect(button).toBeTruthy();
+  await user.click(button!);
 }
 
 async function chooseHomeGame(user: ReturnType<typeof userEvent.setup>, name: RegExp) {
@@ -128,6 +136,7 @@ Object.defineProperty(globalThis, "Audio", {
 describe("App", () => {
   beforeEach(() => {
     audioInstances.length = 0;
+    nextAudioPlayShouldReject = false;
     window.localStorage.clear();
     WorkingSpeechRecognition.instances = [];
     vi.spyOn(Date, "now").mockReturnValue(1000);
@@ -203,6 +212,44 @@ describe("App", () => {
     render(<App />);
 
     expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", "Nauczyciel liter. Baw się literami"));
+  });
+
+  it("replays the opening prompt from the home icon after autoplay is blocked", async () => {
+    const user = userEvent.setup();
+    nextAudioPlayShouldReject = true;
+    render(<App />);
+
+    const openingPrompt = "Nauczyciel liter. Baw się literami";
+    const promptButton = screen.getByRole("button", { name: openingPrompt });
+
+    expect(audioInstances.at(0)?.src).toBe(getAudioPath("pl", openingPrompt));
+    expect(audioInstances.at(0)?.play).toHaveBeenCalledTimes(1);
+
+    await user.click(promptButton);
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", openingPrompt));
+    expect(audioInstances.at(-1)?.play).toHaveBeenCalledTimes(1);
+    expect(audioInstances).toHaveLength(2);
+  });
+
+  it("plays the updated practice prompt from the home icon without reading the picker label", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(
+      "letters-teacher:settings",
+      JSON.stringify({
+        session: { language: "pl", characterSet: "letters", gameMode: "hear-pick", questionCount: 10, letterCase: "uppercase" },
+        readUiActionsAloud: false
+      })
+    );
+    render(<App />);
+    audioInstances.length = 0;
+
+    await chooseHomeCharacterSet(user, /^cyfry$/i);
+    const updatedPrompt = "Nauczyciel liter. Baw się cyframi";
+    await user.click(screen.getByRole("button", { name: updatedPrompt }));
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", updatedPrompt));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("pl", "Cyfry"));
   });
 
   it("reads visible game titles aloud from the home picker", async () => {

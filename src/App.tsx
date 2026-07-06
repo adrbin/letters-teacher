@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
@@ -30,6 +30,9 @@ export default function App() {
   const summary = useMemo(() => (session?.completed ? summarizeSession(session) : null), [session]);
   const settings = appSettings.session;
   const activeLanguage = session?.settings.language ?? settings.language;
+  const speakOpeningPrompt = useCallback(() => {
+    audio.speakText(getOpeningPrompt(settings.language, settings.characterSet), settings.language);
+  }, [audio.speakText, settings.characterSet, settings.language]);
 
   useEffect(() => {
     saveAppSettings(appSettings);
@@ -42,8 +45,8 @@ export default function App() {
   useEffect(() => {
     if (playedOpeningPrompt.current || session || view !== "home") return;
     playedOpeningPrompt.current = true;
-    audio.speakText(getOpeningPrompt(settings.language, settings.characterSet), settings.language);
-  }, [audio, session, settings.characterSet, settings.language, view]);
+    speakOpeningPrompt();
+  }, [session, speakOpeningPrompt, view]);
 
   useEffect(() => {
     if (!summary || !session) {
@@ -147,6 +150,7 @@ export default function App() {
       onCharacterSetChange={(characterSet: CharacterSet) => setSessionSetting("characterSet", characterSet)}
       onGameModeChange={(gameMode: GameMode) => setSessionSetting("gameMode", gameMode)}
       onOpenSettings={() => setView("settings")}
+      onOpeningPrompt={speakOpeningPrompt}
       onUiAction={speakUiAction}
       onStampSpeak={speakStaticText}
     />

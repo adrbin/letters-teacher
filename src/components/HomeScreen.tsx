@@ -9,7 +9,7 @@ import {
   Volume2,
   type LucideIcon
 } from "lucide-react";
-import { getCopy } from "../i18n";
+import { getCopy, getOpeningPrompt } from "../i18n";
 import type { CharacterSet, EarnedStamp, GameMode, SessionSettings } from "../types";
 import { DigitsIcon, LettersIcon } from "./CharacterSetIcons";
 import { IconLabel } from "./IconLabel";
@@ -35,12 +35,24 @@ type Props = {
   onCharacterSetChange: (characterSet: CharacterSet) => void;
   onGameModeChange: (gameMode: GameMode) => void;
   onOpenSettings: () => void;
+  onOpeningPrompt: () => void;
   onUiAction: (label: string) => void;
   onStampSpeak: (label: string, language: SessionSettings["language"]) => void;
 };
 
-export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, onGameModeChange, onOpenSettings, onUiAction, onStampSpeak }: Props) {
+export function HomeScreen({
+  settings,
+  stamps,
+  onStart,
+  onCharacterSetChange,
+  onGameModeChange,
+  onOpenSettings,
+  onOpeningPrompt,
+  onUiAction,
+  onStampSpeak
+}: Props) {
   const copy = getCopy(settings.language);
+  const openingPrompt = getOpeningPrompt(settings.language, settings.characterSet);
   const shortGameTitle = copy.gameShortTitles[settings.characterSet][settings.gameMode];
 
   const handleAction = (label: string, action: () => void) => {
@@ -65,9 +77,14 @@ export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, on
         </header>
 
         <div className="mx-auto mt-8 grid max-w-2xl justify-items-center gap-4">
-          <div className="grid h-24 w-24 place-items-center rounded-[2rem] bg-orange-100 text-orange-600 ring-4 ring-orange-200">
+          <button
+            className="control-button grid h-24 w-24 place-items-center rounded-[2rem] bg-orange-100 text-orange-600 ring-4 ring-orange-200"
+            type="button"
+            aria-label={openingPrompt}
+            onClick={onOpeningPrompt}
+          >
             <BookOpen aria-hidden="true" focusable="false" className="h-12 w-12" />
-          </div>
+          </button>
           <h1 className="text-4xl font-black leading-tight text-slate-950 sm:text-6xl">{copy.headline[settings.characterSet]}</h1>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-lg font-black text-slate-700 sm:text-xl">
             <IconLabel icon={ListChecks} iconClassName="h-5 w-5">

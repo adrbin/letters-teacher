@@ -1,14 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { GameScreen } from "./components/GameScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { SettingsScreen } from "./components/SettingsScreen";
 import { speechLocales } from "./data/letters";
-import { createSession, summarizeSession, type SessionState } from "./game/session";
+import { createSession, getResultGrade, summarizeSession, type SessionState } from "./game/session";
 import { loadAppSettings, saveAppSettings, updateSessionSetting } from "./game/settings";
 import { loadStamps, saveStamp } from "./game/stamps";
 import { useAudioPlayback } from "./hooks/useAudioPlayback";
-import type { AppSettings, CharacterSet, EarnedStamp, GameMode, SessionSettings } from "./types";
+import { getOpeningPrompt, getResultAnnouncement } from "./i18n";
+import type { AppSettings, CharacterSet, EarnedStamp, GameMode, LanguageCode, SessionSettings } from "./types";
 
 type AppView = "home" | "settings";
 
@@ -22,6 +23,8 @@ export default function App() {
   const [session, setSession] = useState<SessionState | null>(null);
   const [stamps, setStamps] = useState<EarnedStamp[]>(() => loadStamps());
   const [newStamp, setNewStamp] = useState<EarnedStamp | null>(null);
+  const playedOpeningPrompt = useRef(false);
+  const announcedSession = useRef<SessionState | null>(null);
   const audio = useAudioPlayback();
 
   const summary = useMemo(() => (session?.completed ? summarizeSession(session) : null), [session]);
@@ -37,6 +40,12 @@ export default function App() {
   }, [activeLanguage]);
 
   useEffect(() => {
+    if (playedOpeningPrompt.current || session || view !== "home") return;
+    playedOpeningPrompt.current = true;
+    audio.speakText(getOpeningPrompt(settings.language, settings.characterSet), settings.language);
+  }, [audio, session, settings.characterSet, settings.language, view]);
+
+  useEffect(() => {
     if (!summary || !session) {
       setNewStamp(null);
       return;
@@ -46,6 +55,13 @@ export default function App() {
     setStamps(saved.stamps);
     setNewStamp(saved.isNew ? saved.stamp : null);
   }, [session, summary]);
+
+  useEffect(() => {
+    if (!summary || !session || announcedSession.current === session) return;
+
+    announcedSession.current = session;
+    audio.speakText(getResultAnnouncement(session.settings.language, getResultGrade(summary.accuracy)), session.settings.language);
+  }, [audio, session, summary]);
 
   const setSettings = (settings: SessionSettings) => {
     setAppSettings((current) => ({ ...current, session: settings }));
@@ -63,6 +79,10 @@ export default function App() {
     if (appSettings.readUiActionsAloud) {
       audio.speakText(label, activeLanguage);
     }
+  };
+
+  const speakStaticText = (label: string, language: LanguageCode) => {
+    audio.speakText(label, language);
   };
 
   const playOpeningPrompt = (session: SessionState) => {
@@ -97,6 +117,7 @@ export default function App() {
         }}
         onChooseGame={chooseHome}
         onUiAction={speakUiAction}
+        onStampSpeak={speakStaticText}
       />
     );
   }
@@ -127,6 +148,7 @@ export default function App() {
       onGameModeChange={(gameMode: GameMode) => setSessionSetting("gameMode", gameMode)}
       onOpenSettings={() => setView("settings")}
       onUiAction={speakUiAction}
+      onStampSpeak={speakStaticText}
     />
   );
 }

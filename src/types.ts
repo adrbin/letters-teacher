@@ -6,6 +6,8 @@ export type GameMode = "hear-pick" | "hear-write" | "see-pick-sound" | "see-say"
 
 export type LetterCase = "uppercase" | "lowercase";
 
+export type ResultGrade = "perfect" | "almost-perfect" | "very-good" | "good" | "keep-practicing";
+
 export type CharacterItem = {
   display: string;
   speechText: string;

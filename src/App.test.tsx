@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { getAudioPath } from "./audio/audioCatalog";
 import { generatedAudioManifest, getAudioManifestEntry } from "./audio/generatedAudioManifest";
 import { getLetters } from "./data/letters";
 import { generateQuestions } from "./game/questionGenerator";
@@ -74,7 +75,7 @@ function drawStroke(canvas: HTMLElement, points: Array<{ x: number; y: number }>
 }
 
 async function continueAfterCorrectAnswer(user: ReturnType<typeof userEvent.setup>, isFinalQuestion = false) {
-  await user.click(screen.getByRole("button", { name: isFinalQuestion ? /pokaż wyniki/i : /następne pytanie/i }));
+  await user.click(screen.getByRole("button", { name: isFinalQuestion ? /pokaż wyniki|show results|看结果/i : /następne pytanie|next question|下一题/i }));
 }
 
 async function chooseSpellingTiles(user: ReturnType<typeof userEvent.setup>, word: string) {
@@ -198,6 +199,27 @@ describe("App", () => {
     expect(audioInstances.at(-1)?.play).toHaveBeenCalledTimes(1);
   });
 
+  it("plays the app name and current practice on first open", () => {
+    render(<App />);
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", "Nauczyciel liter. Baw się literami"));
+  });
+
+  it("reads visible game titles aloud from the home picker", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+    await closeSettings(user);
+    audioInstances.length = 0;
+
+    await chooseHomeGame(user, /hear letter, write it/i);
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("en", "Listen and write"));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("en", "Hear letter, write it"));
+  });
+
   it("plays the first question prompt from static audio without reading Start aloud", async () => {
     const user = userEvent.setup();
     const target = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0].target;
@@ -256,10 +278,12 @@ describe("App", () => {
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /^start$/i }));
+    audioInstances.length = 0;
     await user.click(screen.getByRole("button", { name: `Wybierz ${target.display}` }));
 
     expect(screen.getByText("1 / 10")).toBeInTheDocument();
     expect(screen.getByText("Wspaniale!")).toBeInTheDocument();
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", "Wspaniale!"));
     expect(screen.getByText(`${target.display} jak ${target.example!.word.toLocaleUpperCase("pl-PL")}`)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: target.example!.alt })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /wybierz/i })).not.toBeInTheDocument();
@@ -281,6 +305,22 @@ describe("App", () => {
 
     expect(progress).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /wybierz ten dźwięk/i })).toBeEnabled();
+  });
+
+  it("speaks answer feedback instead of the choose-sound button label", async () => {
+    const user = userEvent.setup();
+    const question = generateQuestions("pl", "letters", 10, "session-1000-0.00289")[0];
+    const targetOptionIndex = question.options.findIndex((option) => option.display === question.target.display) + 1;
+    render(<App />);
+
+    await chooseHomeGame(user, /zobacz literę, wybierz dźwięk/i);
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+    await user.click(screen.getByRole("button", { name: new RegExp(`odtwórz dźwięk ${targetOptionIndex}`, "i") }));
+    audioInstances.length = 0;
+    await user.click(screen.getByRole("button", { name: /wybierz ten dźwięk/i }));
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("pl", "Wspaniale!"));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("pl", "Wybierz ten dźwięk"));
   });
 
   it("shows letter images in see-letter games", async () => {
@@ -467,6 +507,33 @@ describe("App", () => {
     expect(screen.getByLabelText(/a jak auto stempel/i)).toBeInTheDocument();
   });
 
+  it("speaks the tapped stamp label without saying stamp", async () => {
+    const user = userEvent.setup();
+    saveStamp(
+      { language: "en", characterSet: "letters", gameMode: "hear-pick" },
+      {
+        totalScore: 95,
+        maxScore: 100,
+        accuracy: 95,
+        strongLetters: [],
+        practiceLetters: [],
+        results: [{ letter: "D", attempts: 1, awardedPoints: 1, maxPoints: 1, correct: true }]
+      },
+      "2026-06-10T10:00:00.000Z"
+    );
+
+    render(<App />);
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+    await closeSettings(user);
+    audioInstances.length = 0;
+
+    await user.click(screen.getByRole("button", { name: /d as in dog stamp/i }));
+
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("en", "D as in dog"));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("en", "D as in dog stamp"));
+  });
+
   it("shows previously earned digit stamps on the digit tab", async () => {
     const user = userEvent.setup();
     saveStamp(
@@ -569,6 +636,28 @@ describe("App", () => {
     expect(screen.getAllByLabelText(new RegExp(`${questions[0].target.display} jak ${questions[0].target.example!.word} stempel`, "i"))).toHaveLength(2);
   });
 
+  it("shows and speaks the result grade on the results screen", async () => {
+    const user = userEvent.setup();
+    const questions = generateQuestions("en", "letters", 3, "session-1000-0.00289");
+    render(<App />);
+
+    await openSettings(user);
+    await user.selectOptions(screen.getByLabelText(/język/i), "en");
+    for (let count = 0; count < 7; count += 1) {
+      await user.click(screen.getByRole("button", { name: /decrease question count/i }));
+    }
+    await closeSettings(user);
+    await user.click(screen.getByRole("button", { name: /^start$/i }));
+
+    for (const [index, question] of questions.entries()) {
+      await user.click(screen.getByRole("button", { name: `Choose ${question.target.display}` }));
+      await continueAfterCorrectAnswer(user, index === questions.length - 1);
+    }
+
+    expect(screen.getByText("Perfect")).toBeInTheDocument();
+    await waitFor(() => expect(audioInstances.at(-1)?.src).toBe(getAudioPath("en", "Great work! Perfect")));
+  });
+
   it("shows a completed alphabet stamp when the last missing letter is earned", async () => {
     const user = userEvent.setup();
     const questions = generateQuestions("pl", "letters", 3, "session-1000-0.00289");
@@ -604,7 +693,8 @@ describe("App", () => {
     }
 
     expect(screen.getByText(/nowy stempel/i)).toBeInTheDocument();
-    expect(screen.getAllByLabelText(/ukończony alfabet stempel x1/i)).toHaveLength(2);
+    expect(screen.getAllByLabelText(/ukończony alfabet raz/i)).toHaveLength(2);
+    expect(screen.getAllByText("x1")).toHaveLength(2);
   });
 
   it("clamps English quizzes to the available letter count", async () => {
@@ -690,9 +780,12 @@ describe("App", () => {
       { x: 84, y: 92 }
     ]);
 
+    audioInstances.length = 0;
     await user.click(screen.getByRole("button", { name: /check/i }));
 
     expect(screen.getByText("1 / 10")).toBeInTheDocument();
+    expect(audioInstances.at(-1)?.src).toBe(getAudioPath("en", "Almost. Try once more."));
+    expect(audioInstances.map((audio) => audio.src)).not.toContain(getAudioPath("en", "Check"));
   });
 
   it("accepts a correctly spelled word with letter tiles", async () => {

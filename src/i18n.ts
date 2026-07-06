@@ -1,4 +1,12 @@
-import type { CharacterSet, GameMode, LanguageCode, LetterCase } from "./types";
+import type { CharacterSet, GameMode, LanguageCode, LetterCase, ResultGrade } from "./types";
+
+function englishTimes(count: number): string {
+  return count === 1 ? "1 time" : `${count} times`;
+}
+
+function polishTimes(count: number): string {
+  return count === 1 ? "raz" : `razy ${count}`;
+}
 
 type Copy = {
   appName: string;
@@ -41,6 +49,7 @@ type Copy = {
   audioPlaybackUnavailable: string;
   heard: string;
   greatWork: string;
+  resultGrades: Record<ResultGrade, string>;
   accuracy: string;
   strongCharacters: Record<CharacterSet, string>;
   practiceAgain: string;
@@ -134,6 +143,13 @@ const copies: Record<LanguageCode, Copy> = {
     audioPlaybackUnavailable: "Audio is not available in this browser.",
     heard: "Heard",
     greatWork: "Great work!",
+    resultGrades: {
+      perfect: "Perfect",
+      "almost-perfect": "Almost perfect",
+      "very-good": "Very good",
+      good: "Good result",
+      "keep-practicing": "Keep practicing"
+    },
     accuracy: "Accuracy",
     strongCharacters: {
       letters: "Strong letters",
@@ -168,9 +184,9 @@ const copies: Record<LanguageCode, Copy> = {
       words: (word) => `Word ${word}`
     },
     collectionCompleteLabel: {
-      letters: (count) => `Completed alphabet stamp x${count}`,
-      digits: (count) => `Completed digits stamp x${count}`,
-      words: (count) => `Completed words stamp x${count}`
+      letters: (count) => `Alphabet complete ${englishTimes(count)}`,
+      digits: (count) => `Digits complete ${englishTimes(count)}`,
+      words: (count) => `Words complete ${englishTimes(count)}`
     },
     collectionCompleteTitle: {
       letters: "Alphabet complete",
@@ -292,6 +308,13 @@ const copies: Record<LanguageCode, Copy> = {
     audioPlaybackUnavailable: "Odtwarzanie dźwięku nie jest dostępne w tej przeglądarce.",
     heard: "Usłyszano",
     greatWork: "Świetna robota!",
+    resultGrades: {
+      perfect: "Doskonale!",
+      "almost-perfect": "Prawie idealnie!",
+      "very-good": "Bardzo dobrze!",
+      good: "Dobry wynik!",
+      "keep-practicing": "Ćwicz dalej!"
+    },
     accuracy: "Dokładność",
     strongCharacters: {
       letters: "Mocne litery",
@@ -326,9 +349,9 @@ const copies: Record<LanguageCode, Copy> = {
       words: (word) => `Słowo ${word}`
     },
     collectionCompleteLabel: {
-      letters: (count) => `Ukończony alfabet stempel x${count}`,
-      digits: (count) => `Ukończone cyfry stempel x${count}`,
-      words: (count) => `Ukończone słowa stempel x${count}`
+      letters: (count) => `Ukończony alfabet ${polishTimes(count)}`,
+      digits: (count) => `Ukończone cyfry ${polishTimes(count)}`,
+      words: (count) => `Ukończone słowa ${polishTimes(count)}`
     },
     collectionCompleteTitle: {
       letters: "Ukończony alfabet",
@@ -450,6 +473,13 @@ const copies: Record<LanguageCode, Copy> = {
     audioPlaybackUnavailable: "这个浏览器不能播放声音。",
     heard: "听到",
     greatWork: "真棒！",
+    resultGrades: {
+      perfect: "满分！",
+      "almost-perfect": "几乎完美！",
+      "very-good": "很棒！",
+      good: "不错！",
+      "keep-practicing": "继续练习！"
+    },
     accuracy: "正确率",
     strongCharacters: {
       letters: "强项字母",
@@ -484,9 +514,9 @@ const copies: Record<LanguageCode, Copy> = {
       words: (word, label) => `词语 ${label ?? word}`
     },
     collectionCompleteLabel: {
-      letters: (count) => `完成字母印章 x${count}`,
-      digits: (count) => `完成数字印章 x${count}`,
-      words: (count) => `完成词语印章 x${count}`
+      letters: (count) => `完成字母 ${count} 次`,
+      digits: (count) => `完成数字 ${count} 次`,
+      words: (count) => `完成词语 ${count} 次`
     },
     collectionCompleteTitle: {
       letters: "字母完成",
@@ -549,4 +579,14 @@ export function getCopy(language: LanguageCode): Copy {
 export function translateFeedback(language: LanguageCode, feedback: string): string {
   if (!feedback) return "";
   return copies[language].feedback[feedback] ?? feedback;
+}
+
+export function getOpeningPrompt(language: LanguageCode, characterSet: CharacterSet): string {
+  const copy = getCopy(language);
+  return `${copy.appName}. ${copy.headline[characterSet]}`;
+}
+
+export function getResultAnnouncement(language: LanguageCode, grade: ResultGrade): string {
+  const copy = getCopy(language);
+  return `${copy.greatWork} ${copy.resultGrades[grade]}`;
 }

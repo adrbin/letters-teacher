@@ -1,10 +1,12 @@
 import { getCharacters } from "../data/letters";
-import { getCopy } from "../i18n";
-import type { CharacterSet, GameMode, LanguageCode } from "../types";
+import { getCatalogStampSpeechTexts } from "../game/stampSpeech";
+import { getCopy, getOpeningPrompt, getResultAnnouncement } from "../i18n";
+import type { CharacterSet, GameMode, LanguageCode, ResultGrade } from "../types";
 
 export const audioLanguages = ["pl", "en", "zh"] as const satisfies LanguageCode[];
 export const audioCharacterSets = ["letters", "digits", "words"] as const satisfies CharacterSet[];
 export const audioGameModes = ["hear-pick", "hear-write", "see-pick-sound", "see-say"] as const satisfies GameMode[];
+export const audioResultGrades = ["perfect", "almost-perfect", "very-good", "good", "keep-practicing"] as const satisfies ResultGrade[];
 
 export const languageVoiceIds: Record<LanguageCode, string> = {
   pl: "pl-PL-ZofiaNeural",
@@ -79,8 +81,13 @@ function getUiActionTexts(language: LanguageCode): string[] {
     copy.startRecording,
     copy.stopRecording,
     ...audioCharacterSets.map((characterSet) => copy.characterSetTabs[characterSet]),
+    ...audioCharacterSets.map((characterSet) => getOpeningPrompt(language, characterSet)),
     ...Object.values(copy.letterCaseOptions),
-    ...audioCharacterSets.flatMap((characterSet) => audioGameModes.map((gameMode) => copy.gameTitles[characterSet][gameMode]))
+    ...Object.values(copy.feedback),
+    ...audioResultGrades.map((grade) => getResultAnnouncement(language, grade)),
+    ...audioCharacterSets.flatMap((characterSet) => audioGameModes.map((gameMode) => copy.gameTitles[characterSet][gameMode])),
+    ...audioCharacterSets.flatMap((characterSet) => audioGameModes.map((gameMode) => copy.gameShortTitles[characterSet][gameMode])),
+    ...getCatalogStampSpeechTexts(language, audioCharacterSets)
   ];
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { advanceQuestion, answerQuestion, createSession, remainingPoints, summarizeSession } from "./session";
+import { advanceQuestion, answerQuestion, createSession, getResultGrade, remainingPoints, summarizeSession } from "./session";
 
 describe("session", () => {
   it("reduces available points after wrong attempts", () => {
@@ -90,6 +90,17 @@ describe("session", () => {
     expect(summary.maxScore).toBe(20);
     expect(summary.practiceLetters).toContain(session.results[0].letter);
     expect(summary.strongLetters).toContain(session.results[1].letter);
+  });
+
+  it("grades result accuracy with child-friendly bands", () => {
+    expect(getResultGrade(49)).toBe("keep-practicing");
+    expect(getResultGrade(50)).toBe("good");
+    expect(getResultGrade(69)).toBe("good");
+    expect(getResultGrade(70)).toBe("very-good");
+    expect(getResultGrade(89)).toBe("very-good");
+    expect(getResultGrade(90)).toBe("almost-perfect");
+    expect(getResultGrade(99)).toBe("almost-perfect");
+    expect(getResultGrade(100)).toBe("perfect");
   });
 
   it("creates digit sessions from the digit character set", () => {

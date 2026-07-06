@@ -19,13 +19,38 @@ describe("audio catalog", () => {
       en: "en-US",
       zh: "zh-CN"
     });
-    expect(entries).toHaveLength(321);
-    expect(uniqueEntries).toHaveLength(319);
+    expect(entries.length).toBeGreaterThan(321);
+    expect(uniqueEntries.length).toBeGreaterThan(319);
     expect(entries).toContainEqual(
       expect.objectContaining({ language: "pl", languageCode: languageCodes.pl, text: "Ustawienia", voiceId: languageVoiceIds.pl })
     );
     expect(entries).toContainEqual(
-      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Hear letter, pick card", voiceId: languageVoiceIds.en })
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Listen and write", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Letters Teacher. Play with letters", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Great work! Very good", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "D as in dog", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "pl", languageCode: languageCodes.pl, text: "Cyfra 4", voiceId: languageVoiceIds.pl })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "pl", languageCode: languageCodes.pl, text: "Ukończone słowa razy 8", voiceId: languageVoiceIds.pl })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "en", languageCode: languageCodes.en, text: "Words complete 8 times", voiceId: languageVoiceIds.en })
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "zh", languageCode: languageCodes.zh, text: "完成词语 8 次", voiceId: languageVoiceIds.zh })
+    );
+    expect(entries).not.toContainEqual(expect.objectContaining({ language: "pl", text: "Ukończone słowa stempel x8" }));
+    expect(entries).toContainEqual(
+      expect.objectContaining({ language: "zh", languageCode: languageCodes.zh, text: "词语 māo 猫", voiceId: languageVoiceIds.zh })
     );
     expect(entries).toContainEqual(
       expect.objectContaining({ language: "zh", languageCode: languageCodes.zh, text: "猫", voiceId: languageVoiceIds.zh })

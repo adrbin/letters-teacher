@@ -780,6 +780,30 @@
       "voiceId": "pl-PL-ZofiaNeural"
     },
     {
+      "id": "pl-y-rt6x28",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Nauczyciel liter. Baw się literami",
+      "path": "/audio/pl/pl-y-rt6x28.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-x-1wb79go",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Nauczyciel liter. Baw się cyframi",
+      "path": "/audio/pl/pl-x-1wb79go.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-x-4qrovt",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Nauczyciel liter. Baw się słowami",
+      "path": "/audio/pl/pl-x-4qrovt.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
       "id": "pl-e-halvp0",
       "language": "pl",
       "languageCode": "pl-PL",
@@ -793,6 +817,78 @@
       "languageCode": "pl-PL",
       "text": "Małe litery",
       "path": "/audio/pl/pl-b-1czk9ib.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-n-nqr6lm",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ta gra jest zakończona.",
+      "path": "/audio/pl/pl-n-nqr6lm.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-s-1c09w91",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Prawie. Spróbuj jeszcze raz.",
+      "path": "/audio/pl/pl-s-1c09w91.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-jopmyi",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Wspaniale!",
+      "path": "/audio/pl/pl-a-jopmyi.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-om0lzy",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Udało się!",
+      "path": "/audio/pl/pl-a-om0lzy.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-q-c53kgg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Świetna robota! Doskonale!",
+      "path": "/audio/pl/pl-q-c53kgg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-w-1hzq5n3",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Świetna robota! Prawie idealnie!",
+      "path": "/audio/pl/pl-w-1hzq5n3.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-u-1te99ae",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Świetna robota! Bardzo dobrze!",
+      "path": "/audio/pl/pl-u-1te99ae.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-s-13njpdo",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Świetna robota! Dobry wynik!",
+      "path": "/audio/pl/pl-s-13njpdo.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-s-306ir9",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Świetna robota! Ćwicz dalej!",
+      "path": "/audio/pl/pl-s-306ir9.mp3",
       "voiceId": "pl-PL-ZofiaNeural"
     },
     {
@@ -889,6 +985,910 @@
       "languageCode": "pl-PL",
       "text": "Zobacz słowo, powiedz je",
       "path": "/audio/pl/pl-o-17xoy8t.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-h-8ki5ks",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słuchaj i wybierz",
+      "path": "/audio/pl/pl-h-8ki5ks.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-g-14bd9mr",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słuchaj i napisz",
+      "path": "/audio/pl/pl-g-14bd9mr.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-e-1eqltyv",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Dopasuj dźwięk",
+      "path": "/audio/pl/pl-e-1eqltyv.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-g-4wvhhj",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Zobacz i powiedz",
+      "path": "/audio/pl/pl-g-4wvhhj.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-e-6i9dpg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słuchaj i ułóż",
+      "path": "/audio/pl/pl-e-6i9dpg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1imhup1",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "A jak auto",
+      "path": "/audio/pl/pl-a-1imhup1.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1vxrt0g",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ą jak ząb",
+      "path": "/audio/pl/pl-9-1vxrt0g.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-1yxx7j1",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "B jak balon",
+      "path": "/audio/pl/pl-b-1yxx7j1.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-d-1siq22g",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "C jak cytryna",
+      "path": "/audio/pl/pl-d-1siq22g.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1ldsrfk",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ć jak ćma",
+      "path": "/audio/pl/pl-9-1ldsrfk.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-xortn5",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "D jak dom",
+      "path": "/audio/pl/pl-9-xortn5.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-1n710x7",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "E jak ekran",
+      "path": "/audio/pl/pl-b-1n710x7.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-f1ym5s",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ę jak gęś",
+      "path": "/audio/pl/pl-9-f1ym5s.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-q0gtse",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "F jak foka",
+      "path": "/audio/pl/pl-a-q0gtse.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-c-brcmp2",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "G jak gitara",
+      "path": "/audio/pl/pl-c-brcmp2.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-449ta7",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "H jak hamak",
+      "path": "/audio/pl/pl-b-449ta7.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1fyjurl",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "I jak igla",
+      "path": "/audio/pl/pl-a-1fyjurl.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-c-1fqkcm6",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "J jak jabłko",
+      "path": "/audio/pl/pl-c-1fqkcm6.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-377jfi",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "K jak kot",
+      "path": "/audio/pl/pl-9-377jfi.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-1p5b9e0",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "L jak lalka",
+      "path": "/audio/pl/pl-b-1p5b9e0.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-wstv87",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ł jak łódka",
+      "path": "/audio/pl/pl-b-wstv87.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-mb5u13",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "M jak motyl",
+      "path": "/audio/pl/pl-b-mb5u13.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1u5hy1f",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "N jak nos",
+      "path": "/audio/pl/pl-9-1u5hy1f.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-16dvj1y",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ń jak koń",
+      "path": "/audio/pl/pl-9-16dvj1y.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-7txi9r",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "O jak oko",
+      "path": "/audio/pl/pl-9-7txi9r.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1hw069b",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ó jak góra",
+      "path": "/audio/pl/pl-a-1hw069b.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-72odgo",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "P jak pies",
+      "path": "/audio/pl/pl-a-72odgo.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-r9mcht",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "R jak rak",
+      "path": "/audio/pl/pl-9-r9mcht.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-c-10d8hau",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "S jak słońce",
+      "path": "/audio/pl/pl-c-10d8hau.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-c-1d4gqqg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ś jak ślimak",
+      "path": "/audio/pl/pl-c-1d4gqqg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1dl3whk",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "T jak tort",
+      "path": "/audio/pl/pl-a-1dl3whk.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-8-urhchr",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "U jak ul",
+      "path": "/audio/pl/pl-8-urhchr.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-uzc6fx",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "W jak woda",
+      "path": "/audio/pl/pl-a-uzc6fx.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-bdg2ic",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Y jak dym",
+      "path": "/audio/pl/pl-9-bdg2ic.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-ss5exz",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Z jak zamek",
+      "path": "/audio/pl/pl-b-ss5exz.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-c-1loc7zd",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ź jak źrebak",
+      "path": "/audio/pl/pl-c-1loc7zd.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1nkng4m",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ż jak żaba",
+      "path": "/audio/pl/pl-a-1nkng4m.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1u1bfrw",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 0",
+      "path": "/audio/pl/pl-7-1u1bfrw.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1ubb1gv",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 1",
+      "path": "/audio/pl/pl-7-1ubb1gv.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1ulan5u",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 2",
+      "path": "/audio/pl/pl-7-1ulan5u.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1uva8ut",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 3",
+      "path": "/audio/pl/pl-7-1uva8ut.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1sxd100",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 4",
+      "path": "/audio/pl/pl-7-1sxd100.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1t7cmoz",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 5",
+      "path": "/audio/pl/pl-7-1t7cmoz.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1thc8dy",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 6",
+      "path": "/audio/pl/pl-7-1thc8dy.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1trbu2x",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 7",
+      "path": "/audio/pl/pl-7-1trbu2x.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1w989bo",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 8",
+      "path": "/audio/pl/pl-7-1w989bo.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-7-1wj7v0n",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Cyfra 9",
+      "path": "/audio/pl/pl-7-1wj7v0n.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-n4h9sd",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo mama",
+      "path": "/audio/pl/pl-a-n4h9sd.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-bsgpfd",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo tata",
+      "path": "/audio/pl/pl-a-bsgpfd.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-16f9l5p",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo kot",
+      "path": "/audio/pl/pl-9-16f9l5p.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-tjn9q6",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo pies",
+      "path": "/audio/pl/pl-a-tjn9q6.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-kn9oxb",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo dom",
+      "path": "/audio/pl/pl-9-kn9oxb.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1k65axe",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo auto",
+      "path": "/audio/pl/pl-a-1k65axe.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-uwslz1",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo bus",
+      "path": "/audio/pl/pl-9-uwslz1.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1ofkv4r",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo las",
+      "path": "/audio/pl/pl-9-1ofkv4r.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1jyzsfn",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo lis",
+      "path": "/audio/pl/pl-9-1jyzsfn.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-b5yiti",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo osa",
+      "path": "/audio/pl/pl-9-b5yiti.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-8-19ud7dk",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ul",
+      "path": "/audio/pl/pl-8-19ud7dk.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-dx0wjw",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo oko",
+      "path": "/audio/pl/pl-9-dx0wjw.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1fwc2nb",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo nos",
+      "path": "/audio/pl/pl-9-1fwc2nb.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-g50dya",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ząb",
+      "path": "/audio/pl/pl-9-g50dya.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-lrggh4",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ucho",
+      "path": "/audio/pl/pl-a-lrggh4.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-6gnqm0",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ręka",
+      "path": "/audio/pl/pl-a-6gnqm0.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-zpxd1a",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo noga",
+      "path": "/audio/pl/pl-a-zpxd1a.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-syve48",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo but",
+      "path": "/audio/pl/pl-9-syve48.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-5bchmg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo sok",
+      "path": "/audio/pl/pl-9-5bchmg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-7u6ngp",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ser",
+      "path": "/audio/pl/pl-9-7u6ngp.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-14359os",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ryż",
+      "path": "/audio/pl/pl-9-14359os.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-ggvqgx",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo sól",
+      "path": "/audio/pl/pl-9-ggvqgx.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1oejgmo",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo lód",
+      "path": "/audio/pl/pl-9-1oejgmo.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1o3rkio",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo woda",
+      "path": "/audio/pl/pl-a-1o3rkio.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-1jqsq25",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo koń",
+      "path": "/audio/pl/pl-9-1jqsq25.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-kt2th8",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo miś",
+      "path": "/audio/pl/pl-9-kt2th8.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-11iwuau",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo gęś",
+      "path": "/audio/pl/pl-9-11iwuau.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1kg3o6j",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo żaba",
+      "path": "/audio/pl/pl-a-1kg3o6j.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1867qcd",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo ryba",
+      "path": "/audio/pl/pl-a-1867qcd.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-189qqox",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo rak",
+      "path": "/audio/pl/pl-9-189qqox.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-y5n1kg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo kura",
+      "path": "/audio/pl/pl-a-y5n1kg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-rek0xu",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo foka",
+      "path": "/audio/pl/pl-a-rek0xu.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-it9y2",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo mysz",
+      "path": "/audio/pl/pl-a-it9y2.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-a-1jogtgp",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo lala",
+      "path": "/audio/pl/pl-a-1jogtgp.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-b-1y606uk",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo piłka",
+      "path": "/audio/pl/pl-b-1y606uk.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-9-18x60eg",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Słowo koc",
+      "path": "/audio/pl/pl-9-18x60eg.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-l-kuyuk3",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet raz",
+      "path": "/audio/pl/pl-l-kuyuk3.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-53rqoo",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 2",
+      "path": "/audio/pl/pl-o-53rqoo.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-5drcdn",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 3",
+      "path": "/audio/pl/pl-o-5drcdn.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-6rpcui",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 4",
+      "path": "/audio/pl/pl-o-6rpcui.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-71oyjh",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 5",
+      "path": "/audio/pl/pl-o-71oyjh.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-67q5gk",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 6",
+      "path": "/audio/pl/pl-o-67q5gk.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-6hpr5j",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 7",
+      "path": "/audio/pl/pl-o-6hpr5j.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-3fu4iu",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 8",
+      "path": "/audio/pl/pl-o-3fu4iu.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-o-3ptq7t",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 9",
+      "path": "/audio/pl/pl-o-3ptq7t.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-p-mak67n",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończony alfabet razy 10",
+      "path": "/audio/pl/pl-p-mak67n.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-j-1uuu1mf",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry raz",
+      "path": "/audio/pl/pl-j-1uuu1mf.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-5xm938",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 2",
+      "path": "/audio/pl/pl-m-5xm938.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-67lus7",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 3",
+      "path": "/audio/pl/pl-m-67lus7.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-5dn1pa",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 4",
+      "path": "/audio/pl/pl-m-5dn1pa.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-5nmne9",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 5",
+      "path": "/audio/pl/pl-m-5nmne9.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-4tnubc",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 6",
+      "path": "/audio/pl/pl-m-4tnubc.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-53ng0b",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 7",
+      "path": "/audio/pl/pl-m-53ng0b.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-49omxe",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 8",
+      "path": "/audio/pl/pl-m-49omxe.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-4jo8md",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 9",
+      "path": "/audio/pl/pl-m-4jo8md.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-n-v8bipj",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone cyfry razy 10",
+      "path": "/audio/pl/pl-n-v8bipj.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-j-sldy6i",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa raz",
+      "path": "/audio/pl/pl-j-sldy6i.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-1455raz",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 2",
+      "path": "/audio/pl/pl-m-1455raz.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-13v65m0",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 3",
+      "path": "/audio/pl/pl-m-13v65m0.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-15t3dgt",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 4",
+      "path": "/audio/pl/pl-m-15t3dgt.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-15j3rru",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 5",
+      "path": "/audio/pl/pl-m-15j3rru.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-159462v",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 6",
+      "path": "/audio/pl/pl-m-159462v.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-14z4kdw",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 7",
+      "path": "/audio/pl/pl-m-14z4kdw.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-12h8555",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 8",
+      "path": "/audio/pl/pl-m-12h8555.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-m-1278jg6",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 9",
+      "path": "/audio/pl/pl-m-1278jg6.mp3",
+      "voiceId": "pl-PL-ZofiaNeural"
+    },
+    {
+      "id": "pl-n-14pj6oq",
+      "language": "pl",
+      "languageCode": "pl-PL",
+      "text": "Ukończone słowa razy 10",
+      "path": "/audio/pl/pl-n-14pj6oq.mp3",
       "voiceId": "pl-PL-ZofiaNeural"
     },
     {
@@ -1604,6 +2604,30 @@
       "voiceId": "en-US-AnaNeural"
     },
     {
+      "id": "en-y-xiiapt",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Letters Teacher. Play with letters",
+      "path": "/audio/en/en-y-xiiapt.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-x-12tdivu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Letters Teacher. Play with digits",
+      "path": "/audio/en/en-x-12tdivu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-w-e47h75",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Letters Teacher. Play with words",
+      "path": "/audio/en/en-w-e47h75.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
       "id": "en-f-ye9z6u",
       "language": "en",
       "languageCode": "en-US",
@@ -1617,6 +2641,78 @@
       "languageCode": "en-US",
       "text": "Small letters",
       "path": "/audio/en/en-d-1z02kfx.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-plrhav",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "This game is finished.",
+      "path": "/audio/en/en-m-plrhav.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1r3kekm",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Almost. Try once more.",
+      "path": "/audio/en/en-m-1r3kekm.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-a-1t8g50",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Wonderful!",
+      "path": "/audio/en/en-a-1t8g50.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-12ueh7y",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "You got it!",
+      "path": "/audio/en/en-b-12ueh7y.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-j-wi8s4r",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Great work! Perfect",
+      "path": "/audio/en/en-j-wi8s4r.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-q-1lv6z51",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Great work! Almost perfect",
+      "path": "/audio/en/en-q-1lv6z51.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-l-13z341r",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Great work! Very good",
+      "path": "/audio/en/en-l-13z341r.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-1pxiv3o",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Great work! Good result",
+      "path": "/audio/en/en-n-1pxiv3o.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-r-1kkv8xj",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Great work! Keep practicing",
+      "path": "/audio/en/en-r-1kkv8xj.mp3",
       "voiceId": "en-US-AnaNeural"
     },
     {
@@ -1713,6 +2809,862 @@
       "languageCode": "en-US",
       "text": "See word, say it",
       "path": "/audio/en/en-g-cpaio.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-f-tj7dxo",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Listen and pick",
+      "path": "/audio/en/en-f-tj7dxo.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-g-1fdjlcg",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Listen and write",
+      "path": "/audio/en/en-g-1fdjlcg.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-meaa21",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Match sound",
+      "path": "/audio/en/en-b-meaa21.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-l0zkqu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "See and say",
+      "path": "/audio/en/en-b-l0zkqu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-g-oighf1",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Listen and spell",
+      "path": "/audio/en/en-g-oighf1.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-d-1ing13f",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "A as in apple",
+      "path": "/audio/en/en-d-1ing13f.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-1fgnrqf",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "B as in ball",
+      "path": "/audio/en/en-c-1fgnrqf.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-1wrvxkd",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "C as in cat",
+      "path": "/audio/en/en-b-1wrvxkd.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-15z8owa",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "D as in dog",
+      "path": "/audio/en/en-b-15z8owa.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-j1vqn2",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "E as in egg",
+      "path": "/audio/en/en-b-j1vqn2.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-oghyn0",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "F as in fish",
+      "path": "/audio/en/en-c-oghyn0.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-1yal0xd",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "G as in gift",
+      "path": "/audio/en/en-c-1yal0xd.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-d-1ggkf88",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "H as in house",
+      "path": "/audio/en/en-d-1ggkf88.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-av83gs",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "I as in ice",
+      "path": "/audio/en/en-b-av83gs.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-w9ypxa",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "J as in jam",
+      "path": "/audio/en/en-b-w9ypxa.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-qnwk9c",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "K as in kite",
+      "path": "/audio/en/en-c-qnwk9c.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-10evn2w",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "L as in leaf",
+      "path": "/audio/en/en-c-10evn2w.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-18tvv4",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "M as in moon",
+      "path": "/audio/en/en-c-18tvv4.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-cq0e70",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "N as in nest",
+      "path": "/audio/en/en-c-cq0e70.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-e-e73f5p",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "O as in orange",
+      "path": "/audio/en/en-e-e73f5p.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-e-uei3a1",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "P as in pencil",
+      "path": "/audio/en/en-e-uei3a1.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-d-gaxzjp",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Q as in queen",
+      "path": "/audio/en/en-d-gaxzjp.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-7d1vv0",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "R as in rain",
+      "path": "/audio/en/en-c-7d1vv0.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-vaat8r",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "S as in sun",
+      "path": "/audio/en/en-b-vaat8r.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-yxkczs",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "T as in tree",
+      "path": "/audio/en/en-c-yxkczs.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-g-6o5not",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "U as in umbrella",
+      "path": "/audio/en/en-g-6o5not.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-qr1aj7",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "V as in van",
+      "path": "/audio/en/en-b-qr1aj7.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-d-tkk2ha",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "W as in water",
+      "path": "/audio/en/en-d-tkk2ha.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-d-jdrsk5",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "X as in x-ray",
+      "path": "/audio/en/en-d-jdrsk5.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-c-19y4pxb",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Y as in yarn",
+      "path": "/audio/en/en-c-19y4pxb.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-b-8n6kbx",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Z as in zip",
+      "path": "/audio/en/en-b-8n6kbx.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1ro59qu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 0",
+      "path": "/audio/en/en-7-1ro59qu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1ry4vft",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 1",
+      "path": "/audio/en/en-7-1ry4vft.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1r462cw",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 2",
+      "path": "/audio/en/en-7-1r462cw.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1re5o1v",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 3",
+      "path": "/audio/en/en-7-1re5o1v.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1ss3oiq",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 4",
+      "path": "/audio/en/en-7-1ss3oiq.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1t23a7p",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 5",
+      "path": "/audio/en/en-7-1t23a7p.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1s84h4s",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 6",
+      "path": "/audio/en/en-7-1s84h4s.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1si42tr",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 7",
+      "path": "/audio/en/en-7-1si42tr.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1tw23am",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 8",
+      "path": "/audio/en/en-7-1tw23am.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-7-1u61ozl",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digit 9",
+      "path": "/audio/en/en-7-1u61ozl.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-mo6c0a",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word mom",
+      "path": "/audio/en/en-8-mo6c0a.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-p45k4k",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word dad",
+      "path": "/audio/en/en-8-p45k4k.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1ktu6yh",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word cat",
+      "path": "/audio/en/en-8-1ktu6yh.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-li4f3z",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word dog",
+      "path": "/audio/en/en-8-li4f3z.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-14rcjpb",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word sun",
+      "path": "/audio/en/en-8-14rcjpb.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1ldtecf",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word car",
+      "path": "/audio/en/en-8-1ldtecf.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-ko7znb",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word bus",
+      "path": "/audio/en/en-8-ko7znb.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-ffyeny",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word bed",
+      "path": "/audio/en/en-8-ffyeny.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-wq5rhc",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word hat",
+      "path": "/audio/en/en-8-wq5rhc.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1o6vohd",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word cup",
+      "path": "/audio/en/en-8-1o6vohd.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1uhg73d",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word pig",
+      "path": "/audio/en/en-8-1uhg73d.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-v1vjbm",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word hen",
+      "path": "/audio/en/en-8-v1vjbm.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-138p9ok",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word fox",
+      "path": "/audio/en/en-8-138p9ok.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1oeradm",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word cow",
+      "path": "/audio/en/en-8-1oeradm.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-193trnk",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word ant",
+      "path": "/audio/en/en-8-193trnk.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-fpy0cx",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word bee",
+      "path": "/audio/en/en-8-fpy0cx.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-5ql18",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word egg",
+      "path": "/audio/en/en-8-5ql18.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1u9zfiw",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word eye",
+      "path": "/audio/en/en-8-1u9zfiw.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-8-1w5k4z9",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word ear",
+      "path": "/audio/en/en-8-1w5k4z9.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-187n260",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word nose",
+      "path": "/audio/en/en-9-187n260.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1iuwxsu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word hand",
+      "path": "/audio/en/en-9-1iuwxsu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1ngqglr",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word foot",
+      "path": "/audio/en/en-9-1ngqglr.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1a2jy10",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word shoe",
+      "path": "/audio/en/en-9-1a2jy10.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-o7d5rj",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word sock",
+      "path": "/audio/en/en-9-o7d5rj.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1y98mu5",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word fish",
+      "path": "/audio/en/en-9-1y98mu5.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1df78ne",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word duck",
+      "path": "/audio/en/en-9-1df78ne.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1df7ny4",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word bird",
+      "path": "/audio/en/en-9-1df7ny4.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1fim4q",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word ball",
+      "path": "/audio/en/en-9-1fim4q.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1uzw69e",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word doll",
+      "path": "/audio/en/en-9-1uzw69e.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-5h2hsi",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word book",
+      "path": "/audio/en/en-9-5h2hsi.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1inw58e",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word moon",
+      "path": "/audio/en/en-9-1inw58e.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-16nbiob",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word star",
+      "path": "/audio/en/en-9-16nbiob.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-g9mk7p",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word rain",
+      "path": "/audio/en/en-9-g9mk7p.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-1xl50wb",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word tree",
+      "path": "/audio/en/en-9-1xl50wb.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-3hywur",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word leaf",
+      "path": "/audio/en/en-9-3hywur.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-9-fpr5r7",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Word cake",
+      "path": "/audio/en/en-9-fpr5r7.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-o-1xw7g3r",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 1 time",
+      "path": "/audio/en/en-o-1xw7g3r.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-gq9m51",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 2 times",
+      "path": "/audio/en/en-p-gq9m51.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-agmikq",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 3 times",
+      "path": "/audio/en/en-p-agmikq.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-xug4vv",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 4 times",
+      "path": "/audio/en/en-p-xug4vv.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-7pc6w8",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 5 times",
+      "path": "/audio/en/en-p-7pc6w8.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-card75",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 6 times",
+      "path": "/audio/en/en-p-card75.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-1q4tleu",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 7 times",
+      "path": "/audio/en/en-p-1q4tleu.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-6c0lz",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 8 times",
+      "path": "/audio/en/en-p-6c0lz.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-p-14zfays",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 9 times",
+      "path": "/audio/en/en-p-14zfays.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-q-1p4oeig",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Alphabet complete 10 times",
+      "path": "/audio/en/en-q-1p4oeig.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1ggqlra",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 1 time",
+      "path": "/audio/en/en-m-1ggqlra.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-hfiekq",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 2 times",
+      "path": "/audio/en/en-n-hfiekq.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-1xf95hx",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 3 times",
+      "path": "/audio/en/en-n-1xf95hx.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-7ng9t4",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 4 times",
+      "path": "/audio/en/en-n-7ng9t4.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-8ho8e3",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 5 times",
+      "path": "/audio/en/en-n-8ho8e3.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-1k4zmna",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 6 times",
+      "path": "/audio/en/en-n-1k4zmna.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-6av6tt",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 7 times",
+      "path": "/audio/en/en-n-6av6tt.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-14xllhg",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 8 times",
+      "path": "/audio/en/en-n-14xllhg.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-15a3ys7",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 9 times",
+      "path": "/audio/en/en-n-15a3ys7.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-o-pfctv9",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Digits complete 10 times",
+      "path": "/audio/en/en-o-pfctv9.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-l-qzi5dj",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 1 time",
+      "path": "/audio/en/en-l-qzi5dj.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-nw17b9",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 2 times",
+      "path": "/audio/en/en-m-nw17b9.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-jsm0xm",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 3 times",
+      "path": "/audio/en/en-m-jsm0xm.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1pkm6ln",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 4 times",
+      "path": "/audio/en/en-m-1pkm6ln.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1p6ip5k",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 5 times",
+      "path": "/audio/en/en-m-1p6ip5k.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1r96ce9",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 6 times",
+      "path": "/audio/en/en-m-1r96ce9.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-yt3axi",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 7 times",
+      "path": "/audio/en/en-m-yt3axi.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-1fti4lj",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 8 times",
+      "path": "/audio/en/en-m-1fti4lj.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-m-nfjyus",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 9 times",
+      "path": "/audio/en/en-m-nfjyus.mp3",
+      "voiceId": "en-US-AnaNeural"
+    },
+    {
+      "id": "en-n-1cp5sx4",
+      "language": "en",
+      "languageCode": "en-US",
+      "text": "Words complete 10 times",
+      "path": "/audio/en/en-n-1cp5sx4.mp3",
       "voiceId": "en-US-AnaNeural"
     },
     {
@@ -2444,6 +4396,30 @@
       "voiceId": "zh-CN-XiaoxiaoNeural"
     },
     {
+      "id": "zh-9-13ayt9l",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "字母老师. 玩字母",
+      "path": "/audio/zh/zh-9-13ayt9l.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-147x2w0",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "字母老师. 玩数字",
+      "path": "/audio/zh/zh-9-147x2w0.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-ug81c7",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "字母老师. 玩词语",
+      "path": "/audio/zh/zh-9-ug81c7.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
       "id": "zh-4-wj6n2x",
       "language": "zh",
       "languageCode": "zh-CN",
@@ -2457,6 +4433,78 @@
       "languageCode": "zh-CN",
       "text": "小写字母",
       "path": "/audio/zh/zh-4-b2l7q9.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-1b1553m",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "游戏结束了。",
+      "path": "/audio/zh/zh-6-1b1553m.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1bjdn3b",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "差一点，再试一次。",
+      "path": "/audio/zh/zh-9-1bjdn3b.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-18s5grk",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "太棒了！",
+      "path": "/audio/zh/zh-4-18s5grk.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-zzxlaz",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "答对了！",
+      "path": "/audio/zh/zh-4-zzxlaz.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-1k05etx",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "真棒！ 满分！",
+      "path": "/audio/zh/zh-7-1k05etx.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-btheog",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "真棒！ 几乎完美！",
+      "path": "/audio/zh/zh-9-btheog.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-1psmyj6",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "真棒！ 很棒！",
+      "path": "/audio/zh/zh-7-1psmyj6.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-1uz2tmm",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "真棒！ 不错！",
+      "path": "/audio/zh/zh-7-1uz2tmm.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-lwpjpt",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "真棒！ 继续练习！",
+      "path": "/audio/zh/zh-9-lwpjpt.mp3",
       "voiceId": "zh-CN-XiaoxiaoNeural"
     },
     {
@@ -2553,6 +4601,862 @@
       "languageCode": "zh-CN",
       "text": "看词语，说出来",
       "path": "/audio/zh/zh-7-1vtc9a1.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-1stbded",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "听一听选一选",
+      "path": "/audio/zh/zh-6-1stbded.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-wkd0fp",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "听一听写一写",
+      "path": "/audio/zh/zh-6-wkd0fp.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-3-y4o1w1",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "配声音",
+      "path": "/audio/zh/zh-3-y4o1w1.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-vn6oo5",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "看一看说一说",
+      "path": "/audio/zh/zh-6-vn6oo5.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-63rtp9",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "听一听拼一拼",
+      "path": "/audio/zh/zh-6-63rtp9.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-rjh21",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "A，例：āyí 阿姨",
+      "path": "/audio/zh/zh-a-rjh21.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-ida0st",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "B，例：bāshì 巴士",
+      "path": "/audio/zh/zh-c-ida0st.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-108ibhz",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "C，例：chē 车",
+      "path": "/audio/zh/zh-9-108ibhz.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-d-1bf7kdd",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "D，例：dàngāo 蛋糕",
+      "path": "/audio/zh/zh-d-1bf7kdd.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-1rm6iu0",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "E，例：ěrduo 耳朵",
+      "path": "/audio/zh/zh-c-1rm6iu0.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-d-1hkxfdg",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "F，例：fángzi 房子",
+      "path": "/audio/zh/zh-d-1hkxfdg.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-126a7p8",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "G，例：gǒu 狗",
+      "path": "/audio/zh/zh-9-126a7p8.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1hdtmw1",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "H，例：huā 花",
+      "path": "/audio/zh/zh-9-1hdtmw1.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-9zv8w9",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "I，例：yī 一",
+      "path": "/audio/zh/zh-8-9zv8w9.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-osi5q3",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "J，例：jīdàn 鸡蛋",
+      "path": "/audio/zh/zh-c-osi5q3.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-1eu919",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "K，例：kǎchē 卡车",
+      "path": "/audio/zh/zh-c-1eu919.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-no6b06",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "L，例：lǜyè 绿叶",
+      "path": "/audio/zh/zh-b-no6b06.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-x3c211",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "M，例：māo 猫",
+      "path": "/audio/zh/zh-9-x3c211.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-xkqlwy",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "N，例：niú 牛",
+      "path": "/audio/zh/zh-9-xkqlwy.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-5-eceg2g",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "O，例：o",
+      "path": "/audio/zh/zh-5-eceg2g.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-e-1gpw9c7",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "P，例：píngguǒ 苹果",
+      "path": "/audio/zh/zh-e-1gpw9c7.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-wyqq66",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "Q，例：qiú 球",
+      "path": "/audio/zh/zh-9-wyqq66.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1wbzu81",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "R，例：rén 人",
+      "path": "/audio/zh/zh-9-1wbzu81.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-hsqv74",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "S，例：shù 树",
+      "path": "/audio/zh/zh-9-hsqv74.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-e-1bnh58x",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "T，例：tàiyáng 太阳",
+      "path": "/audio/zh/zh-e-1bnh58x.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1vdeqw2",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "U，例：wǔ 五",
+      "path": "/audio/zh/zh-8-1vdeqw2.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-6-1u1rff6",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "V，例：vê",
+      "path": "/audio/zh/zh-6-1u1rff6.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-1smtyvf",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "W，例：wáwa 娃娃",
+      "path": "/audio/zh/zh-b-1smtyvf.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-f-1ii4kwc",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "X，例：xīngxing 星星",
+      "path": "/audio/zh/zh-f-1ii4kwc.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-ycnvya",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "Y，例：yú 鱼",
+      "path": "/audio/zh/zh-8-ycnvya.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-7j9eif",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "Z，例：zhū 猪",
+      "path": "/audio/zh/zh-9-7j9eif.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1m0m8zc",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 0",
+      "path": "/audio/zh/zh-4-1m0m8zc.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1maluob",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 1",
+      "path": "/audio/zh/zh-4-1maluob.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1mklgda",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 2",
+      "path": "/audio/zh/zh-4-1mklgda.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1mul229",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 3",
+      "path": "/audio/zh/zh-4-1mul229.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1n4knr8",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 4",
+      "path": "/audio/zh/zh-4-1n4knr8.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1nek9g7",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 5",
+      "path": "/audio/zh/zh-4-1nek9g7.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1nojv56",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 6",
+      "path": "/audio/zh/zh-4-1nojv56.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1nyjgu5",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 7",
+      "path": "/audio/zh/zh-4-1nyjgu5.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1jspffk",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 8",
+      "path": "/audio/zh/zh-4-1jspffk.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-4-1k2p14j",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "数字 9",
+      "path": "/audio/zh/zh-4-1k2p14j.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-4eoth7",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 māma 妈妈",
+      "path": "/audio/zh/zh-a-4eoth7.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-jcl08u",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 bàba 爸爸",
+      "path": "/audio/zh/zh-a-jcl08u.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-s31pxh",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 māo 猫",
+      "path": "/audio/zh/zh-8-s31pxh.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-n0uxy2",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 gǒu 狗",
+      "path": "/audio/zh/zh-8-n0uxy2.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-d-1o0f1a4",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 tàiyáng 太阳",
+      "path": "/audio/zh/zh-d-1o0f1a4.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-fybv3l",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 chē 车",
+      "path": "/audio/zh/zh-8-fybv3l.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-si7s0q",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 bāshì 巴士",
+      "path": "/audio/zh/zh-b-si7s0q.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-18wzawl",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 chuáng 床",
+      "path": "/audio/zh/zh-b-18wzawl.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-1ilw2hl",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 màozi 帽子",
+      "path": "/audio/zh/zh-b-1ilw2hl.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-h5abx3",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 bēizi 杯子",
+      "path": "/audio/zh/zh-b-h5abx3.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1uevxj6",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 zhū 猪",
+      "path": "/audio/zh/zh-8-1uevxj6.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-nan4vx",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 jī 鸡",
+      "path": "/audio/zh/zh-7-nan4vx.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-odizqg",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 húli 狐狸",
+      "path": "/audio/zh/zh-a-odizqg.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-hld1qb",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 niú 牛",
+      "path": "/audio/zh/zh-8-hld1qb.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-tcph3s",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 mǎyǐ 蚂蚁",
+      "path": "/audio/zh/zh-a-tcph3s.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-xwhla6",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 mìfēng 蜜蜂",
+      "path": "/audio/zh/zh-c-xwhla6.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-bei4ko",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 jīdàn 鸡蛋",
+      "path": "/audio/zh/zh-b-bei4ko.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-d-raexkn",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yǎnjing 眼睛",
+      "path": "/audio/zh/zh-d-raexkn.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-b-1mq2kcw",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 ěrduo 耳朵",
+      "path": "/audio/zh/zh-b-1mq2kcw.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-1ckk704",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 bízi 鼻子",
+      "path": "/audio/zh/zh-a-1ckk704.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1ai093i",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 shǒu 手",
+      "path": "/audio/zh/zh-9-1ai093i.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-35sbbd",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 jiǎo 脚",
+      "path": "/audio/zh/zh-9-35sbbd.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1mmwnso",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 xié 鞋",
+      "path": "/audio/zh/zh-8-1mmwnso.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-fme351",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 wàzi 袜子",
+      "path": "/audio/zh/zh-a-fme351.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-rxja5q",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yú 鱼",
+      "path": "/audio/zh/zh-7-rxja5q.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-136o2aw",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yā 鸭",
+      "path": "/audio/zh/zh-7-136o2aw.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-8skjli",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 niǎo 鸟",
+      "path": "/audio/zh/zh-9-8skjli.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1wbudya",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 qiú 球",
+      "path": "/audio/zh/zh-8-1wbudya.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-3urxgd",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 wáwa 娃娃",
+      "path": "/audio/zh/zh-a-3urxgd.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1sf67op",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 shū 书",
+      "path": "/audio/zh/zh-8-1sf67op.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-e-11nuk1c",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yuèliang 月亮",
+      "path": "/audio/zh/zh-e-11nuk1c.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-e-ojt9zf",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 xīngxing 星星",
+      "path": "/audio/zh/zh-e-ojt9zf.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-7-k1w8cw",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yǔ 雨",
+      "path": "/audio/zh/zh-7-k1w8cw.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-zsze9e",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 shù 树",
+      "path": "/audio/zh/zh-8-zsze9e.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-a-1wvla7h",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 yèzi 叶子",
+      "path": "/audio/zh/zh-a-1wvla7h.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-c-626i1m",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "词语 dàngāo 蛋糕",
+      "path": "/audio/zh/zh-c-626i1m.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-5ow2n9",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 1 次",
+      "path": "/audio/zh/zh-8-5ow2n9.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-ncrsfo",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 2 次",
+      "path": "/audio/zh/zh-8-ncrsfo.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-o287wv",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 3 次",
+      "path": "/audio/zh/zh-8-o287wv.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-nt49y6",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 4 次",
+      "path": "/audio/zh/zh-8-nt49y6.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-ot1q2h",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 5 次",
+      "path": "/audio/zh/zh-8-ot1q2h.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-6sisi0",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 6 次",
+      "path": "/audio/zh/zh-8-6sisi0.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-17chc4j",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 7 次",
+      "path": "/audio/zh/zh-8-17chc4j.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-11tfile",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 8 次",
+      "path": "/audio/zh/zh-8-11tfile.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-3g33r1",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 9 次",
+      "path": "/audio/zh/zh-8-3g33r1.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1flljy1",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成字母 10 次",
+      "path": "/audio/zh/zh-9-1flljy1.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-r5ozd0",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 1 次",
+      "path": "/audio/zh/zh-8-r5ozd0.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1r7h985",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 2 次",
+      "path": "/audio/zh/zh-8-1r7h985.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1q3ne6y",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 3 次",
+      "path": "/audio/zh/zh-8-1q3ne6y.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-bebovn",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 4 次",
+      "path": "/audio/zh/zh-8-bebovn.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-ajlna0",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 5 次",
+      "path": "/audio/zh/zh-8-ajlna0.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-b2uzyh",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 6 次",
+      "path": "/audio/zh/zh-8-b2uzyh.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-a6jgmm",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 7 次",
+      "path": "/audio/zh/zh-8-a6jgmm.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-pz8szb",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 8 次",
+      "path": "/audio/zh/zh-8-pz8szb.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1onh5ss",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 9 次",
+      "path": "/audio/zh/zh-8-1onh5ss.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-1on31si",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成数字 10 次",
+      "path": "/audio/zh/zh-9-1on31si.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1cft3n",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 1 次",
+      "path": "/audio/zh/zh-8-1cft3n.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-z90t3i",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 2 次",
+      "path": "/audio/zh/zh-8-z90t3i.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-karft",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 3 次",
+      "path": "/audio/zh/zh-8-karft.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-h4sh9g",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 4 次",
+      "path": "/audio/zh/zh-8-h4sh9g.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-i0hwjj",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 5 次",
+      "path": "/audio/zh/zh-8-i0hwjj.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1g29796",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 6 次",
+      "path": "/audio/zh/zh-8-1g29796.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-h4fc5x",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 7 次",
+      "path": "/audio/zh/zh-8-h4fc5x.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1x1epzk",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 8 次",
+      "path": "/audio/zh/zh-8-1x1epzk.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-8-1y5q9uz",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 9 次",
+      "path": "/audio/zh/zh-8-1y5q9uz.mp3",
+      "voiceId": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "zh-9-8morj7",
+      "language": "zh",
+      "languageCode": "zh-CN",
+      "text": "完成词语 10 次",
+      "path": "/audio/zh/zh-9-8morj7.mp3",
       "voiceId": "zh-CN-XiaoxiaoNeural"
     }
   ]

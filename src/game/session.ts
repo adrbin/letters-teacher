@@ -1,5 +1,5 @@
 import { generateQuestions } from "./questionGenerator";
-import type { AttemptResult, LetterResult, Question, SessionSettings, SessionSummary } from "../types";
+import type { AttemptResult, LetterResult, Question, ResultGrade, SessionSettings, SessionSummary } from "../types";
 import { normalizeLetterCase } from "./displayCase";
 
 const MAX_POINTS_PER_QUESTION = 10;
@@ -38,6 +38,14 @@ export function createSession(settings: SessionSettings, seed?: string): Session
 
 export function remainingPoints(wrongAttemptCount: number): number {
   return Math.max(MIN_POINTS_FOR_SUCCESS, MAX_POINTS_PER_QUESTION - wrongAttemptCount * WRONG_ATTEMPT_PENALTY);
+}
+
+export function getResultGrade(accuracy: number): ResultGrade {
+  if (accuracy >= 100) return "perfect";
+  if (accuracy >= 90) return "almost-perfect";
+  if (accuracy >= 70) return "very-good";
+  if (accuracy >= 50) return "good";
+  return "keep-practicing";
 }
 
 export function answerQuestion(state: SessionState, answer: string): { state: SessionState; result: AttemptResult } {

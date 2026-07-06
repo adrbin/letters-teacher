@@ -1,7 +1,8 @@
 import { Gamepad2, RotateCcw } from "lucide-react";
 import { languageNames } from "../data/letters";
+import { getResultGrade } from "../game/session";
 import { getCopy } from "../i18n";
-import type { EarnedStamp, SessionSettings, SessionSummary } from "../types";
+import type { EarnedStamp, LanguageCode, SessionSettings, SessionSummary } from "../types";
 import { IconLabel } from "./IconLabel";
 import { StampBadge, StampCollection } from "./StampBadge";
 
@@ -13,10 +14,13 @@ type Props = {
   onPlayAgain: () => void;
   onChooseGame: () => void;
   onUiAction: (label: string) => void;
+  onStampSpeak: (label: string, language: LanguageCode) => void;
 };
 
-export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain, onChooseGame, onUiAction }: Props) {
+export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain, onChooseGame, onUiAction, onStampSpeak }: Props) {
   const copy = getCopy(settings.language);
+  const resultGrade = getResultGrade(summary.accuracy);
+  const resultGradeLabel = copy.resultGrades[resultGrade];
   const handleAction = (label: string, action: () => void) => {
     onUiAction(label);
     action();
@@ -27,6 +31,7 @@ export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain
       <section className="w-full max-w-4xl rounded-[2rem] bg-white/92 p-5 text-center shadow-soft ring-1 ring-slate-200 sm:p-8">
         <p className="text-sm font-black uppercase tracking-wide text-emerald-700">{languageNames[settings.language]}</p>
         <h1 className="mt-2 text-4xl font-black text-slate-950 sm:text-6xl">{copy.greatWork}</h1>
+        <p className="mt-3 text-2xl font-black text-emerald-700 sm:text-3xl">{resultGradeLabel}</p>
 
         <div className="mx-auto mt-7 grid max-w-xl gap-4 rounded-3xl bg-slate-950 p-5 text-white">
           <p className="text-2xl font-black">
@@ -44,7 +49,7 @@ export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain
         {newStamp && (
           <section className="mx-auto mt-7 grid max-w-sm justify-items-center gap-3 rounded-3xl bg-amber-50 p-5 text-amber-950 ring-2 ring-amber-200">
             <h2 className="text-2xl font-black">{copy.newStamp}</h2>
-            <StampBadge stamp={newStamp} language={settings.language} isNew />
+            <StampBadge stamp={newStamp} language={settings.language} isNew onSpeakLabel={onStampSpeak} />
           </section>
         )}
 
@@ -54,7 +59,7 @@ export function ResultsScreen({ settings, summary, stamps, newStamp, onPlayAgain
         </div>
 
         <div className="mt-7 text-left">
-          <StampCollection stamps={stamps} language={settings.language} />
+          <StampCollection stamps={stamps} language={settings.language} onSpeakLabel={onStampSpeak} />
         </div>
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">

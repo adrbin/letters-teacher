@@ -36,9 +36,10 @@ type Props = {
   onGameModeChange: (gameMode: GameMode) => void;
   onOpenSettings: () => void;
   onUiAction: (label: string) => void;
+  onStampSpeak: (label: string, language: SessionSettings["language"]) => void;
 };
 
-export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, onGameModeChange, onOpenSettings, onUiAction }: Props) {
+export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, onGameModeChange, onOpenSettings, onUiAction, onStampSpeak }: Props) {
   const copy = getCopy(settings.language);
   const shortGameTitle = copy.gameShortTitles[settings.characterSet][settings.gameMode];
 
@@ -135,7 +136,7 @@ export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, on
                     type="button"
                     aria-label={title}
                     aria-pressed={active}
-                    onClick={() => handleAction(title, () => onGameModeChange(game.mode))}
+                    onClick={() => handleAction(shortTitle, () => onGameModeChange(game.mode))}
                   >
                     <span className={`mb-3 block h-2 w-14 rounded-full ${game.accent}`} />
                     <IconLabel icon={game.icon} className="justify-start text-xl font-black">
@@ -149,7 +150,7 @@ export function HomeScreen({ settings, stamps, onStart, onCharacterSetChange, on
         </div>
 
         <div className="mt-8 text-left">
-          <StampCollection stamps={stamps} language={settings.language} />
+          <StampCollection stamps={stamps} language={settings.language} onSpeakLabel={onStampSpeak} />
         </div>
       </section>
     </main>

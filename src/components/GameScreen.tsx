@@ -49,7 +49,7 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
   const copy = getCopy(session.settings.language);
   const characterSet = session.settings.characterSet;
   const letterCase = session.settings.letterCase;
-  const { speak, supported: speechSupported, error: speechError } = audio;
+  const { speak, speakText, supported: speechSupported, error: speechError } = audio;
   const playFeedbackSound = useFeedbackSound();
   const feedbackSequence = useRef(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
@@ -68,9 +68,10 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
       feedbackSequence.current += 1;
       setAnswerFeedback({ result: next.result, target: answeredTarget, sourceKey, feedbackKey: feedbackSequence.current });
       playFeedbackSound(next.result.correct ? "correct" : "incorrect");
+      speakText(translateFeedback(session.settings.language, next.result.feedback), session.settings.language);
       onSessionChange(next.state);
     },
-    [onSessionChange, playFeedbackSound, session]
+    [onSessionChange, playFeedbackSound, session, speakText]
   );
 
   const recognition = useSpeechRecognition(
@@ -229,7 +230,6 @@ export function GameScreen({ session, onSessionChange, onExit, onUiAction, audio
                   answerFeedback={answerFeedback}
                   copy={copy}
                   letterCase={letterCase}
-                  onUiAction={onUiAction}
                 />
               )}
 
@@ -459,7 +459,7 @@ function HearWriteGame({
           data-recognized-letter={recognized.letter ?? ""}
           data-recognition-confidence={recognized.confidence.toFixed(3)}
           data-recognition-matches={recognized.matches ? "true" : "false"}
-          onClick={() => handleAction(copy.check, () => onAnswer(recognized.matches ? target.display : ""))}
+          onClick={() => onAnswer(recognized.matches ? target.display : "")}
         >
           <IconLabel icon={Check}>{copy.check}</IconLabel>
         </button>
@@ -593,7 +593,7 @@ function SpellWordGame({
           }`}
           type="button"
           disabled={!readyToCheck}
-          onClick={() => handleAction(copy.check, () => onAnswer(selectedWord === displayWord ? target.display : ""))}
+          onClick={() => onAnswer(selectedWord === displayWord ? target.display : "")}
         >
           <IconLabel icon={Check}>{copy.check}</IconLabel>
         </button>
@@ -625,8 +625,7 @@ function SeePickSoundGame({
   onAnswer,
   answerFeedback,
   copy,
-  letterCase,
-  onUiAction
+  letterCase
 }: {
   options: LetterItem[];
   target: LetterItem;
@@ -636,13 +635,8 @@ function SeePickSoundGame({
   answerFeedback: { result: AttemptResult; sourceKey: string; feedbackKey: number } | null;
   copy: Copy;
   letterCase: LetterCase | undefined;
-  onUiAction: (label: string) => void;
 }) {
   const [previewedLetter, setPreviewedLetter] = useState<LetterItem | null>(null);
-  const handleAction = (label: string, action: () => void) => {
-    onUiAction(label);
-    action();
-  };
 
   useEffect(() => {
     setPreviewedLetter(null);
@@ -680,7 +674,7 @@ function SeePickSoundGame({
         className="control-button mx-auto w-full max-w-md bg-emerald-500 px-6 py-4 text-xl text-white shadow-lg shadow-emerald-200 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none"
         type="button"
         disabled={!previewedLetter}
-        onClick={() => previewedLetter && handleAction(copy.chooseThisSound, () => onAnswer(previewedLetter.display))}
+        onClick={() => previewedLetter && onAnswer(previewedLetter.display)}
       >
         <IconLabel icon={Check}>{copy.chooseThisSound}</IconLabel>
       </button>

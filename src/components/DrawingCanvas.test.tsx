@@ -14,7 +14,7 @@ function pointerEvent(type: string, init: { clientX?: number; clientY?: number; 
 }
 
 describe("DrawingCanvas", () => {
-  it("records the first pointer point synchronously and appends moves", () => {
+  it("draws pointer moves locally and commits the stroke on pointer end", () => {
     const changes: Stroke[][] = [];
     const onChange = vi.fn((next: Stroke[]) => {
       changes.push(next);
@@ -31,17 +31,18 @@ describe("DrawingCanvas", () => {
     Object.defineProperty(canvas, "releasePointerCapture", { configurable: true, value: vi.fn() });
 
     fireEvent(canvas, pointerEvent("pointerdown", { clientX: 30, clientY: 50, pointerId: 1 }));
-    expect(changes.at(-1)).toEqual([[{ x: 20, y: 30 }]]);
+    expect(onChange).not.toHaveBeenCalled();
 
     fireEvent(canvas, pointerEvent("pointermove", { clientX: 70, clientY: 90, pointerId: 1 }));
+    expect(onChange).not.toHaveBeenCalled();
+
+    fireEvent(document, pointerEvent("pointerup", { pointerId: 1 }));
     expect(changes.at(-1)).toEqual([
       [
         { x: 20, y: 30 },
         { x: 60, y: 70 }
       ]
     ]);
-
-    fireEvent(document, pointerEvent("pointerup", { pointerId: 1 }));
     expect(canvas.releasePointerCapture).toHaveBeenCalledWith(1);
     rerender(<DrawingCanvas strokes={changes.at(-1) ?? []} onChange={onChange} />);
   });

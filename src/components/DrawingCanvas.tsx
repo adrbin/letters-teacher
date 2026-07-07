@@ -97,14 +97,12 @@ export function DrawingCanvas({ strokes, onChange }: Props) {
     } else {
       drawDot(point);
     }
-    onChange(next);
   };
 
   const startStroke = (point: { x: number; y: number } | null) => {
     const next = [...strokesRef.current, point ? [point] : []];
     strokesRef.current = next;
     if (point) drawDot(point);
-    onChange(next);
   };
 
   const commitStrokes = () => {
